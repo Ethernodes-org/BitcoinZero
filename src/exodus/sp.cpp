@@ -72,16 +72,16 @@ CMPSPInfo::CMPSPInfo(const boost::filesystem::path& path, bool fWipe)
     implied_exodus.category = "N/A";
     implied_exodus.subcategory = "N/A";
     implied_exodus.name = "Exodus";
-    implied_exodus.url = "https://www.zcoin.io";
-    implied_exodus.data = "Exodus serve as the binding between Zcoin, smart properties and contracts created on the Exodus Layer.";
+    implied_exodus.url = "https://www.gravitycoin.io";
+    implied_exodus.data = "Exodus serve as the binding between GravityCoin, smart properties and contracts created on the Exodus Layer.";
     implied_texodus.issuer = ExodusAddress().ToString();
     implied_texodus.prop_type = EXODUS_PROPERTY_TYPE_DIVISIBLE;
     implied_texodus.num_tokens = 700000;
     implied_texodus.category = "N/A";
     implied_texodus.subcategory = "N/A";
     implied_texodus.name = "Test Exodus";
-    implied_texodus.url = "https://www.zcoin.io";
-    implied_texodus.data = "Test Exodus serve as the binding between Zcoin, smart properties and contracts created on the Exodus Layer.";
+    implied_texodus.url = "https://www.gravitycoin.io";
+    implied_texodus.data = "Test Exodus serve as the binding between GravityCoin, smart properties and contracts created on the Exodus Layer.";
 
     init();
 }
@@ -667,7 +667,7 @@ void exodus::calculateFundraiser(bool inflateAmount, int64_t amtTransfer, uint8_
     // Weeks in seconds
     arith_uint256 weeks_sec_ = ConvertTo256(604800);
 
-    // Precision for all non-zcoin values (bonus percentages, for example)
+    // Precision for all non-coin values (bonus percentages, for example)
     arith_uint256 precision_ = ConvertTo256(1000000000000LL);
 
     // Precision for all percentages (10/100 = 10%)
@@ -696,7 +696,7 @@ void exodus::calculateFundraiser(bool inflateAmount, int64_t amtTransfer, uint8_
     issuerPercentage_ *= precision_;
     issuerPercentage_ /= percentage_precision;
 
-    // Precision for zcoin amounts (satoshi)
+    // Precision for coin amounts (satoshi)
     arith_uint256 satoshi_precision_ = ConvertTo256(100000000L);
 
     // Total tokens including remainders

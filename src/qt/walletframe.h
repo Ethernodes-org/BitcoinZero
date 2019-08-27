@@ -63,8 +63,8 @@ public Q_SLOTS:
     void gotoBitcoinHistoryTab();
     /** Switch to utility page */
     void gotoToolboxPage();
-    /** Switch to znode page */
-    void gotoZnodePage();
+    /** Switch to xnode page */
+    void gotoXnodePage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

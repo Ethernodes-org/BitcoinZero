@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(pubcoin_serialization)
     secp_primitives::GroupElement coin;
     coin.randomize();
 
-    sigma::PublicCoin pubcoin(coin, sigma::CoinDenomination::SIGMA_DENOM_10);
+    sigma::PublicCoin pubcoin(coin, sigma::CoinDenomination::SIGMA_DENOM_X10);
 
     CDataStream serialized(SER_NETWORK, PROTOCOL_VERSION);
     serialized << pubcoin;
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(pubcoin_validate)
 {
     auto params = sigma::Params::get_default();
 
-    sigma::PrivateCoin privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_1);
+    sigma::PrivateCoin privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_X1);
     auto& pubcoin = privcoin.getPublicCoin();
 
     BOOST_CHECK(pubcoin.validate());
@@ -39,8 +39,8 @@ BOOST_AUTO_TEST_CASE(getter_setter_priv)
 {
     auto params = sigma::Params::get_default();
 
-    sigma::PrivateCoin privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_1);
-    sigma::PrivateCoin new_privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_1);
+    sigma::PrivateCoin privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_X1);
+    sigma::PrivateCoin new_privcoin(params, sigma::CoinDenomination::SIGMA_DENOM_X1);
 
     BOOST_CHECK(privcoin.getPublicCoin() != new_privcoin.getPublicCoin());
     BOOST_CHECK(privcoin.getSerialNumber() != new_privcoin.getSerialNumber());

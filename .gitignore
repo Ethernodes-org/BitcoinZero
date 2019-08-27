@@ -6,13 +6,10 @@
 *.tar.gz
 
 *.exe
-src/zcoin
-src/zcoind
-src/zcoin-cli
-src/zcoin-tx
-src/test/test_zcoin
-src/test/test_zcoin_fuzzy
-src/qt/test/test_zcoin-qt
+src/GravityCoin
+src/GravityCoind
+src/GravityCoin-cli
+src/GravityCoin-tx
 
 # autoreconf
 Makefile.in
@@ -83,12 +80,8 @@ src/tor/src/or
 *.qm
 /Makefile
 /src/Makefile
-zcoin-qt
-Zcoin-Qt.app
-
-# Unit-tests
-Makefile.test
-zcoin-qt_test
+GravityCoin-qt
+GravityCoin-Qt.app
 
 # Resources cpp
 qrc_*.cpp
@@ -101,7 +94,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_zcoin.coverage/
+test_GravityCoin.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -118,7 +111,7 @@ src/test/test_bitcoin
 
 /doc/doxygen/
 
-libzcoinconsensus.pc
+libbitcoinconsensus.pc
 contrib/devtools/split-debug.sh
 
 src/test/test_bitcoin
@@ -127,9 +120,3 @@ libbitcoinconsensus.pc
 qa/pull-tester/run-bitcoind-for-test.sh
 qa/pull-tester/tests_config.py
 
-# Qt Creator project files
-zcoin.config
-zcoin.creator
-zcoin.creator.user
-zcoin.files
-zcoin.includes

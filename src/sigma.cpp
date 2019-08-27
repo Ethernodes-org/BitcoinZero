@@ -13,8 +13,8 @@
 #include "sigma/coinspend.h"
 #include "sigma/coin.h"
 #include "sigma/remint.h"
-#include "znode-payments.h"
-#include "znode-sync.h"
+#include "xnode-payments.h"
+#include "xnode-sync.h"
 #include "primitives/zerocoin.h"
 
 #include <atomic>
@@ -706,12 +706,14 @@ bool BuildSigmaStateFromIndex(CChain *chain) {
     }
     // DEBUG
     LogPrintf(
-        "Latest IDs for sigma coin groups are %d, %d, %d, %d, %d\n",
-        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_0_1),
-        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_0_5),
-        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_1),
-        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_10),
-        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_100));
+        "Latest IDs for sigma coin groups are %d, %d, %d, %d, %d, %d, %d\n",
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X1),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X10),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X50),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X100),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X500),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X1000),
+        sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_X5000));
     return true;
 }
 

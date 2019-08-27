@@ -94,7 +94,7 @@ std::vector<ConsensusCheckpoint> CConsensusParams::GetCheckpoints() const
  */
 CMainConsensusParams::CMainConsensusParams()
 {
-    GENESIS_BLOCK = 108888;
+    GENESIS_BLOCK = 529599;//xxxx
     // Notice range for feature activations:
     MIN_ACTIVATION_BLOCKS = 2048;  // ~2 weeks
     MAX_ACTIVATION_BLOCKS = 12288; // ~12 weeks
@@ -535,8 +535,8 @@ bool IsTransactionTypeAllowed(int txBlock, uint32_t txProperty, uint16_t txType,
         if (entry.txType != txType || entry.txVersion != version) {
             continue;
         }
-        // a property identifier of 0 (= XZC) may be used as wildcard
-        if (EXODUS_PROPERTY_XZC == txProperty && !entry.allowWildcard) {
+        // a property identifier of 0 (= GXX) may be used as wildcard
+        if (EXODUS_PROPERTY_GXX == txProperty && !entry.allowWildcard) {
             continue;
         }
         // transactions are not restricted in the test ecosystem

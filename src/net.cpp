@@ -79,10 +79,10 @@ bool AcceptToMemoryPool(
         bool fOverrideMempoolLimit=false,
         const CAmount nAbsurdFee=0,
         bool isCheckWalletTransaction = false,
-        bool markZcoinSpendTransactionSerial = true);
+        bool markGravityCoinSpendTransactionSerial = true);
 
 namespace {
-    const int MAX_OUTBOUND_CONNECTIONS = 8;
+    const int MAX_OUTBOUND_CONNECTIONS = 16;
     const int MAX_FEELER_CONNECTIONS = 1;
 
     struct ListenSocket {
@@ -396,20 +396,20 @@ CNode *FindNode(const NodeId nodeid) {
     return NULL;
 }
 
-CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToZnode) {
+CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToXnode) {
     if (pszDest == NULL) {
-        // we clean znode connections in CZnodeMan::ProcessZnodeConnections()
-        // so should be safe to skip this and connect to local Hot MN on CActiveZnode::ManageState()
-        if (IsLocal(addrConnect) && !fConnectToZnode)
+        // we clean xnode connections in CXnodeMan::ProcessXnodeConnections()
+        // so should be safe to skip this and connect to local Hot MN on CActiveXnode::ManageState()
+        if (IsLocal(addrConnect) && !fConnectToXnode)
             return NULL;
         LOCK(cs_vNodes);
         // Look for an existing connection
         CNode *pnode = FindNode((CService) addrConnect);
         if (pnode) {
-            // we have existing connection to this node but it was not a connection to znode,
+            // we have existing connection to this node but it was not a connection to xnode,
             // change flag and add reference so that we can correctly clear it later
-            if (fConnectToZnode && !pnode->fZnode) {
-                pnode->fZnode = true;
+            if (fConnectToXnode && !pnode->fXnode) {
+                pnode->fXnode = true;
             }
             pnode->AddRef();
             return pnode;
@@ -440,8 +440,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
             // name catch this early.
             CNode *pnode = FindNode((CService) addrConnect);
             if (pnode) {
-                if (fConnectToZnode && !pnode->fZnode) {
-                    pnode->fZnode = true;
+                if (fConnectToXnode && !pnode->fXnode) {
+                    pnode->fXnode = true;
                 }
                 pnode->AddRef();
                 {
@@ -459,8 +459,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
 
         // Add node
         CNode *pnode = new CNode(hSocket, addrConnect, pszDest ? pszDest : "", false);
-        if (fConnectToZnode) {
-            pnode->fZnode = true;
+        if (fConnectToXnode) {
+            pnode->fXnode = true;
         }
         pnode->AddRef();
 
@@ -2267,7 +2267,7 @@ void ThreadDandelionShuffle() {
                 GetTimeMicros(), consensus.nDandelionShuffleInterval);
             // Sleep for 1 second until the next shuffle time.
             // Sleeping for DANDELION_SHUFFLE_INTERVAL seconds at once
-            // results to not being able to close zcoin.
+            // results to not being able to close.
             int time_to_sleep = (nNextDandelionShuffle - GetTimeMicros()) / 1000;
             while (time_to_sleep > 0) {
                 if (!CNode::interruptNet.sleep_for(
@@ -2833,8 +2833,8 @@ CNode::CNode(SOCKET hSocketIn, const CAddress &addrIn, const std::string &addrNa
     minFeeFilter = 0;
     lastSentFeeFilter = 0;
     nextSendTimeFeeFilter = 0;
-    // znode
-    fZnode = false;
+    // xnode
+    fXnode = false;
 
     BOOST_FOREACH(
     const std::string &msg, getAllNetMessageTypes())

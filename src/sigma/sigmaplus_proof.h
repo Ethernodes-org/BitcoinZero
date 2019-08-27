@@ -1,5 +1,5 @@
-#ifndef ZCOIN_SIGMA_SIGMAPLUS_PROOF_H
-#define ZCOIN_SIGMA_SIGMAPLUS_PROOF_H
+#ifndef GRAVITYCOIN_SIGMA_SIGMAPLUS_PROOF_H
+#define GRAVITYCOIN_SIGMA_SIGMAPLUS_PROOF_H
 
 #include "params.h"
 #include "r1_proof.h"
@@ -54,4 +54,4 @@ public:
 
 } //namespace sigma
 
-#endif // ZCOIN_SIGMA_SIGMAPLUS_PROOF_H
+#endif // GRAVITYCOIN_SIGMA_SIGMAPLUS_PROOF_H

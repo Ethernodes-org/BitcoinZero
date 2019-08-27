@@ -79,7 +79,7 @@ extern const char * DEFAULT_WALLET_DAT;
 const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 const uint32_t BIP44_INDEX = 0x2C;
 const uint32_t BIP44_TEST_INDEX = 0x1;   // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
-const uint32_t BIP44_ZCOIN_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
+const uint32_t BIP44_GRAVITYCOIN_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
 const uint32_t BIP44_MINT_INDEX = 0x2;
 
 class CBlockIndex;
@@ -93,13 +93,13 @@ class CWalletTx;
 /** (client) version numbers for particular wallet features */
 enum WalletFeature
 {
-    FEATURE_BASE = 10500, // the earliest version new wallets supports (only useful for getinfo's clientversion output)
+    FEATURE_BASE = 60000, // the earliest version new wallets supports (only useful for getinfo's clientversion output)
 
-    FEATURE_WALLETCRYPT = 40000, // wallet encryption
+    FEATURE_WALLETCRYPT = 60000, // wallet encryption
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
 
     FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
-    FEATURE_LATEST = FEATURE_COMPRPUBKEY // HD is optional, use FEATURE_COMPRPUBKEY as latest version
+    FEATURE_LATEST = 4000608 // HD is optional, use FEATURE_COMPRPUBKEY as latest version
 };
 
 enum AvailableCoinsType
@@ -108,7 +108,7 @@ enum AvailableCoinsType
     ONLY_DENOMINATED = 2,
     ONLY_NOT1000IFMN = 3,
     ONLY_NONDENOMINATED_NOT1000IFMN = 4,
-    ONLY_1000 = 5, // find znode outputs including locked ones (use with caution)
+    ONLY_1000 = 5, // find xnode outputs including locked ones (use with caution)
     ONLY_PRIVATESEND_COLLATERAL = 6,
     ONLY_MINTS = 7,
     WITH_MINTS = 8
@@ -267,7 +267,7 @@ public:
         CValidationState& state,
         bool fCheckInputs,
         bool isCheckWalletTransaction = false,
-        bool markZcoinSpendTransactionSerial = true);
+        bool markGravityCoinSpendTransactionSerial = true);
 
     bool hashUnset() const { return (hashBlock.IsNull() || hashBlock == ABANDON_HASH); }
     bool isAbandoned() const { return (hashBlock == ABANDON_HASH); }
@@ -685,7 +685,7 @@ public:
 
     std::set<int64_t> setKeyPool;
     std::map<CKeyID, CKeyMetadata> mapKeyMetadata;
-    //znode
+    //xnode
     int64_t nKeysLeftSinceAutoBackup;
 
     typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
@@ -779,9 +779,9 @@ public:
     void UnlockAllCoins();
     void ListLockedCoins(std::vector<COutPoint>& vOutpts);
 
-    // znode
-    /// Get 1000 XZC output and keys which can be used for the Znode
-    bool GetZnodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
+    // xnode
+    /// Get 1000 GXX output and keys which can be used for the Xnode
+    bool GetXnodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
     /// Extract txin information and keys from output
     bool GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet);
     bool HasCollateralInputs(bool fOnlyConfirmed = true) const;
@@ -845,7 +845,7 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime);
-    //znode
+    //xnode
     CAmount GetBalance() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
@@ -889,11 +889,11 @@ public:
     // to be spent.
     std::list<CSigmaEntry> GetAvailableCoins(const CCoinControl *coinControl = NULL, bool includeUnsafe = false) const;
 
-    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 zcoin, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
+    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 coin, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
      * \param[in] required Required amount to spend.
      * \param[out] coinsToSpend_out Coins which user needs to spend.
      * \param[out] coinsToMint_out Coins which will be re-minted by the user to get the change back.
-     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 zcoin) amount using coins we have.
+     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 coin) amount using coins we have.
      */
     bool GetCoinsToSpend(
         CAmount required,
@@ -1017,7 +1017,7 @@ public:
 
     bool CreateZerocoinMintModelV2(string &stringError, const std::vector<std::pair<int,int>>& denominationPairs);
 
-    // If dontSpendSigma is set, spends only old zcoin mints if any. Used in old unit tests.
+    // If dontSpendSigma is set, spends only old coin mints if any. Used in old unit tests.
     bool CreateZerocoinSpendModel(string &stringError, string thirdPartyAddress, string denomAmount, bool forceUsed = false, bool dontSpendSigma = false);
 
     bool CreateSigmaSpendModel(string &stringError, string thirdPartyAddress, string denomAmount, bool forceUsed = false);

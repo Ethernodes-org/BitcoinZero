@@ -204,7 +204,7 @@ void SigmaDialog::on_mintButton_clicked()
 
     if (amount < smallestDenominationValue) {
         QMessageBox::critical(this, tr("Amount too small to mint"),
-            tr("Amount to mint must not be lower than %1 XZC.").arg(formatAmount(smallestDenominationValue)),
+            tr("Amount to mint must not be lower than %1 GXX.").arg(formatAmount(smallestDenominationValue)),
             QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
@@ -213,7 +213,7 @@ void SigmaDialog::on_mintButton_clicked()
         amount -= amount % smallestDenominationValue;
         auto reply = QMessageBox::question(
             this, tr("Unable to mint."),
-            tr("Amount to mint must be a multiple of 0.05 XZC. Do you want to spend %1 XZC?"
+            tr("Amount to mint must be a multiple of 0.05 GXX. Do you want to spend %1 GXX?"
             ).arg(formatAmount(amount)));
 
         if (reply == QMessageBox::No) {
@@ -637,7 +637,7 @@ void SigmaDialog::coinControlChangeEdited(const QString& text)
         }
         else if (!addr.IsValid()) // Invalid address
         {
-            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Zcoin address"));
+            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid GravityCoin address"));
         }
         else // Valid address
         {
@@ -730,7 +730,7 @@ void SigmaDialog::processSpendCoinsReturn(const WalletModel::SendCoinsReturn &se
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     case WalletModel::ExceedLimit:
-        msgParams.first = tr("Transaction exceeds max number of spends (35) or value (500 XZC per transaction), please reduce the amount you wish to spend.");
+        msgParams.first = tr("Transaction exceeds max number of spends (100) or value (5000 GXX per transaction), please reduce the amount you wish to spend.");
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     // included to prevent a compiler warning.
@@ -771,21 +771,21 @@ void SigmaDialog::updateCoins(const std::vector<CMintMeta>& spendable, const std
     }
 
     // update coins amount
-    int denom100Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_100];
-    int denom25Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_25];
-    int denom10Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_10];
-    int denom1Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_1];
-    int denom05Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_5];
-    int denom01Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_1];
-    int denom005Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_05];
+    int denomX5000Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X5000];
+    int denomX1000Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X1000];
+    int denomX500Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X500];
+    int denomX100Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X100];
+    int denomX50Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X50];
+    int denomX10Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X10];
+    int denomX1Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_X1];
 
-    ui->amountDenom100->setText(QString::fromStdString(std::to_string(denom100Amount)));
-    ui->amountDenom25->setText(QString::fromStdString(std::to_string(denom25Amount)));
-    ui->amountDenom10->setText(QString::fromStdString(std::to_string(denom10Amount)));
-    ui->amountDenom1->setText(QString::fromStdString(std::to_string(denom1Amount)));
-    ui->amountDenom05->setText(QString::fromStdString(std::to_string(denom05Amount)));
-    ui->amountDenom01->setText(QString::fromStdString(std::to_string(denom01Amount)));
-    ui->amountDenom005->setText(QString::fromStdString(std::to_string(denom005Amount)));
+    ui->amountDenomX5000->setText(QString::fromStdString(std::to_string(denomX5000Amount)));
+    ui->amountDenomX1000->setText(QString::fromStdString(std::to_string(denomX1000Amount)));
+    ui->amountDenomX500->setText(QString::fromStdString(std::to_string(denomX500Amount)));
+    ui->amountDenomX100->setText(QString::fromStdString(std::to_string(denomX100Amount)));
+    ui->amountDenomX50->setText(QString::fromStdString(std::to_string(denomX50Amount)));
+    ui->amountDenomX10->setText(QString::fromStdString(std::to_string(denomX10Amount)));
+    ui->amountDenomX1->setText(QString::fromStdString(std::to_string(denomX1Amount)));
 
     CAmount pendingSum(0);
     for (const auto& c : pending) {

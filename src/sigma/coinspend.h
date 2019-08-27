@@ -1,5 +1,5 @@
-#ifndef ZCOIN_SIGMA_COINSPEND_H
-#define ZCOIN_SIGMA_COINSPEND_H
+#ifndef GRAVITYCOIN_SIGMA_COINSPEND_H
+#define GRAVITYCOIN_SIGMA_COINSPEND_H
 
 #include "coin.h"
 #include "sigmaplus_proof.h"
@@ -16,7 +16,7 @@ public:
     template<typename Stream>
     CoinSpend(const Params* p,  Stream& strm):
         params(p),
-        denomination(CoinDenomination::SIGMA_DENOM_1),
+        denomination(CoinDenomination::SIGMA_DENOM_X1),
         sigmaProof(p) {
             strm >> * this;
         }
@@ -87,4 +87,4 @@ private:
 
 } //namespace sigma
 
-#endif // ZCOIN_SIGMA_COINSPEND_H
+#endif // GRAVITYCOIN_SIGMA_COINSPEND_H

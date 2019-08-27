@@ -37,8 +37,8 @@
 #include "validation.h"
 #include "darksend.h"
 #include "instantx.h"
-#include "znode.h"
-#include "znode-sync.h"
+#include "xnode.h"
+#include "xnode-sync.h"
 #include "random.h"
 #include "init.h"
 #include "hdmint/wallet.h"
@@ -150,7 +150,7 @@ CPubKey CWallet::GenerateNewKey(uint32_t nChange) {
     boost::optional<bool> regTest = GetOptBoolArg("-regtest")
     , testNet = GetOptBoolArg("-testnet");
 
-    uint32_t nIndex = (regTest || testNet) ? BIP44_TEST_INDEX : BIP44_ZCOIN_INDEX;
+    uint32_t nIndex = (regTest || testNet) ? BIP44_TEST_INDEX : BIP44_GRAVITYCOIN_INDEX;
 
     // use HD key derivation if HD was enabled during wallet creation
     if (!hdChain.masterKeyID.IsNull()) {
@@ -158,7 +158,7 @@ CPubKey CWallet::GenerateNewKey(uint32_t nChange) {
         CKey key;                      //master key seed (256bit)
         CExtKey masterKey;             //hd master key
         CExtKey purposeKey;            //key at m/44'
-        CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or Zcoin Coin Type respectively, according to SLIP-0044)
+        CExtKey coinTypeKey;           //key at m/44'/<1/136>' (Testnet or GravityCoin Coin Type respectively, according to SLIP-0044)
         CExtKey accountKey;            //key at m/44'/<1/136>'/0'
         CExtKey externalChainChildKey; //key at m/44'/<1/136>'/0'/<c> (Standard: 0/1, Mints: 2)
         CExtKey childKey;              //key at m/44'/<1/136>'/0'/<c>/<n>
@@ -2300,7 +2300,7 @@ bool CWallet::GetCoinsToSpend(
     // Sanity check to make sure this function is never called with a too large
     // amount to spend, resulting to a possible crash due to out of memory condition.
     if (!MoneyRange(required)) {
-        throw std::invalid_argument("Request to spend more than 21 MLN zcoins.\n");
+        throw std::invalid_argument("Request to spend more than 21 MLN gravitycoins.\n");
     }
 
     if (!MoneyRange(amountToSpendLimit)) {
@@ -2678,13 +2678,13 @@ void CWallet::AvailableCoins(vector <COutput> &vCoins, bool fOnlyConfirmed, cons
                 } else if (nCoinType == ONLY_DENOMINATED) {
                     found = IsDenominatedAmount(pcoin->vout[i].nValue);
                 } else if (nCoinType == ONLY_NOT1000IFMN) {
-                    found = !(fZNode && pcoin->vout[i].nValue == ZNODE_COIN_REQUIRED * COIN);
+                    found = !(fXNode && pcoin->vout[i].nValue == XNODE_COIN_REQUIRED * COIN);
                 } else if (nCoinType == ONLY_NONDENOMINATED_NOT1000IFMN) {
                     if (IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
                     found = !IsDenominatedAmount(pcoin->vout[i].nValue);
-                    if (found && fZNode) found = pcoin->vout[i].nValue != ZNODE_COIN_REQUIRED * COIN; // do not use Hot MN funds
+                    if (found && fXNode) found = pcoin->vout[i].nValue != XNODE_COIN_REQUIRED * COIN; // do not use Hot MN funds
                 } else if (nCoinType == ONLY_1000) {
-                    found = pcoin->vout[i].nValue == ZNODE_COIN_REQUIRED * COIN;
+                    found = pcoin->vout[i].nValue == XNODE_COIN_REQUIRED * COIN;
                 } else if (nCoinType == ONLY_PRIVATESEND_COLLATERAL) {
                     found = IsCollateralAmount(pcoin->vout[i].nValue);
                 } else {
@@ -2735,7 +2735,7 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector 
         if (out.tx->vout[out.i].nValue < nValueMin / 10) continue;
         //do not allow collaterals to be selected
         if (IsCollateralAmount(out.tx->vout[out.i].nValue)) continue;
-        if (fZNode && out.tx->vout[out.i].nValue == ZNODE_COIN_REQUIRED * COIN) continue; //znode input
+        if (fXNode && out.tx->vout[out.i].nValue == XNODE_COIN_REQUIRED * COIN) continue; //xnode input
 
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
             CTxIn txin = CTxIn(out.tx->GetHash(), out.i);
@@ -2753,7 +2753,7 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector 
     return nValueRet >= nValueMin;
 }
 
-// znode
+// xnode
 bool CWallet::GetCollateralTxIn(CTxIn& txinRet, CAmount& nValueRet) const
 {
     vector<COutput> vCoins;
@@ -2774,7 +2774,7 @@ bool CWallet::GetCollateralTxIn(CTxIn& txinRet, CAmount& nValueRet) const
     return false;
 }
 
-bool CWallet::GetZnodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRet, std::string strTxHash,
+bool CWallet::GetXnodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRet, std::string strTxHash,
                                  std::string strOutputIndex) {
     // wait for reindex and/or import to finish
     if (fImporting || fReindex) return false;
@@ -2783,7 +2783,7 @@ bool CWallet::GetZnodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRe
     std::vector <COutput> vPossibleCoins;
     AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_1000);
     if (vPossibleCoins.empty()) {
-        LogPrintf("CWallet::GetZnodeVinAndKeys -- Could not locate any valid znode vin\n");
+        LogPrintf("CWallet::GetXnodeVinAndKeys -- Could not locate any valid xnode vin\n");
         return false;
     }
 
@@ -2798,7 +2798,7 @@ bool CWallet::GetZnodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRe
     if (out.tx->GetHash() == txHash && out.i == nOutputIndex) // found it!
         return GetVinAndKeysFromOutput(out, txinRet, pubKeyRet, keyRet);
 
-    LogPrintf("CWallet::GetZnodeVinAndKeys -- Could not locate specified znode vin\n");
+    LogPrintf("CWallet::GetXnodeVinAndKeys -- Could not locate specified xnode vin\n");
     return false;
 }
 
@@ -2830,7 +2830,7 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn &txinRet, CPubKey &pubK
     return true;
 }
 
-//[zcoin]
+//GravityCoin
 void CWallet::ListAvailableCoinsMintCoins(vector <COutput> &vCoins, bool fOnlyConfirmed) const {
     vCoins.clear();
     {
@@ -3260,10 +3260,10 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount 
     std::random_shuffle(vCoins.rbegin(), vCoins.rend(), GetRandInt);
 
     // ( bit on if present )
-    // bit 0 - 100ZCOIN+1
-    // bit 1 - 10ZCOIN+1
-    // bit 2 - 1ZCOIN+1
-    // bit 3 - .1ZCOIN+1
+    // bit 0 - 100GRAVITYCOIN+1
+    // bit 1 - 10GRAVITYCOIN+1
+    // bit 2 - 1GRAVITYCOIN+1
+    // bit 3 - .1GRAVITYCOIN+1
 
     std::vector<int> vecBits;
     if (!darkSendPool.GetDenominationsBits(nDenom, vecBits)) {
@@ -3275,7 +3275,7 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount 
     InsecureRand insecureRand;
     BOOST_FOREACH(const COutput &out, vCoins)
     {
-        // znode-like input should not be selected by AvailableCoins now anyway
+        // xnode-like input should not be selected by AvailableCoins now anyway
         //if(out.tx->vout[out.i].nValue == 1000*COIN) continue;
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
 
@@ -3383,7 +3383,7 @@ bool CWallet::SelectCoinsGrouppedByAddresses(std::vector <CompactTallyItem> &vec
             if (fAnonymizable) {
                 // ignore collaterals
                 if (IsCollateralAmount(wtx.vout[i].nValue)) continue;
-                if (fZNode && wtx.vout[i].nValue == ZNODE_COIN_REQUIRED * COIN) continue;
+                if (fXNode && wtx.vout[i].nValue == XNODE_COIN_REQUIRED * COIN) continue;
                 // ignore outputs that are 10 times smaller then the smallest denomination
                 // otherwise they will just lead to higher fee / lower priority
                 if (wtx.vout[i].nValue <= vecPrivateSendDenominations.back() / 10) continue;
@@ -3542,9 +3542,9 @@ bool CWallet::CreateTransaction(const vector <CRecipient> &vecSend, CWalletTx &w
                 CAmount nValueIn = 0;
                 if (!SelectCoins(vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl)) {
                     if (nCoinType == ONLY_NOT1000IFMN) {
-                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 1000 XZC.");
+                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 1000 GXX.");
                     } else if (nCoinType == ONLY_NONDENOMINATED_NOT1000IFMN) {
-                        strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 1000 XZC.");
+                        strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 1000 GXX.");
                     } else if (nCoinType == ONLY_DENOMINATED) {
                         strFailReason = _("Unable to locate enough PrivateSend denominated funds for this transaction.");
                         strFailReason += _("PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.");
@@ -3936,7 +3936,7 @@ bool CWallet::CreateSigmaMintModel(
         int64_t denominationValue;
         if (!DenominationToInteger(denomination, denominationValue)) {
             throw runtime_error(
-                "mintzerocoin <amount>(0.1, 0.5, 1, 10, 100) (\"zcoinaddress\")\n");
+                "mintzerocoin <amount>(0.1, 0.5, 1, 10, 100) (\"gravitycoinaddress\")\n");
         }
 
         int64_t coinCount = denominationPair.second;
@@ -3945,7 +3945,7 @@ bool CWallet::CreateSigmaMintModel(
             denominationValue, coinCount);
 
         if(coinCount < 0) {
-            throw runtime_error("Coin count negative (\"zcoinaddress\")\n");
+            throw runtime_error("Coin count negative (\"gravitycoinaddress\")\n");
         }
 
         sigma::Params* sigmaParams = sigma::Params::get_default();
@@ -4052,18 +4052,18 @@ bool CWallet::CreateZerocoinMintModelV2(
             case 10:
                 denomination = libzerocoin::ZQ_GOLDWASSER;
                 break;
-            case 25:
+            case 100:
                 denomination = libzerocoin::ZQ_RACKOFF;
                 break;
-            case 50:
+            case 250:
                 denomination = libzerocoin::ZQ_PEDERSEN;
                 break;
-            case 100:
+            case 500:
                 denomination = libzerocoin::ZQ_WILLIAMSON;
                 break;
             default:
                 throw runtime_error(
-                    "mintzerocoin <amount>(1,10,25,50,100) (\"zcoinaddress\")\n");
+                    "mintzerocoin <amount>(1,10,100,250,500) (\"gravitycoinaddress\")\n");
         }
 
         int64_t amount = denominationPair.second;
@@ -4072,7 +4072,7 @@ bool CWallet::CreateZerocoinMintModelV2(
 
         if(amount < 0){
                 throw runtime_error(
-                    "mintzerocoin <amount>(1,10,25,50,100) (\"zcoinaddress\")\n");
+                    "mintzerocoin <amount>(1,10,100,250,500) (\"gravitycoinaddress\")\n");
         }
 
         for(int64_t i=0; i<amount; i++){
@@ -4223,15 +4223,15 @@ bool CWallet::CreateZerocoinMintModelV2(string &stringError, const string& denom
     } else if (denomAmount == "10") {
         denomination = libzerocoin::ZQ_GOLDWASSER;
         nAmount = roundint64(10 * COIN);
-    } else if (denomAmount == "25") {
-        denomination = libzerocoin::ZQ_RACKOFF;
-        nAmount = roundint64(25 * COIN);
-    } else if (denomAmount == "50") {
-        denomination = libzerocoin::ZQ_PEDERSEN;
-        nAmount = roundint64(50 * COIN);
     } else if (denomAmount == "100") {
-        denomination = libzerocoin::ZQ_WILLIAMSON;
+        denomination = libzerocoin::ZQ_RACKOFF;
         nAmount = roundint64(100 * COIN);
+    } else if (denomAmount == "250") {
+        denomination = libzerocoin::ZQ_PEDERSEN;
+        nAmount = roundint64(250 * COIN);
+    } else if (denomAmount == "500") {
+        denomination = libzerocoin::ZQ_WILLIAMSON;
+        nAmount = roundint64(500 * COIN);
     } else {
         return false;
     }
@@ -4370,7 +4370,7 @@ bool CWallet::CreateZerocoinToSigmaRemintModel(string &stringError, int version,
         return false;
     }
 
-    if (!params.IsRegtest() && !znodeSync.IsBlockchainSynced()) {
+    if (!params.IsRegtest() && !xnodeSync.IsBlockchainSynced()) {
         stringError = "Blockchain is not synced";
         return false;
     }
@@ -4411,11 +4411,11 @@ bool CWallet::CreateZerocoinToSigmaRemintModel(string &stringError, int version,
         sigma::CoinDenomination sigmaDenomination;
         int numberOfSigmaMints;
     } zerocoinToSigmaDenominationMap[] = {
-        {1, sigma::CoinDenomination::SIGMA_DENOM_1, 1},
-        {10, sigma::CoinDenomination::SIGMA_DENOM_10, 1},
-        {25, sigma::CoinDenomination::SIGMA_DENOM_25, 1},
-        {50, sigma::CoinDenomination::SIGMA_DENOM_25, 2},
-        {100, sigma::CoinDenomination::SIGMA_DENOM_100, 1}
+        {1, sigma::CoinDenomination::SIGMA_DENOM_X1, 1},
+        {10, sigma::CoinDenomination::SIGMA_DENOM_X10, 1},
+        {100, sigma::CoinDenomination::SIGMA_DENOM_X100, 1},
+        {250, sigma::CoinDenomination::SIGMA_DENOM_X50, 5},
+        {500, sigma::CoinDenomination::SIGMA_DENOM_X500, 1}
     };
 
     for (auto &denomMap: zerocoinToSigmaDenominationMap) {
@@ -4534,15 +4534,15 @@ bool CWallet::CheckDenomination(string denomAmount, int64_t& nAmount, libzerocoi
     } else if (denomAmount == "10") {
         denomination = libzerocoin::ZQ_GOLDWASSER;
         nAmount = roundint64(10 * COIN);
-    } else if (denomAmount == "25") {
-        denomination = libzerocoin::ZQ_RACKOFF;
-        nAmount = roundint64(25 * COIN);
-    } else if (denomAmount == "50") {
-        denomination = libzerocoin::ZQ_PEDERSEN;
-        nAmount = roundint64(50 * COIN);
     } else if (denomAmount == "100") {
-        denomination = libzerocoin::ZQ_WILLIAMSON;
+        denomination = libzerocoin::ZQ_RACKOFF;
         nAmount = roundint64(100 * COIN);
+    } else if (denomAmount == "250") {
+        denomination = libzerocoin::ZQ_PEDERSEN;
+        nAmount = roundint64(250 * COIN);
+    } else if (denomAmount == "500") {
+        denomination = libzerocoin::ZQ_WILLIAMSON;
+        nAmount = roundint64(500 * COIN);
     } else {
         return false;
     }
@@ -4688,15 +4688,15 @@ bool CWallet::CreateZerocoinSpendModelV2(
         } else if (denomAmount == "10") {
             denomination = libzerocoin::ZQ_GOLDWASSER;
             nAmount = roundint64(10 * COIN);
-        } else if (denomAmount == "25") {
-            denomination = libzerocoin::ZQ_RACKOFF;
-            nAmount = roundint64(25 * COIN);
-        } else if (denomAmount == "50") {
-            denomination = libzerocoin::ZQ_PEDERSEN;
-            nAmount = roundint64(50 * COIN);
         } else if (denomAmount == "100") {
-            denomination = libzerocoin::ZQ_WILLIAMSON;
+            denomination = libzerocoin::ZQ_RACKOFF;
             nAmount = roundint64(100 * COIN);
+        } else if (denomAmount == "250") {
+            denomination = libzerocoin::ZQ_PEDERSEN;
+            nAmount = roundint64(250 * COIN);
+        } else if (denomAmount == "500") {
+            denomination = libzerocoin::ZQ_WILLIAMSON;
+            nAmount = roundint64(500 * COIN);
         } else {
             return false;
         }
@@ -5037,7 +5037,7 @@ bool CWallet::CreateZerocoinMintTransaction(const vector <CRecipient> &vecSend, 
 //                }
                 } else{
                     int64_t nPayFee = payTxFee.GetFeePerK() * (1 + (int64_t) GetTransactionWeight(txNew) / 1000);
-                    //                bool fAllowFree = false;                                 // No free TXs in XZC
+                    //                bool fAllowFree = false;                                 // No free TXs in GXX
                     int64_t nMinFee = wtxNew.GetMinFee(1, false, GMF_SEND);
                     nFeeNeeded = nPayFee;
                     if (nFeeNeeded < nMinFee) {
@@ -5131,10 +5131,10 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
 
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid Zcoin address");
+                    strFailReason = _("Invalid GravityCoin address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse GravityCoin address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -5378,10 +5378,10 @@ bool CWallet::CreateSigmaSpendTransaction(
             } else {
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid Zcoin address");
+                    strFailReason = _("Invalid GravityCoin address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse GravityCoin address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -5656,10 +5656,10 @@ bool CWallet::CreateMultipleZerocoinSpendTransaction(std::string &thirdPartyaddr
             }else{
                  CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid Zcoin address");
+                    strFailReason = _("Invalid GravityCoin address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse GravityCoin address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -5978,10 +5978,10 @@ bool CWallet::CreateMultipleSigmaSpendTransaction(
             }else{
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()) {
-                    strFailReason = _("Invalid Zcoin address");
+                    strFailReason = _("Invalid GravityCoin address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse GravityCoin address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -6330,11 +6330,11 @@ bool CWallet::SpendOldMints(string& stringError)
                 } else if (pubcoin.denomination == libzerocoin::ZQ_GOLDWASSER) {
                     denomAmount = "10";
                 } else if (pubcoin.denomination == libzerocoin::ZQ_RACKOFF) {
-                    denomAmount = "25";
-                } else if (pubcoin.denomination == libzerocoin::ZQ_PEDERSEN) {
-                    denomAmount = "50";
-                } else if (pubcoin.denomination == libzerocoin::ZQ_WILLIAMSON) {
                     denomAmount = "100";
+                } else if (pubcoin.denomination == libzerocoin::ZQ_PEDERSEN) {
+                    denomAmount = "250";
+                } else if (pubcoin.denomination == libzerocoin::ZQ_WILLIAMSON) {
+                    denomAmount = "500";
                 } else {
                     return false;
                 }
@@ -8212,7 +8212,7 @@ bool CMerkleTx::AcceptToMemoryPool(
         CValidationState &state,
         bool fCheckInputs,
         bool isCheckWalletTransaction,
-        bool markZcoinSpendTransactionSerial) {
+        bool markGravityCoinSpendTransactionSerial) {
     LogPrintf("CMerkleTx::AcceptToMemoryPool(), transaction %s, fCheckInputs=%s\n",
               GetHash().ToString(),
               fCheckInputs);
@@ -8227,7 +8227,7 @@ bool CMerkleTx::AcceptToMemoryPool(
             false, /* fOverrideMempoolLimit */
             nAbsurdFee,
             isCheckWalletTransaction,
-            false /* markZcoinSpendTransactionSerial */
+            false /* markGravityCoinSpendTransactionSerial */
         );
         if (!res) {
             LogPrintf(
@@ -8249,7 +8249,7 @@ bool CMerkleTx::AcceptToMemoryPool(
             false, /* fOverrideMempoolLimit */
             nAbsurdFee,
             isCheckWalletTransaction,
-            false /* markZcoinSpendTransactionSerial */
+            false /* markGravityCoinSpendTransactionSerial */
         );
         return ::AcceptToMemoryPool(
             mempool,
@@ -8261,7 +8261,7 @@ bool CMerkleTx::AcceptToMemoryPool(
             false, /* fOverrideMempoolLimit */
             nAbsurdFee,
             isCheckWalletTransaction,
-            markZcoinSpendTransactionSerial);
+            markGravityCoinSpendTransactionSerial);
     }
 }
 

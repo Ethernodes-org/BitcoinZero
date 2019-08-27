@@ -27,26 +27,26 @@ bool DenominationToInteger(CoinDenomination denom, int64_t& denom_out, CValidati
     switch (denom) {
         default:
             return state.DoS(100, error("CheckZerocoinTransaction : invalid denomination value, unable to convert to integer"));
-        case CoinDenomination::SIGMA_DENOM_0_05:
-            denom_out = 5 * CENT;
+        case CoinDenomination::SIGMA_DENOM_X1:
+            denom_out = 1 * COIN;
             break;
-        case CoinDenomination::SIGMA_DENOM_0_1:
-            denom_out = 10 * CENT;
-            break;
-        case CoinDenomination::SIGMA_DENOM_0_5:
-            denom_out = 50 * CENT;
-            break;
-        case CoinDenomination::SIGMA_DENOM_1:
-            denom_out = COIN;
-            break;
-        case CoinDenomination::SIGMA_DENOM_10:
+        case CoinDenomination::SIGMA_DENOM_X10:
             denom_out = 10 * COIN;
             break;
-        case CoinDenomination::SIGMA_DENOM_25:
-            denom_out = 25 * COIN;
+        case CoinDenomination::SIGMA_DENOM_X50:
+            denom_out = 50 * COIN;
             break;
-        case CoinDenomination::SIGMA_DENOM_100:
+        case CoinDenomination::SIGMA_DENOM_X100:
             denom_out = 100 * COIN;
+            break;
+        case CoinDenomination::SIGMA_DENOM_X500:
+            denom_out = 500 * COIN;
+            break;
+        case CoinDenomination::SIGMA_DENOM_X1000:
+            denom_out = 1000 * COIN;
+            break;
+        case CoinDenomination::SIGMA_DENOM_X5000:
+            denom_out = 5000 * COIN;
             break;
     }
 return true;
@@ -57,58 +57,58 @@ bool RealNumberToDenomination(const double& value, CoinDenomination& denom_out) 
 }
 
 bool StringToDenomination(const std::string& str, CoinDenomination& denom_out) {
-    if (str == "0.05") {
-        denom_out = CoinDenomination::SIGMA_DENOM_0_05;
-        return true;
-    }
-    if (str == "0.1") {
-        denom_out = CoinDenomination::SIGMA_DENOM_0_1;
-        return true;
-    }
-    if (str == "0.5") {
-        denom_out = CoinDenomination::SIGMA_DENOM_0_5;
-        return true;
-    }
     if (str == "1") {
-        denom_out = CoinDenomination::SIGMA_DENOM_1;
+        denom_out = CoinDenomination::SIGMA_DENOM_X1;
         return true;
     }
     if (str == "10") {
-        denom_out = CoinDenomination::SIGMA_DENOM_10;
+        denom_out = CoinDenomination::SIGMA_DENOM_X10;
         return true;
     }
-    if (str == "25") {
-        denom_out = CoinDenomination::SIGMA_DENOM_25;
+    if (str == "50") {
+        denom_out = CoinDenomination::SIGMA_DENOM_X50;
         return true;
     }
     if (str == "100") {
-        denom_out = CoinDenomination::SIGMA_DENOM_100;
+        denom_out = CoinDenomination::SIGMA_DENOM_X100;
+        return true;
+    }
+    if (str == "500") {
+        denom_out = CoinDenomination::SIGMA_DENOM_X500;
+        return true;
+    }
+    if (str == "1000") {
+        denom_out = CoinDenomination::SIGMA_DENOM_X1000;
+        return true;
+    }
+    if (str == "5000") {
+        denom_out = CoinDenomination::SIGMA_DENOM_X5000;
         return true;
     }
     return false;
 }
 
 std::string DenominationToString(const CoinDenomination& denom) {
-    if (denom == CoinDenomination::SIGMA_DENOM_0_05) {
-        return "0.05";
-    }
-    if (denom == CoinDenomination::SIGMA_DENOM_0_1) {
-        return "0.1";
-    }
-    if (denom == CoinDenomination::SIGMA_DENOM_0_5) {
-        return "0.5";
-    }
-    if (denom == CoinDenomination::SIGMA_DENOM_1) {
+    if (denom == CoinDenomination::SIGMA_DENOM_X1) {
         return "1";
     }
-    if (denom == CoinDenomination::SIGMA_DENOM_10) {
+    if (denom == CoinDenomination::SIGMA_DENOM_X10) {
         return "10";
     }
-    if (denom == CoinDenomination::SIGMA_DENOM_25) {
-        return "25";
+    if (denom == CoinDenomination::SIGMA_DENOM_X50) {
+        return "50";
     }
-    if (denom == CoinDenomination::SIGMA_DENOM_100) {
+    if (denom == CoinDenomination::SIGMA_DENOM_X100) {
         return "100";
+    }
+    if (denom == CoinDenomination::SIGMA_DENOM_X500) {
+        return "500";
+    }
+    if (denom == CoinDenomination::SIGMA_DENOM_X1000) {
+        return "1000";
+    }
+    if (denom == CoinDenomination::SIGMA_DENOM_X5000) {
+        return "5000";
     }
     throw ZerocoinException("Unsupported denomination, unable to convert to string.");
 }
@@ -122,44 +122,44 @@ bool IntegerToDenomination(int64_t value, CoinDenomination& denom_out, CValidati
     switch (value) {
         default:
             return state.DoS(100, error("CheckZerocoinTransaction : invalid denomination value, unable to convert to enum"));
-        case 5 * CENT:
-            denom_out = CoinDenomination::SIGMA_DENOM_0_05;
-            break;
-        case 10 * CENT:
-            denom_out = CoinDenomination::SIGMA_DENOM_0_1;
-            break;
-        case 50 * CENT:
-            denom_out = CoinDenomination::SIGMA_DENOM_0_5;
-            break;
         case 1 * COIN:
-            denom_out = CoinDenomination::SIGMA_DENOM_1;
+            denom_out = CoinDenomination::SIGMA_DENOM_X1;
             break;
         case 10 * COIN:
-            denom_out = CoinDenomination::SIGMA_DENOM_10;
+            denom_out = CoinDenomination::SIGMA_DENOM_X10;
             break;
-        case 25 * COIN:
-            denom_out = CoinDenomination::SIGMA_DENOM_25;
+        case 50 * COIN:
+            denom_out = CoinDenomination::SIGMA_DENOM_X50;
             break;
         case 100 * COIN:
-            denom_out = CoinDenomination::SIGMA_DENOM_100;
+            denom_out = CoinDenomination::SIGMA_DENOM_X100;
+            break;
+        case 500 * COIN:
+            denom_out = CoinDenomination::SIGMA_DENOM_X500;
+            break;
+        case 1000 * COIN:
+            denom_out = CoinDenomination::SIGMA_DENOM_X1000;
+            break;
+        case 5000 * COIN:
+            denom_out = CoinDenomination::SIGMA_DENOM_X5000;
             break;
     }
 return true;
 }
 
 void GetAllDenoms(std::vector<sigma::CoinDenomination>& denominations_out) {
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_100);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_25);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_10);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_1);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_0_5);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_0_1);
-    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_0_05);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X5000);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X1000);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X500);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X100);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X50);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X10);
+    denominations_out.push_back(CoinDenomination::SIGMA_DENOM_X1);
 }
 
 //class PublicCoin
 PublicCoin::PublicCoin()
-    : denomination(CoinDenomination::SIGMA_DENOM_1)
+    : denomination(CoinDenomination::SIGMA_DENOM_X1)
 {
 
 }
@@ -318,20 +318,20 @@ namespace std {
 string to_string(::sigma::CoinDenomination denom)
 {
     switch (denom) {
-    case ::sigma::CoinDenomination::SIGMA_DENOM_0_05:
-        return "0.05";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_0_1:
-        return "0.1";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_0_5:
-        return "0.5";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_1:
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X1:
         return "1";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_10:
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X10:
         return "10";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_25:
-        return "25";
-    case ::sigma::CoinDenomination::SIGMA_DENOM_100:
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X50:
+        return "50";
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X100:
         return "100";
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X500:
+        return "500";
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X1000:
+        return "1000";
+    case ::sigma::CoinDenomination::SIGMA_DENOM_X5000:
+        return "5000";
     default:
         throw invalid_argument("the specified denomination is not valid");
     }

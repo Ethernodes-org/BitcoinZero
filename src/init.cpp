@@ -40,7 +40,6 @@
 #include "utilmoneystr.h"
 #include "validationinterface.h"
 #include "validation.h"
-#include "mtpstate.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -73,12 +72,12 @@
 #include <event2/util.h>
 #include <event2/event.h>
 #include <event2/thread.h>
-#include "activeznode.h"
+#include "activexnode.h"
 #include "darksend.h"
-#include "znode-payments.h"
-#include "znode-sync.h"
-#include "znodeman.h"
-#include "znodeconfig.h"
+#include "xnode-payments.h"
+#include "xnode-sync.h"
+#include "xnodeman.h"
+#include "xnodeconfig.h"
 #include "netfulfilledman.h"
 #include "flat-database.h"
 #include "instantx.h"
@@ -242,9 +241,9 @@ void Shutdown() {
     GenerateBitcoins(false, 0, Params());
     StopNode();
 
-    CFlatDB<CZnodeMan> flatdb1("zncache.dat", "magicZnodeCache");
+    CFlatDB<CXnodeMan> flatdb1("xncache.dat", "magicXnodeCache");
     flatdb1.Dump(mnodeman);
-    CFlatDB<CZnodePayments> flatdb2("znpayments.dat", "magicZnodePaymentsCache");
+    CFlatDB<CXnodePayments> flatdb2("xnpayments.dat", "magicXnodePaymentsCache");
     flatdb2.Dump(mnpayments);
     CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
     flatdb4.Dump(netfulfilledman);
@@ -685,8 +684,8 @@ std::string HelpMessage(HelpMessageMode mode) {
 }
 
 std::string LicenseInfo() {
-    const std::string URL_SOURCE_CODE = "<https://github.com/zcoinofficial/zcoin>";
-    const std::string URL_WEBSITE = "<https://zcoin.io/>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/GravityCoinOfficial/GravityCoin/>";
+    const std::string URL_WEBSITE = "<https://gravitycoin.io/>";
     // todo: remove urls from translations on next change
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +
@@ -800,7 +799,6 @@ void ThreadImport(std::vector <boost::filesystem::path> vImportFiles) {
     CImportingNow imp;
     // -reindex
     if (fReindex) {
-        MTPState::GetMTPState()->Reset();
         int nFile = 0;
         while (true) {
             CDiskBlockPos pos(nFile, 0);
@@ -1094,7 +1092,7 @@ void InitLogging() {
     fLogIPs = GetBoolArg("-logips", DEFAULT_LOGIPS);
 
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("Zcoin version %s\n", FormatFullVersion());
+    LogPrintf("GravityCoin version %s\n", FormatFullVersion());
 }
 
 /** Initialize bitcoin.
@@ -1413,6 +1411,12 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
             threadGroup.create_thread(&ThreadScriptCheck);
     }
 
+    if (mapArgs.count("-sporkkey")) // spork priv key
+    {
+        if (!sporkManager.SetPrivKey(GetArg("-sporkkey", "")))
+            return InitError(_("Unable to sign spork message, wrong key?"));
+    }
+
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, &scheduler);
     threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
@@ -1595,7 +1599,9 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
     // ********************************************************* Step 7: load block chain
     LogPrintf("Step 7: load block chain ************************************\n");
+
     fReindex = GetBoolArg("-reindex", false);
+
     bool fReindexChainState = GetBoolArg("-reindex-chainstate", false);
 
     // Upgrading to 0.8; hard-link the old blknnnn.dat files into /blocks/
@@ -1664,20 +1670,11 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
                 pblocktree = new CBlockTreeDB(nBlockTreeDBCache, false, fReindex);
 
-                if (!fReindex) {
-                    // Check existing block index database version, reindex if needed
-                    if (pblocktree->GetBlockIndexVersion() < ZC_ADVANCED_INDEX_VERSION) {
-                        LogPrintf("Upgrade to new version of block index required, reindex forced\n");
-                        delete pblocktree;
-                        fReindex = fReset = true;
-                        pblocktree = new CBlockTreeDB(nBlockTreeDBCache, false, fReindex);
-                    }
-                }
-
                 pcoinsdbview = new CCoinsViewDB(nCoinDBCache, false, fReindex || fReindexChainState);
                 pcoinscatcher = new CCoinsViewErrorCatcher(pcoinsdbview);
                 pcoinsTip = new CCoinsViewCache(pcoinscatcher);
                 LogPrintf("fReindex = %s\n", fReindex);
+
                 if (fReindex) {
                     pblocktree->WriteReindexing(true);
                     //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
@@ -1688,18 +1685,6 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
                 if (!LoadBlockIndex()) {
                     strLoadError = _("Error loading block database");
                     break;
-                }
-
-                if (!fReindex) {
-                    CBlockIndex *tip = chainActive.Tip();
-                    if (tip && tip->nHeight >= chainparams.GetConsensus().nSigmaStartBlock) {
-                        const uint256* phash = tip->phashBlock;
-                        if (pblocktree->GetBlockIndexVersion(*phash) < SIGMA_PROTOCOL_ENABLEMENT_VERSION) {
-                            strLoadError = _(
-                                    "Block index is outdated, reindex required\n");
-                            break;
-                        }
-                    }
                 }
 
                 // If the loaded chain has a wrong genesis, bail out immediately
@@ -1774,11 +1759,8 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
         if (!fLoaded) {
             // first suggest a reindex
             if (!fReset) {
-                bool fRet = uiInterface.ThreadSafeQuestion(
-                        strLoadError + ".\n\n" + _("Do you want to rebuild the block database now?"),
-                        strLoadError + ".\nPlease restart with -reindex or -reindex-chainstate to recover.",
-                        "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
-                if (fRet) {
+
+                if (true) {
                     fReindex = true;
                     fRequestShutdown = false;
                 } else {
@@ -1957,46 +1939,46 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
                      chainparams);
 
     // ********************************************************* Step 11a: setup PrivateSend
-    fZNode = GetBoolArg("-znode", false);
+    fXNode = GetBoolArg("-xnode", false);
 
-    LogPrintf("fZNode = %s\n", fZNode);
-    LogPrintf("znodeConfig.getCount(): %s\n", znodeConfig.getCount());
+    LogPrintf("fXNode = %s\n", fXNode);
+    LogPrintf("xnodeConfig.getCount(): %s\n", xnodeConfig.getCount());
 
-    if ((fZNode || znodeConfig.getCount() > 0) && !fTxIndex) {
-        return InitError("Enabling Znode support requires turning on transaction indexing."
+    if ((fXNode || xnodeConfig.getCount() > 0) && !fTxIndex) {
+        return InitError("Enabling Xnode support requires turning on transaction indexing."
                                  "Please add txindex=1 to your configuration and start with -reindex");
     }
 
-    if (fZNode) {
-        LogPrintf("ZNODE:\n");
+    if (fXNode) {
+        LogPrintf("XNODE:\n");
 
-        if (!GetArg("-znodeaddr", "").empty()) {
-            // Hot Znode (either local or remote) should get its address in
-            // CActiveZnode::ManageState() automatically and no longer relies on Znodeaddr.
-            return InitError(_("znodeaddr option is deprecated. Please use znode.conf to manage your remote znodes."));
+        if (!GetArg("-xnodeaddr", "").empty()) {
+            // Hot Xnode (either local or remote) should get its address in
+            // CActiveXnode::ManageState() automatically and no longer relies on Xnodeaddr.
+            return InitError(_("xnodeaddr option is deprecated. Please use xnode.conf to manage your remote xnodes."));
         }
 
-        std::string strZnodePrivKey = GetArg("-znodeprivkey", "");
-        if (!strZnodePrivKey.empty()) {
-            if (!darkSendSigner.GetKeysFromSecret(strZnodePrivKey, activeZnode.keyZnode,
-                                                  activeZnode.pubKeyZnode))
-                return InitError(_("Invalid znodeprivkey. Please see documentation."));
+        std::string strXnodePrivKey = GetArg("-xnodeprivkey", "");
+        if (!strXnodePrivKey.empty()) {
+            if (!darkSendSigner.GetKeysFromSecret(strXnodePrivKey, activeXnode.keyXnode,
+                                                  activeXnode.pubKeyXnode))
+                return InitError(_("Invalid xnodeprivkey. Please see documentation."));
 
-            LogPrintf("  pubKeyZnode: %s\n", CBitcoinAddress(activeZnode.pubKeyZnode.GetID()).ToString());
+            LogPrintf("  pubKeyXnode: %s\n", CBitcoinAddress(activeXnode.pubKeyXnode.GetID()).ToString());
         } else {
             return InitError(
-                    _("You must specify a znodeprivkey in the configuration. Please see documentation for help."));
+                    _("You must specify a xnodeprivkey in the configuration. Please see documentation for help."));
         }
     }
 
-    LogPrintf("Using Znode config file %s\n", GetZnodeConfigFile().string());
+    LogPrintf("Using Xnode config file %s\n", GetXnodeConfigFile().string());
 
-    if (GetBoolArg("-znconflock", true) && pwalletMain && (znodeConfig.getCount() > 0)) {
+    if (GetBoolArg("-xnconflock", true) && pwalletMain && (xnodeConfig.getCount() > 0)) {
         LOCK(pwalletMain->cs_wallet);
-        LogPrintf("Locking Znodes:\n");
+        LogPrintf("Locking Xnodes:\n");
         uint256 mnTxHash;
         int outputIndex;
-        BOOST_FOREACH(CZnodeConfig::CZnodeEntry mne, znodeConfig.getEntries()) {
+        BOOST_FOREACH(CXnodeConfig::CXnodeEntry mne, xnodeConfig.getEntries()) {
             mnTxHash.SetHex(mne.getTxHash());
             outputIndex = boost::lexical_cast<unsigned int>(mne.getOutputIndex());
             COutPoint outpoint = COutPoint(mnTxHash, outputIndex);
@@ -2027,10 +2009,10 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 //    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
 //    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
 
-    // lite mode disables all Znode and Darksend related functionality
+    // lite mode disables all Xnode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
-    if (fZNode && fLiteMode) {
-        return InitError("You can not start a znode in litemode");
+    if (fXNode && fLiteMode) {
+        return InitError("You can not start a xnode in litemode");
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
@@ -2043,21 +2025,21 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     // ********************************************************* Step 11b: Load cache data
 
     // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
-    if (GetBoolArg("-persistentznodestate", true)) {
-        uiInterface.InitMessage(_("Loading znode cache..."));
-        CFlatDB<CZnodeMan> flatdb1("zncache.dat", "magicZnodeCache");
+    if (GetBoolArg("-persistentxnodestate", true)) {
+        uiInterface.InitMessage(_("Loading xnode cache..."));
+        CFlatDB<CXnodeMan> flatdb1("xncache.dat", "magicXnodeCache");
         if (!flatdb1.Load(mnodeman)) {
-            return InitError("Failed to load znode cache from zncache.dat");
+            return InitError("Failed to load xnode cache from xncache.dat");
         }
 
         if (mnodeman.size()) {
-            uiInterface.InitMessage(_("Loading Znode payment cache..."));
-            CFlatDB<CZnodePayments> flatdb2("znpayments.dat", "magicZnodePaymentsCache");
+            uiInterface.InitMessage(_("Loading Xnode payment cache..."));
+            CFlatDB<CXnodePayments> flatdb2("xnpayments.dat", "magicXnodePaymentsCache");
             if (!flatdb2.Load(mnpayments)) {
-                return InitError("Failed to load znode payments cache from znpayments.dat");
+                return InitError("Failed to load xnode payments cache from xnpayments.dat");
             }
         } else {
-            uiInterface.InitMessage(_("Znode cache is empty, skipping payments cache..."));
+            uiInterface.InitMessage(_("Xnode cache is empty, skipping payments cache..."));
         }
 
         uiInterface.InitMessage(_("Loading fulfilled requests cache..."));
@@ -2069,7 +2051,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     //     LogPrint"Failed to load fulfilled requests cache from netfulfilled.dat");
     // }
 
-    // ********************************************************* Step 11c: update block tip in Zcoin modules
+    // ********************************************************* Step 11c: update block tip in GravityCoin modules
 
     // force UpdatedBlockTip to initialize pCurrentBlockIndex for DS, MN payments and budgets
     // but don't call it directly to prevent triggering of other listeners like zmq etc.
@@ -2077,7 +2059,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     mnodeman.UpdatedBlockTip(chainActive.Tip());
     darkSendPool.UpdatedBlockTip(chainActive.Tip());
     mnpayments.UpdatedBlockTip(chainActive.Tip());
-    znodeSync.UpdatedBlockTip(chainActive.Tip());
+    xnodeSync.UpdatedBlockTip(chainActive.Tip());
     // governance.UpdatedBlockTip(chainActive.Tip());
 
     // ********************************************************* Step 11d: start dash-privatesend thread

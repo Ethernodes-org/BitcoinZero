@@ -15,7 +15,6 @@
 #include "crypto/scrypt.h"
 #include "crypto/Lyra2Z/Lyra2Z.h"
 #include "crypto/Lyra2Z/Lyra2.h"
-#include "crypto/MerkleTreeProof/mtp.h"
 #include "util.h"
 #include <iostream>
 #include <chrono>
@@ -25,36 +24,8 @@
 #include "precomputed_hash.h"
 
 
-
-unsigned char GetNfactor(int64_t nTimestamp) {
-    int l = 0;
-    if (nTimestamp <= Params().GetConsensus().nChainStartTime)
-        return Params().GetConsensus().nMinNFactor;
-
-    int64_t s = nTimestamp - Params().GetConsensus().nChainStartTime;
-    while ((s >> 1) > 3) {
-        l += 1;
-        s >>= 1;
-    }
-    s &= 3;
-    int n = (l * 158 + s * 28 - 2670) / 100;
-    if (n < 0) n = 0;
-    if (n > 255)
-        LogPrintf("GetNfactor(%d) - something wrong(n == %d)\n", nTimestamp, n);
-
-    unsigned char N = (unsigned char) n;
-
-    return std::min(std::max(N, Params().GetConsensus().nMinNFactor), Params().GetConsensus().nMaxNFactor);
-}
-
 uint256 CBlockHeader::GetHash() const {
     return SerializeHash(*this);
-}
-
-bool CBlockHeader::IsMTP() const {
-    // In case if nTime == ZC_GENESIS_BLOCK_TIME we're being called from CChainParams() constructor and
-    // it is not possible to get Params()
-    return nTime > ZC_GENESIS_BLOCK_TIME && nTime >= Params().GetConsensus().nMTPSwitchTime;
 }
 
 uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
@@ -62,7 +33,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
 //            std::chrono::system_clock::now().time_since_epoch()).count();
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (!fTestNet) {
-        if (nHeight < 20500) {
+        if (nHeight < 0) {
             if (!mapPoWHash.count(1)) {
 //            std::cout << "Start Build Map" << std::endl;
                 buildMapPoWHash();
@@ -74,27 +45,12 @@ uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
         }
     }
     uint256 powHash;
-    // Zcoin - MTP
-    try {
-    	if (IsMTP()) {
-            powHash = mtpHashValue;
-		} else if (!fTestNet && nHeight >= HF_LYRA2Z_HEIGHT) {
-            lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
-        } else if (!fTestNet && nHeight >= HF_LYRA2_HEIGHT) {
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 8192, 256);
-        } else if (!fTestNet && nHeight >= HF_LYRA2VAR_HEIGHT) {
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, nHeight, 256);
-		//} else if (fTestNet	&& nHeight  >= HF_MTP_HEIGHT_TESTNET) { // testnet
-		} else if (fTestNet && nHeight >= HF_LYRA2Z_HEIGHT_TESTNET) { // testnet
-            lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
-        } else if (fTestNet && nHeight >= HF_LYRA2_HEIGHT_TESTNET) { // testnet
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 8192, 256);
-        } else if (fTestNet && nHeight >= HF_LYRA2VAR_HEIGHT_TESTNET) { // testnet
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, nHeight, 256);
-        } else {
-            scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(powHash), GetNfactor(nTime));
-        }
-    } catch (std::exception &e) {
+
+    try
+    {
+        LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256);
+    }
+    catch (std::exception &e) {
         LogPrintf("excepetion: %s", e.what());
     }
 //    int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -106,7 +62,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
 }
 
 void CBlockHeader::InvalidateCachedPoWHash(int nHeight) const {
-    if (nHeight >= 20500 && mapPoWHash.count(nHeight) > 0)
+    if (nHeight >= 0 && mapPoWHash.count(nHeight) > 0)
         mapPoWHash.erase(nHeight);
 }
 

@@ -82,10 +82,10 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 1 || params.size() > 3)
         throw runtime_error(
-            "importprivkey \"zcoinprivkey\" ( \"label\" rescan )\n"
+            "importprivkey \"gravitycoinprivkey\" ( \"label\" rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
-            "1. \"zcoinprivkey\"   (string, required) The private key (see dumpprivkey)\n"
+            "1. \"gravitycoinprivkey\"   (string, required) The private key (see dumpprivkey)\n"
             "2. \"label\"            (string, optional, default=\"\") An optional label\n"
             "3. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
             "\nNote: This call can take minutes to complete if rescan is true.\n"
@@ -241,7 +241,7 @@ UniValue importaddress(const UniValue& params, bool fHelp)
         std::vector<unsigned char> data(ParseHex(params[0].get_str()));
         ImportScript(CScript(data.begin(), data.end()), strLabel, fP2SH);
     } else {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Zcoin address or script");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address or script");
     }
 
     if (fRescan)
@@ -555,11 +555,11 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "dumpprivkey \"zcoinaddress\"\n"
-            "\nReveals the private key corresponding to 'zcoinaddress'.\n"
+            "dumpprivkey \"gravitycoinaddress\"\n"
+            "\nReveals the private key corresponding to 'gravitycoinaddress'.\n"
             "Then the importprivkey can be used with this output\n"
             "\nArguments:\n"
-            "1. \"zcoinaddress\"   (string, required) The Zcoin address for the private key\n"
+            "1. \"gravitycoinaddress\"   (string, required) The GravityCoin address for the private key\n"
             "\nResult:\n"
             "\"key\"                (string) The private key\n"
             "\nExamples:\n"
@@ -575,7 +575,7 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     string strAddress = params[0].get_str();
     CBitcoinAddress address;
     if (!address.SetString(strAddress))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Zcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
     CKeyID keyID;
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
@@ -585,16 +585,16 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     return CBitcoinSecret(vchSecret).ToString();
 }
 
-UniValue dumpprivkey_zcoin(const UniValue& params, bool fHelp)
+UniValue dumpprivkey_gcoin(const UniValue& params, bool fHelp)
 {
 #ifndef UNSAFE_DUMPPRIVKEY
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "dumpprivkey \"zcoinaddress\"\n"
-            "\nReveals the private key corresponding to 'zcoinaddress'.\n"
+            "dumpprivkey \"gravitycoinaddress\"\n"
+            "\nReveals the private key corresponding to 'gravitycoinaddress'.\n"
             "Then the importprivkey can be used with this output\n"
             "\nArguments:\n"
-            "1. \"zcoinaddress\"   (string, required) The Zcoin address for the private key\n"
+            "1. \"gravitycoinaddress\"   (string, required) The GravityCoin address for the private key\n"
             "2. \"one-time-auth-code\"   (string, optional) A one time authorization code received from a previous call of dumpprivkey"
             "\nResult:\n"
             "\"key\"                (string) The private key\n"
@@ -612,12 +612,8 @@ UniValue dumpprivkey_zcoin(const UniValue& params, bool fHelp)
             "WARNING! Your one time authorization code is: " + AuthorizationHelper::inst().generateAuthorizationCode(__FUNCTION__ + params[0].get_str()) + "\n"
             "This command exports your wallet private key. Anyone with this key has complete control over your funds. \n"
             "If someone asked you to type in this command, chances are they want to steal your coins. \n"
-            "Zcoin team members will never ask for this command's output and it is not needed for Znode setup or diagnosis!\n"
+            "GravityCoin team members will never ask for this command's output and it is not needed for Xnode setup or diagnosis!\n"
             "\n"
-            " Please seek help on one of our public channels. \n"
-            " Telegram: https://t.me/zcoinproject \n"
-            " Discord: https://discordapp.com/invite/4FjnQ2q\n"
-            " Reddit: https://www.reddit.com/r/zcoin/\n"
             "\n"
             ;
         throw runtime_error(warning);
@@ -670,7 +666,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by Zcoin %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet dump created by GravityCoin %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -729,7 +725,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
-UniValue dumpwallet_zcoin(const UniValue& params, bool fHelp)
+UniValue dumpwallet_gcoin(const UniValue& params, bool fHelp)
 {
 #ifndef UNSAFE_DUMPPRIVKEY
     if (fHelp || params.size() < 1 || params.size() > 2)
@@ -752,12 +748,8 @@ UniValue dumpwallet_zcoin(const UniValue& params, bool fHelp)
             "WARNING! Your one time authorization code is: " + AuthorizationHelper::inst().generateAuthorizationCode(__FUNCTION__ + params[0].get_str()) + "\n"
             "This command exports all your private keys. Anyone with these keys has complete control over your funds. \n"
             "If someone asked you to type in this command, chances are they want to steal your coins. \n"
-            "Zcoin team members will never ask for this command's output and it is not needed for Znode setup or diagnosis!\n"
+            "GravityCoin team members will never ask for this command's output and it is not needed for Xnode setup or diagnosis!\n"
             "\n"
-            " Please seek help on one of our public channels. \n"
-            " Telegram: https://t.me/zcoinproject \n"
-            " Discord: https://discordapp.com/invite/4FjnQ2q\n"
-            " Reddit: https://www.reddit.com/r/zcoin/\n"
             "\n"
             ;
         throw runtime_error(warning);

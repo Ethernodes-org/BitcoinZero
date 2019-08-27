@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The Zcoin Core Developers
+// Copyright (c) 2019 The GravityCoin Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -80,7 +80,7 @@ std::pair<uint256,uint256> CHDMintWallet::RegenerateMintPoolEntry(const uint160&
         throw ZerocoinException("Unable to create seed for mint regeneration.");
 
     GroupElement commitmentValue;
-    sigma::PrivateCoin coin(sigma::Params::get_default(), sigma::CoinDenomination::SIGMA_DENOM_1);
+    sigma::PrivateCoin coin(sigma::Params::get_default(), sigma::CoinDenomination::SIGMA_DENOM_X1);
     if(!SeedToZerocoin(seedZerocoin, commitmentValue, coin))
         throw ZerocoinException("Unable to create zerocoin from seed in mint regeneration.");
 
@@ -128,7 +128,7 @@ void CHDMintWallet::GenerateMintPool(int32_t nIndex)
             continue;
 
         GroupElement commitmentValue;
-        sigma::PrivateCoin coin(sigma::Params::get_default(), sigma::CoinDenomination::SIGMA_DENOM_1);
+        sigma::PrivateCoin coin(sigma::Params::get_default(), sigma::CoinDenomination::SIGMA_DENOM_X1);
         if(!SeedToZerocoin(seedZerocoin, commitmentValue, coin))
             continue;
 

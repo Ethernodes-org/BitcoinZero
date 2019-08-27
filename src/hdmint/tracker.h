@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Zcoin Core Developers
+// Copyright (c) 2019 The GravityCoin Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZCOIN_HDMINTTRACKER_H
-#define ZCOIN_HDMINTTRACKER_H
+#ifndef GRAVITYCOIN_HDMINTTRACKER_H
+#define GRAVITYCOIN_HDMINTTRACKER_H
 
 #include "primitives/zerocoin.h"
 #include "hdmint/mintpool.h"
@@ -54,4 +54,4 @@ public:
     void Clear();
 };
 
-#endif //ZCOIN_HDMINTTRACKER_H
+#endif //GRAVITYCOIN_HDMINTTRACKER_H

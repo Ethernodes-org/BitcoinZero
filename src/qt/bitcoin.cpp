@@ -19,7 +19,7 @@
 #include "splashscreen.h"
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
-#include "znodeconfig.h"
+#include "xnodeconfig.h"
 
 #ifdef ENABLE_WALLET
 #include "paymentserver.h"
@@ -50,6 +50,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QTranslator>
+#include <QSslConfiguration>
 
 #if defined(QT_STATICPLUGIN)
 #include <QtPlugin>
@@ -81,8 +82,17 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(CAmount)
 
+static SplashScreen *splashref;
+
 static void InitMessage(const std::string &message)
 {
+
+    if(splashref)
+    {
+        splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(255,255,255));
+        qApp->processEvents();
+    }
+
     LogPrintf("init message: %s\n", message);
 }
 
@@ -91,7 +101,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("zcoin-core", psz).toStdString();
+    return QCoreApplication::translate("GravityCoin-core", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -365,11 +375,10 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
-//    SplashScreen *splash = new SplashScreen(0, networkStyle);
-//    SplashScreen splash(QPixmap(), 0);
     SplashScreen *splash = new SplashScreen(QPixmap(), 0);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
     // screen will take care of deleting itself when slotFinish happens.
+    splashref = splash;
     splash->show();
     connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
     connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
@@ -477,7 +486,7 @@ void BitcoinApplication::initializeResult(int retval)
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
-        // zcoin: URIs or payment requests:
+        // bitcoin: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
                          window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
@@ -499,7 +508,7 @@ void BitcoinApplication::shutdownResult(int retval)
 
 void BitcoinApplication::handleRunawayException(const QString &message)
 {
-    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. Zcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
+    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. Bitcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
     ::exit(EXIT_FAILURE);
 }
 
@@ -543,6 +552,13 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MAC
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
+#if QT_VERSION >= 0x050500
+    // Because of the POODLE attack it is recommended to disable SSLv3 (https://disablessl3.com/),
+    // so set SSL protocols to TLS1.0+.
+    QSslConfiguration sslconf = QSslConfiguration::defaultConfiguration();
+    sslconf.setProtocol(QSsl::TlsV1_0OrLater);
+    QSslConfiguration::setDefaultConfiguration(sslconf);
+#endif
 
     // Register meta types used for QMetaObject::invokeMethod
     qRegisterMetaType< bool* >();
@@ -578,7 +594,7 @@ int main(int argc, char *argv[])
     if (!Intro::pickDataDirectory())
         return EXIT_SUCCESS;
 
-    /// 6. Determine availability of data directory and parse zcoin.conf
+    /// 6. Determine availability of data directory and parse bitcoin.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!boost::filesystem::is_directory(GetDataDir(false)))
     {
@@ -620,11 +636,11 @@ int main(int argc, char *argv[])
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
 #ifdef ENABLE_WALLET
-    /// 7a. parse znode.conf
+    /// 7a. parse xnode.conf
     std::string strErr;
-    if(!znodeConfig.read(strErr)) {
-        QMessageBox::critical(0, QObject::tr("Zcoin Core"),
-                              QObject::tr("Error reading znode configuration file: %1").arg(strErr.c_str()));
+    if(!xnodeConfig.read(strErr)) {
+        QMessageBox::critical(0, QObject::tr("GravityCoin Core"),
+                              QObject::tr("Error reading xnode configuration file: %1").arg(strErr.c_str()));
         return EXIT_FAILURE;
     }
 
@@ -638,7 +654,7 @@ int main(int argc, char *argv[])
         exit(EXIT_SUCCESS);
 
     // Start up the payment server early, too, so impatient users that click on
-    // zcoin: links repeatedly have their payment requests routed to this process:
+    // bitcoin: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
 #endif
 
