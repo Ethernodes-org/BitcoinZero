@@ -133,6 +133,7 @@ bool CSporkManager::IsSporkActive(int nSporkID)
             case SPORK_7_RECONSIDER_BLOCKS:                 r = SPORK_7_RECONSIDER_BLOCKS_DEFAULT; break;
             case SPORK_8_FIXX_MN:                           r = SPORK_8_FIXX_MN_DEFAULT; break;
             case SPORK_9_FIXX_VN:                           r = SPORK_9_FIXX_VN_DEFAULT; break;
+            case SPORK_10_SIGMA:                            r = SPORK_10_SIGMA; break;
             default:
                 LogPrint("spork", "CSporkManager::IsSporkActive -- Unknown Spork ID %d\n", nSporkID);
                 r = 4070908800ULL; // 2099-1-1 i.e. off by default
@@ -159,6 +160,7 @@ int64_t CSporkManager::GetSporkValue(int nSporkID)
         case SPORK_7_RECONSIDER_BLOCKS:                 return SPORK_7_RECONSIDER_BLOCKS_DEFAULT;
         case SPORK_8_FIXX_MN:                           return SPORK_8_FIXX_MN_DEFAULT;
         case SPORK_9_FIXX_VN:                           return SPORK_9_FIXX_VN_DEFAULT;
+        case SPORK_10_SIGMA:                            return SPORK_10_SIGMA_DEFAULT;
         default:
             LogPrint("spork", "CSporkManager::GetSporkValue -- Unknown Spork ID %d\n", nSporkID);
             return -1;
@@ -177,6 +179,7 @@ int CSporkManager::GetSporkIDByName(std::string strName)
     if (strName == "SPORK_7_RECONSIDER_BLOCKS")             return SPORK_7_RECONSIDER_BLOCKS;
     if (strName == "SPORK_8_FIXX_MN")                       return SPORK_8_FIXX_MN;
     if (strName == "SPORK_9_FIXX_VN")                       return SPORK_9_FIXX_VN;
+    if (strName == "SPORK_10_SIGMA")                        return SPORK_10_SIGMA;
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
 }
@@ -193,6 +196,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_7_RECONSIDER_BLOCKS:                 return "SPORK_7_RECONSIDER_BLOCKS";
         case SPORK_8_FIXX_MN:                           return "SPORK_8_FIXX_MN";
         case SPORK_9_FIXX_VN:                           return "SPORK_9_FIXX_VN";
+        case SPORK_10_SIGMA:                            return "SPORK_10_SIGMA";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

@@ -17,7 +17,7 @@ class CSporkMessage;
     - This would result in old clients getting confused about which spork is for what
 */
 static const int SPORK_START                                            = 10001;
-static const int SPORK_END                                              = 10009;
+static const int SPORK_END                                              = 10010;
 
 static const int SPORK_1_FIXX_ON                                        = 10001;
 static const int SPORK_2_F_PAYMENT_START                                = 10002;
@@ -28,6 +28,7 @@ static const int SPORK_6_MIN_XNODE                                      = 10006;
 static const int SPORK_7_RECONSIDER_BLOCKS                              = 10007;
 static const int SPORK_8_FIXX_MN                                        = 10008;
 static const int SPORK_9_FIXX_VN                                        = 10009;
+static const int SPORK_10_SIGMA                                         = 10010;
 
 static const int64_t SPORK_1_FIXX_ON_DEFAULT                            = 4070908800;   // OFF
 static const int64_t SPORK_2_F_PAYMENT_START_DEFAULT                    = 4070908800;   // OFF
@@ -38,6 +39,7 @@ static const int64_t SPORK_6_MIN_XNODE_DEFAULT                          = 99028;
 static const int64_t SPORK_7_RECONSIDER_BLOCKS_DEFAULT                  = 0;            // 0 BLOCKS
 static const int64_t SPORK_8_FIXX_MN_DEFAULT                            = 2000;
 static const int64_t SPORK_9_FIXX_VN_DEFAULT                            = 4070908800;   // OFF
+static const int64_t SPORK_10_SIGMA_DEFAULT                             = 4070908800;   // OFF
 
 extern std::map<uint256, CSporkMessage> mapSporks;
 
