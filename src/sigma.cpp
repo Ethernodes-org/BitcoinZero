@@ -412,9 +412,7 @@ bool CheckSigmaTransaction(
 
     if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
     {
-        return state.DoS(100, false,
-            REJECT_INVALID,
-            "Sigma maintenance");
+        return false;
     }
 
     bool allowSigma = (realHeight >= consensus.nSigmaStartBlock);
