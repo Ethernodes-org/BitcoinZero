@@ -1,45 +1,8 @@
-GravityCoin [GXX] Core update 2018
+GravityCoin [GXX] (Sigma)
 ===============================
 
 
 [![Build Status](https://travis-ci.org/GravityCoinOfficial/GravityCoin.svg?branch=master)](https://travis-ci.org/GravityCoinOfficial/GravityCoin)
-
-
-
-Basic changes for rebrand
-----------------
-To update your current Hexxcoin wallet to the new GravityCoin wallet you only have to rename the hexxcoin data/application folder and the hexxcoin.conf file to GravityCoin and GravityCoin.conf
-
-Before:
-```
-(Windows) -> C:\Users\Username\AppData\Roaming\hexxcoin
-(Mac) -> /Users/Username/Library/Application Support/hexxcoin
-(Unix) -> /.hexxcoin
-```
-After:
-```
-(Windows) -> C:\Users\Username\AppData\Roaming\GravityCoin
-(Mac) -> /Users/Username/Library/Application Support/GravityCoin
-(Unix) -> /.GravityCoin
-```
-
-```
-hexxcoin.conf --> GravityCoin.conf
-```
-
-Now download the latest release and start the new wallet.
-
-## CLI Commands
-
-The CLI commands for GravityCoin changed too, for example:
-
-```
-./hexxcoind -daemon -> ./GravityCoind -daemon
-./hexxcoin-cli stop -> ./GravityCoin-cli stop
-./hexxcoin-cli getinfo -> ./GravityCoin-cli getinfo
-./hexxcoin-cli xnode status -> ./GravityCoin-cli xnode status
-```
-
 
 GravityCoin
 ----------------
