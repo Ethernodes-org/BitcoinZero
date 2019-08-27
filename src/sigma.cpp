@@ -16,6 +16,7 @@
 #include "xnode-payments.h"
 #include "xnode-sync.h"
 #include "primitives/zerocoin.h"
+#include "spork.h"
 
 #include <atomic>
 #include <sstream>
@@ -407,6 +408,13 @@ bool CheckSigmaTransaction(
     if (realHeight == INT_MAX) {
         LOCK(cs_main);
         realHeight = chainActive.Height();
+    }
+
+    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    {
+        return state.DoS(100, false,
+            REJECT_INVALID,
+            "Sigma maintenance");
     }
 
     bool allowSigma = (realHeight >= consensus.nSigmaStartBlock);
