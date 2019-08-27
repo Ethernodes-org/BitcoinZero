@@ -36,6 +36,7 @@
 #include "zerocoin.h"
 #include "sigma.h"
 #include "sigma/remint.h"
+#include "spork.h"
 #include <algorithm>
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -346,6 +347,19 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
             if (!IsFinalTx(tx, nHeight, nLockTimeCutoff)) {
                 LogPrintf("skip tx=%s, not IsFinalTx\n", tx.GetHash().ToString());
                 continue;
+            }
+
+            if (tx.IsSigmaMint() || tx.IsSigmaSpend()) {
+                sigma::CSigmaState * sigmaState = sigma::CSigmaState::GetState();
+                if(sigmaState->IsSurgeConditionDetected())
+                    continue;
+            }
+
+            if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+            {
+                if (tx.IsSigmaMint() || tx.IsSigmaSpend()) {
+                        continue;
+                }
             }
 
             if (tx.IsSigmaMint() || tx.IsSigmaSpend()) {
