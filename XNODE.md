@@ -21,10 +21,10 @@ Either
 	mkdir .GravityCoin
 	cd .GravityCoin
 	sudo apt-get install unzip
-	wget https://github.com/hexxcointakeover/hexxcoin/releases/tag/4.0.6.1
+	wget https://github.com/hexxcointakeover/hexxcoin/releases/tag/4.0.7.1
 	unzip chainfiles.zip
 	cd ..
-	wget https://github.com/GravityCointakeover/GravityCoin/releases/download/4.0.6.1/linux-x64.tar.gz
+	wget https://github.com/GravityCointakeover/GravityCoin/releases/download/4.0.7.1/linux-x64.tar.gz
 	tar xvfz linux-x64.tar.gz
 	
 	./GravityCoind -daemon
