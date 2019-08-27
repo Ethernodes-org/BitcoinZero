@@ -25,6 +25,7 @@
 #include "xnode-sync.h"
 #include "zerocoin.h"
 #include "walletexcept.h"
+#include "spork.h"
 
 #include <xnode-payments.h>
 
@@ -2841,6 +2842,11 @@ UniValue mint(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma is not activated yet");
     }
 
+    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Sigma maintenance!");
+    }
+
     CAmount nAmount = AmountFromValue(params[0]);
     LogPrintf("rpcWallet.mint() denomination = %s, nAmount = %d \n", params[0].getValStr(), nAmount);
 
@@ -3311,6 +3317,11 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
 
     if (!sigma::IsSigmaAllowed()) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma is not activated yet");
+    }
+
+    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Sigma maintenance!");
     }
 
     EnsureSigmaWalletIsAvailable();
