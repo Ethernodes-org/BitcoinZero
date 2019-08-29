@@ -1,109 +1,104 @@
-GravityCoin [GXX] (Sigma)
-===============================
+# Bitcoinzero [BZX](Sigma) Core 2019
+
+[![Build Status](https://travis-ci.org/BitcoinZeroOfficial/bitcoinzero.svg?branch=master)](https://travis-ci.org/BitcoinZeroOfficial/bitcoinzero)
+
+## Bitcoinzero
+
+- Coin Suffix: BZX
+- Algorithm: Lyra2Z
+- Target Spacing: 150 Seconds
+- Retarget: every block
+- Confirmation: 6 Blocks
+- Maturity: 120 Blocks
+- Max Coins: 40,000,000 BZX
+- Min TX Fee: 0.001 BZX
+- Block Size: 4MB
+
+## Net Parameters
+
+- P2P Port=29301
+- RPC Port=29202
+- Client core=13.4
+- Client name=bitcoinzero.qt
+- Conf file=bitcoinzero.conf
+
+## Installation folder
+
+- Windows: C:\Users\Username\AppData\Roaming\bitcoinzero
+- Mac: /Library/Application Support/bitcoinzero
+- Unix: /.bitcoinzero
+
+# Debian/Ubuntu Linux Daemon Build Instructions
+
+    install dependencies:
+    Build a node or qt:
+
+    if you need a swap memory:
+    free
+    dd if=/dev/zero of=/var/swap.img bs=2048 count=1048576
+    mkswap /var/swap.img
+    swapon /var/swap.img
+    free
 
 
-[![Build Status](https://travis-ci.org/GravityCoinOfficial/GravityCoin.svg?branch=master)](https://travis-ci.org/GravityCoinOfficial/GravityCoin)
+    sudo apt-get update
+    sudo apt-get upgrade
 
-GravityCoin
-----------------
-* Coin Suffix: GXX
-* Algorithm: lyra2z330
-* Algo params: LYRA2(BEGIN(thash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256)
-* Target Spacing: 150 Seconds
-* Retarget: every block
-* Confirmation: 6 Blocks
-* Maturity: 120 Blocks
-* Blocks: ~576 per day
-* Total Coins: 9,999,999 GXX
-* Min TX Fee: 0.001 GXX
-* Block Size: 4MB
+    sudo apt-get install git build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev
 
-Net Parameters
-----------------
-* P2P Port=29100
-* RPC Port=29200
-* Client core=13.4
-* Client name=GravityCoin.qt
-* Conf file=GravityCoin.conf
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository ppa:bitcoin/bitcoin
+    sudo apt-get update
+    sudo apt-get install libdb4.8-dev libdb4.8++-dev
 
-Installation folder
-----------------
-* Windows: C:\Users\Username\AppData\Roaming\GravityCoin
-* Mac: /Library/Application Support/GravityCoin
-* Unix: /.GravityCoin
+    sudo apt-get install libminiupnpc-dev libzmq3-dev
+    for qt:
+    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
 
-Debian/Ubuntu Linux Daemon Build Instructions
-================================================
+    git clone https://github.com/BitcoinZeroOfficial/bitcoinzero
 
-	install dependencies:
-	Build a node or qt:
+    cd bitcoinzero
+    for vps:
+    ./autogen.sh
+    ./configure  --without-gui
+    make -j 4   (-j is optional, number of your cores, -j 4)
 
-	if you need a swap memory:
-	free
-	dd if=/dev/zero of=/var/swap.img bs=2048 count=1048576
-	mkswap /var/swap.img
-	swapon /var/swap.img
-	free
+    for qt:
+    ./autogen.sh
+    ./configure
+    make -j 4   (-j is optional, number of your cores, -j 4)
 
+    cd src
+    strip bitcoinzerod
+    strip bitcoinzero-cli
+    or:
+    cd src
+    cd qt
+    strip bitcoinzero-qt
 
-	sudo apt-get update
-	sudo apt-get upgrade
+    files are:
+    bitcoinzerod
+    bitcoinzero-cli
 
-	sudo apt-get install git build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev
+    bitcoinzero-qt
+    bitcoinzero.conf
+    bznode.conf
+    data folder:
+    bitcoinzero
 
-	sudo apt-get install software-properties-common
-	sudo add-apt-repository ppa:bitcoin/bitcoin
-	sudo apt-get update
-	sudo apt-get install libdb4.8-dev libdb4.8++-dev
+        port 29301
+        rpc port 29201
 
-	sudo apt-get install libminiupnpc-dev libzmq3-dev
-	for qt:
-	sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+# Example bitcoinzero.conf Configuration
 
-	git clone https://github.com/GravityCoinOfficial/gravitycoin
-
-	cd GravityCoin
-	for vps:
-	./autogen.sh
-	./configure  --without-gui
-	make -j 4   (-j is optional, number of your cores, -j 4)
-
-	for qt:
-	./autogen.sh
-	./configure
-	make -j 4   (-j is optional, number of your cores, -j 4)
-
-	cd src
-	strip GravityCoind
-	strip GravityCoin-cli
-	or:
-	cd src
-	cd qt
-	strip GravityCoin-qt
-
-	files are:
-	GravityCoind
-	GravityCoin-cli
-
-	GravityCoin-qt
-	GravityCoin.conf
-	xnode.conf
-	data folder:
-	GravityCoin
-
-	port 29100
-	rpc port 29200
-
-Example GravityCoin.conf Configuration
-===================================================
-
-	listen=1
-	server=1
-	daemon=1
-	xnode=1
-	externalip=
-	xnodeprivkey=
-	addnode=node_ip
-	rpcallowip=127.0.0.1
-	rpcuser=MAKEUPYOUROWNUSERNAME
-	rpcpassword=MAKEUPYOUROWNPASSWORD
+    rescan=0
+    listen=1
+    server=1
+    daemon=1
+    bznode=1
+    externalip=
+    bznodeprivkey=
+    addnode=node_ip
+    rpcallowip=127.0.0.1
+    rpcuser=MAKEUPYOUROWNUSERNAME
+    rpcpassword=MAKEUPYOUROWNPASSWORD
