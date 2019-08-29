@@ -1,4 +1,4 @@
-# Bitcoinzero [BZX](Sigma) Core 2019
+# Bitcoinzero [BZX] (Sigma) Core 2019
 
 [![Build Status](https://travis-ci.org/BitcoinZeroOfficial/bitcoinzero.svg?branch=master)](https://travis-ci.org/BitcoinZeroOfficial/bitcoinzero)
 
