@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_SIGMA_REMINT_H
-#define GRAVITYCOIN_SIGMA_REMINT_H
+#ifndef BITCOINZERO_SIGMA_REMINT_H
+#define BITCOINZERO_SIGMA_REMINT_H
 
 #include "amount.h"
 #include "primitives/transaction.h"

@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Signer &amp;message...</translation>
@@ -166,8 +166,8 @@
         <translation>Réindexer les blocs sur le disque...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Envoyer des pièces à une adresse GravityCoin</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Envoyer des pièces à une adresse BitcoinZero</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -190,8 +190,8 @@
         <translation>&amp;Vérification du message</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -218,8 +218,8 @@
         <translation>Crypter les clé privées qui appartiennent votre portefeuille</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Signer vos messages avec vos adresses GravityCoin pour prouver que vous les détenez</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Signer vos messages avec vos adresses BitcoinZero pour prouver que vous les détenez</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -238,24 +238,24 @@
         <translation>Barre d'outils des onglets</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
-        <translation>Demander des paiements (générer QR codes et GravityCoin: URIs)</translation>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
+        <translation>Demander des paiements (générer QR codes et BitcoinZero: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
         <translation>Montrer la liste des adresses d'envois utilisées et les étiquettes</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>Ouvrir un GravityCoin: URI ou demande de paiement</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>Ouvrir un BitcoinZero: URI ou demande de paiement</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Options de ligne de commande</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to GravityCoin network</source>
-        <translation><numerusform>%n connexion active au réseau GravityCoin</numerusform><numerusform>%n connexions actives au réseau GravityCoin</numerusform></translation>
+        <source>%n active connection(s) to BitcoinZero network</source>
+        <translation><numerusform>%n connexion active au réseau BitcoinZero</numerusform><numerusform>%n connexions actives au réseau BitcoinZero</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -617,8 +617,8 @@
         <translation>Expert</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Ouvrir le port du client GravityCoin automatiquement sur le routeur. Cela ne fonctionne que si votre routeur supporte l'UPnP et si la fonctionnalité est activée.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Ouvrir le port du client BitcoinZero automatiquement sur le routeur. Cela ne fonctionne que si votre routeur supporte l'UPnP et si la fonctionnalité est activée.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -781,8 +781,8 @@
         <translation>Montant</translation>
     </message>
     <message>
-        <source>Enter a GravityCoin address (e.g. %1)</source>
-        <translation>Entrer une adresse GravityCoin (e.g. %1)</translation>
+        <source>Enter a BitcoinZero address (e.g. %1)</source>
+        <translation>Entrer une adresse BitcoinZero (e.g. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1354,7 +1354,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Options :</translation>
@@ -1380,8 +1380,8 @@
         <translation>Impossible de démarrer le serveur HTTP. Voir le journal de débogage pour plus de détails.</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoin Core</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZero Core</translation>
     </message>
     <message>
         <source>&lt;category&gt; can be:</source>

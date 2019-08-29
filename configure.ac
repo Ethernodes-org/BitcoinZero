@@ -1,23 +1,23 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
-define(_CLIENT_VERSION_MAJOR, 4)
+define(_CLIENT_VERSION_MAJOR, 5)
 define(_CLIENT_VERSION_MINOR, 0)
-define(_CLIENT_VERSION_REVISION, 7)
+define(_CLIENT_VERSION_REVISION, 3)
 define(_CLIENT_VERSION_BUILD, 1)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2019)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
-define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[GravityCoin Core]])
-AC_INIT([GravityCoin Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/GravityCoinOfficial/GravityCoin//issues],GravityCoin,[https://gravitycoin.io/])
+define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[BitcoinZero Core]])
+AC_INIT([BitcoinZero Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/BitcoinZeroOfficial/BitcoinZero//issues],BitcoinZero,[https://bitcoinzero.io/])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-BITCOIN_DAEMON_NAME=GravityCoind
-BITCOIN_GUI_NAME=GravityCoin-qt
-BITCOIN_CLI_NAME=GravityCoin-cli
-BITCOIN_TX_NAME=GravityCoin-tx
+BITCOIN_DAEMON_NAME=bitcoinzerod
+BITCOIN_GUI_NAME=bitcoinzero-qt
+BITCOIN_CLI_NAME=bitcoinzero-cli
+BITCOIN_TX_NAME=bitcoinzero-tx
 
 AC_CANONICAL_HOST
 
@@ -205,7 +205,7 @@ if test "x$enable_debug" = xyes; then
         CFLAGS="$CFLAGS -g3 -O0"
     fi
 
-    if test "x$GXX" = xyes; then
+    if test "x$BZX" = xyes; then
         CXXFLAGS="$CXXFLAGS -g3 -O0"
     fi
 fi
@@ -915,7 +915,7 @@ AC_SUBST(UNIVALUE_LIBS)
 
 BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build GravityCoind])
+AC_MSG_CHECKING([whether to build bitcoinzerod])
 AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_bitcoind = xyes])
 AC_MSG_RESULT($build_bitcoind)
 

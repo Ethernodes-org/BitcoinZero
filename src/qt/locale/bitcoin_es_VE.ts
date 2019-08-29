@@ -68,7 +68,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Firmar &amp;mensaje...</translation>
@@ -114,8 +114,8 @@
         <translation>Reindexando bloques en el disco...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Enviar monedas a una dirección GravityCoin</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Enviar monedas a una dirección BitcoinZero</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -130,8 +130,8 @@
         <translation>Abre la consola de depuración y diágnostico</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -158,12 +158,12 @@
         <translation>Encriptar las llaves privadas que pertenecen a tu billetera</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Firma mensajes con tus direcciones GravityCoin para probar que eres dueño de ellas</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Firma mensajes con tus direcciones BitcoinZero para probar que eres dueño de ellas</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>Verificar mensajes para asegurar que estaban firmados con direcciones GravityCoin especificas</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>Verificar mensajes para asegurar que estaban firmados con direcciones BitcoinZero especificas</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -588,7 +588,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Opciones:</translation>
@@ -614,8 +614,8 @@
         <translation>Correr en segundo plano como daemon y aceptar comandos</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoin Core</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZero Core</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>

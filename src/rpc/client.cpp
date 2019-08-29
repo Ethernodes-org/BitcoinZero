@@ -120,7 +120,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getaddressutxos", 0},
     { "getaddressmempool", 0},
     { "spork", 1 },
-        //GravityCoin
+        //BitcoinZero
     { "setmininput", 0 },
     { "mint", 0 },
     { "mintzerocoin", 0 },

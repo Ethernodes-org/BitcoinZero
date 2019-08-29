@@ -22,10 +22,10 @@ elif [[ $HOST = "x86_64-apple-darwin11" ]]; then
     ARCHIVE_NAME="osx-x64.zip"
 fi
 
-cp $TRAVIS_BUILD_DIR/src/qt/GravityCoin-qt $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/qt/GravityCoin-qt.exe $OUTDIR/bin/ || echo "no QT Wallet"
-cp $TRAVIS_BUILD_DIR/src/GravityCoind $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/GravityCoind.exe $OUTDIR/bin/
-cp $TRAVIS_BUILD_DIR/src/GravityCoin-cli $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/GravityCoin-cli.exe $OUTDIR/bin/
-cp $TRAVIS_BUILD_DIR/src/GravityCoin-tx $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/GravityCoin-tx.exe $OUTDIR/bin/
+cp $TRAVIS_BUILD_DIR/src/qt/bitcoinzero-qt $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/qt/bitcoinzero-qt.exe $OUTDIR/bin/ || echo "no QT Wallet"
+cp $TRAVIS_BUILD_DIR/src/bitcoinzerod $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/bitcoinzerod.exe $OUTDIR/bin/
+cp $TRAVIS_BUILD_DIR/src/bitcoinzero-cli $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/bitcoinzero-cli.exe $OUTDIR/bin/
+cp $TRAVIS_BUILD_DIR/src/bitcoinzero-tx $OUTDIR/bin/ || cp $TRAVIS_BUILD_DIR/src/bitcoinzero-tx.exe $OUTDIR/bin/
 strip "$OUTDIR/bin"/* || echo "nothing to strip"
 ls -lah $OUTDIR/bin
 

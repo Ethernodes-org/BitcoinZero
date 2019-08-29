@@ -60,7 +60,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>I-sign ing &amp;mensayi</translation>
@@ -122,8 +122,8 @@
         <translation>Address king pamag-Tanggap</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Magpadalang barya king GravityCoin address</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Magpadalang barya king BitcoinZero address</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -146,8 +146,8 @@
         <translation>&amp;Beripikan ing message...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -311,8 +311,8 @@
         <translation>&amp;Network</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Ibuklat yang antimanu ing GravityCoin client port king router. Gagana yamu ini istung ing router mu susuporta yang UPnP at magsilbi ya.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Ibuklat yang antimanu ing BitcoinZero client port king router. Gagana yamu ini istung ing router mu susuporta yang UPnP at magsilbi ya.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -386,8 +386,8 @@
         <translation>Form</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the GravityCoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Ing makaltong impormasion mapalyaring luma ne. Ing kekang wallet otomatiku yang mag-synchronize keng GravityCoin network istung mekakonekta ne king network, oneng ing prosesung ini ali ya pa kumpletu.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the BitcoinZero network after a connection is established, but this process has not completed yet.</source>
+        <translation>Ing makaltong impormasion mapalyaring luma ne. Ing kekang wallet otomatiku yang mag-synchronize keng BitcoinZero network istung mekakonekta ne king network, oneng ing prosesung ini ali ya pa kumpletu.</translation>
     </message>
     <message>
         <source>Your current spendable balance</source>
@@ -641,8 +641,8 @@
         <translation>Kopyan ing kasalungsungan pirma king system clipboard</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
-        <translation>Pirman ing mensayi ban patune na keka ya ining GravityCoin address</translation>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
+        <translation>Pirman ing mensayi ban patune na keka ya ining BitcoinZero address</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -661,8 +661,8 @@
         <translation>&amp;Beripikan ing Mensayi</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified GravityCoin address</source>
-        <translation>Beripikan ing mensayi ban asiguradu a me pirma ya ini gamit ing mepiling GravityCoin address</translation>
+        <source>Verify the message to ensure it was signed with the specified BitcoinZero address</source>
+        <translation>Beripikan ing mensayi ban asiguradu a me pirma ya ini gamit ing mepiling BitcoinZero address</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -712,7 +712,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Pipamilian:</translation>
@@ -742,8 +742,8 @@
         <translation>Tumanggap koneksion menibat king kilwal (default: 1 if no -proxy or -connect)</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>Kapilubluban ning GravityCoin</translation>
+        <source>BitcoinZero Core</source>
+        <translation>Kapilubluban ning BitcoinZero</translation>
     </message>
     <message>
         <source>Block creation options:</source>

@@ -13,8 +13,8 @@
 #include "sigma/coinspend.h"
 #include "sigma/coin.h"
 #include "sigma/remint.h"
-#include "xnode-payments.h"
-#include "xnode-sync.h"
+#include "bznode-payments.h"
+#include "bznode-sync.h"
 #include "primitives/zerocoin.h"
 #include "spork.h"
 
@@ -410,7 +410,7 @@ bool CheckSigmaTransaction(
         realHeight = chainActive.Height();
     }
 
-    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    if (sporkManager.IsSporkActive(SPORK_20_SIGMA))
     {
         return false;
     }

@@ -5,7 +5,7 @@
 #ifndef DARKSEND_H
 #define DARKSEND_H
 
-#include "xnode.h"
+#include "bznode.h"
 #include "wallet/wallet.h"
 
 class CDarksendPool;
@@ -38,7 +38,7 @@ static const int PRIVATESEND_KEYS_THRESHOLD_STOP    = 50;
 
 // The main object for accessing mixing
 extern CDarksendPool darkSendPool;
-// A helper object for signing messages from Xnodes
+// A helper object for signing messages from Bznodes
 extern CDarkSendSigner darkSendSigner;
 
 extern int nPrivateSendRounds;
@@ -170,14 +170,14 @@ public:
 
     /** Sign this mixing transaction
      *  \return true if all conditions are met:
-     *     1) we have an active Xnode,
-     *     2) we have a valid Xnode private key,
+     *     1) we have an active Bznode,
+     *     2) we have a valid Bznode private key,
      *     3) we signed the message successfully, and
      *     4) we verified the message successfully
      */
     bool Sign();
-    /// Check if we have a valid Xnode address
-    bool CheckSignature(const CPubKey& pubKeyXnode);
+    /// Check if we have a valid Bznode address
+    bool CheckSignature(const CPubKey& pubKeyBznode);
 
     bool Relay();
 
@@ -186,7 +186,7 @@ public:
 
     std::string ToString()
     {
-        return strprintf("nDenom=%d, nTime=%lld, fReady=%s, fTried=%s, xnode=%s",
+        return strprintf("nDenom=%d, nTime=%lld, fReady=%s, fTried=%s, bznode=%s",
                         nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", vin.prevout.ToStringShort());
     }
 
@@ -231,7 +231,7 @@ public:
     }
 
     bool Sign();
-    bool CheckSignature(const CPubKey& pubKeyXnode);
+    bool CheckSignature(const CPubKey& pubKeyBznode);
 };
 
 /** Helper object for signing and checking signatures
@@ -239,7 +239,7 @@ public:
 class CDarkSendSigner
 {
 public:
-    /// Is the input associated with this public key? (and there is 1000 GXX - checking if valid xnode)
+    /// Is the input associated with this public key? (and there is 1000 BZX - checking if valid bznode)
     bool IsVinAssociatedWithPubkey(const CTxIn& vin, const CPubKey& pubkey);
     /// Set the private/public key values, returns true if successful
     bool GetKeysFromSecret(std::string strSecret, CKey& keyRet, CPubKey& pubkeyRet);
@@ -305,15 +305,15 @@ private:
 
     // The current mixing sessions in progress on the network
     std::vector<CDarksendQueue> vecDarksendQueue;
-    // Keep track of the used Xnodes
-    std::vector<CTxIn> vecXnodesUsed;
+    // Keep track of the used Bznodes
+    std::vector<CTxIn> vecBznodesUsed;
 
     std::vector<CAmount> vecDenominationsSkipped;
     std::vector<COutPoint> vecOutPointLocked;
     // Mixing uses collateral transactions to trust parties entering the pool
     // to behave honestly. If they don't it takes their money.
     std::vector<CTransaction> vecSessionCollaterals;
-    std::vector<CDarkSendEntry> vecEntries; // Xnode/clients entries
+    std::vector<CDarkSendEntry> vecEntries; // Bznode/clients entries
 
     PoolState nState; // should be one of the POOL_STATE_XXX values
     int64_t nTimeLastSuccessfulStep; // the time when last successful mixing step was performed, in UTC milliseconds
@@ -389,14 +389,14 @@ private:
     bool MakeCollateralAmounts();
     bool MakeCollateralAmounts(const CompactTallyItem& tallyItem);
 
-    /// As a client, submit part of a future mixing transaction to a Xnode to start the process
+    /// As a client, submit part of a future mixing transaction to a Bznode to start the process
     bool SubmitDenominate();
     /// step 1: prepare denominated inputs and outputs
     bool PrepareDenominate(int nMinRounds, int nMaxRounds, std::string& strErrorRet, std::vector<CTxIn>& vecTxInRet, std::vector<CTxOut>& vecTxOutRet);
     /// step 2: send denominated inputs and outputs prepared in step 1
     bool SendDenominate(const std::vector<CTxIn>& vecTxIn, const std::vector<CTxOut>& vecTxOut);
 
-    /// Get Xnode updates about the progress of mixing
+    /// Get Bznode updates about the progress of mixing
     bool CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountNew, PoolStatusUpdate nStatusUpdate, PoolMessage nMessageID, int nSessionIDNew=0);
     // Set the 'state' value, with some logging and capturing when the state changed
     void SetState(PoolState nStateNew);
@@ -416,7 +416,7 @@ private:
     void SetNull();
 
 public:
-    CXnode* pSubmittedToXnode;
+    CBznode* pSubmittedToBznode;
     int nSessionDenom; //Users must submit an denom matching this
     int nCachedNumBlocks; //used for the overview screen
     bool fCreateAutoBackups; //builtin support for automatic backups

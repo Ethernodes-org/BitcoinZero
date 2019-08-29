@@ -79,7 +79,7 @@ bool AcceptToMemoryPool(
         bool fOverrideMempoolLimit=false,
         const CAmount nAbsurdFee=0,
         bool isCheckWalletTransaction = false,
-        bool markGravityCoinSpendTransactionSerial = true);
+        bool markBitcoinZeroSpendTransactionSerial = true);
 
 namespace {
     const int MAX_OUTBOUND_CONNECTIONS = 16;
@@ -396,20 +396,20 @@ CNode *FindNode(const NodeId nodeid) {
     return NULL;
 }
 
-CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToXnode) {
+CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToBznode) {
     if (pszDest == NULL) {
-        // we clean xnode connections in CXnodeMan::ProcessXnodeConnections()
-        // so should be safe to skip this and connect to local Hot MN on CActiveXnode::ManageState()
-        if (IsLocal(addrConnect) && !fConnectToXnode)
+        // we clean bznode connections in CBznodeMan::ProcessBznodeConnections()
+        // so should be safe to skip this and connect to local Hot MN on CActiveBznode::ManageState()
+        if (IsLocal(addrConnect) && !fConnectToBznode)
             return NULL;
         LOCK(cs_vNodes);
         // Look for an existing connection
         CNode *pnode = FindNode((CService) addrConnect);
         if (pnode) {
-            // we have existing connection to this node but it was not a connection to xnode,
+            // we have existing connection to this node but it was not a connection to bznode,
             // change flag and add reference so that we can correctly clear it later
-            if (fConnectToXnode && !pnode->fXnode) {
-                pnode->fXnode = true;
+            if (fConnectToBznode && !pnode->fBznode) {
+                pnode->fBznode = true;
             }
             pnode->AddRef();
             return pnode;
@@ -440,8 +440,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
             // name catch this early.
             CNode *pnode = FindNode((CService) addrConnect);
             if (pnode) {
-                if (fConnectToXnode && !pnode->fXnode) {
-                    pnode->fXnode = true;
+                if (fConnectToBznode && !pnode->fBznode) {
+                    pnode->fBznode = true;
                 }
                 pnode->AddRef();
                 {
@@ -459,8 +459,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
 
         // Add node
         CNode *pnode = new CNode(hSocket, addrConnect, pszDest ? pszDest : "", false);
-        if (fConnectToXnode) {
-            pnode->fXnode = true;
+        if (fConnectToBznode) {
+            pnode->fBznode = true;
         }
         pnode->AddRef();
 
@@ -2833,8 +2833,8 @@ CNode::CNode(SOCKET hSocketIn, const CAddress &addrIn, const std::string &addrNa
     minFeeFilter = 0;
     lastSentFeeFilter = 0;
     nextSendTimeFeeFilter = 0;
-    // xnode
-    fXnode = false;
+    // bznode
+    fBznode = false;
 
     BOOST_FOREACH(
     const std::string &msg, getAllNetMessageTypes())

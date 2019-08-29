@@ -7,7 +7,7 @@
 
 #include "amount.h"
 #include "exoassetsdialog.h"
-#include "xnodelist.h"
+#include "bznodelist.h"
 #include "sigmadialog.h"
 
 #include <QStackedWidget>
@@ -87,7 +87,7 @@ private:
     AddressBookPage *usedSendingAddressesPage;
     AddressBookPage *usedReceivingAddressesPage;
     QWidget *sendCoinsPage;
-    SendCoinsDialog *sendGravityCoinView;
+    SendCoinsDialog *sendBitcoinZeroView;
     SendMPDialog *sendExodusView;
     TradeHistoryDialog *tradeHistoryTab;
     MetaDExDialog *metaDExTab;
@@ -99,8 +99,8 @@ private:
     Zc2SigmaPage *zc2SigmaPage;
     TransactionView *coinTransactionList;
     TXHistoryDialog *exodusTransactionsView;
-    QWidget *gravitycoinTransactionsView;
-    XnodeList *xnodeListPage;
+    QWidget *bitcoinzeroTransactionsView;
+    BznodeList *bznodeListPage;
 
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
@@ -123,8 +123,8 @@ public Q_SLOTS:
     void focusExodusTransaction(const uint256& txid);
     /** Switch to bitcoin tx history tab and focus on specific transaction */
     void focusBitcoinHistoryTab(const QModelIndex &idx);
-    /** Switch to xnode page */
-    void gotoXnodePage();
+    /** Switch to bznode page */
+    void gotoBznodePage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

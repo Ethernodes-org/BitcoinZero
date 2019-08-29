@@ -48,7 +48,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>&amp;Transactions</source>
         <translation>&amp;Транзакциялар</translation>
@@ -70,7 +70,7 @@
         <translation>Құпия сөзді өзгерту</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
+        <source>BitcoinZero</source>
         <translation>Биткоин</translation>
     </message>
     <message>
@@ -320,7 +320,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Information</source>
         <translation>Информация</translation>

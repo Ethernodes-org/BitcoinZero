@@ -56,7 +56,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Sincronizando con la red...</translation>
@@ -110,16 +110,16 @@
         <translation>Recibiendo direcciones</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Enviar monedas a una dirección GravityCoin</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Enviar monedas a una dirección BitcoinZero</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation>Cambie la clave utilizada para el cifrado del monedero</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -439,7 +439,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Opciones:</translation>

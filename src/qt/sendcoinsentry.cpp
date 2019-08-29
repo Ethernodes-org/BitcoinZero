@@ -37,9 +37,9 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *pare
     ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
 #endif
 
-    // normal GravityCoin address field
+    // normal BitcoinZero address field
     GUIUtil::setupAddressWidget(ui->payTo, this);
-    // just a label for displaying GravityCoin address(es)
+    // just a label for displaying BitcoinZero address(es)
     ui->payTo_is->setFont(GUIUtil::fixedPitchFont());
 
     // Connect signals

@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>&amp;Allekirjoita viesti...</translation>
@@ -166,8 +166,8 @@
         <translation>Ladataan lohkoindeksiä...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Lähetä kolikoita GravityCoin-osoitteeseen</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Lähetä kolikoita BitcoinZero-osoitteeseen</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -190,8 +190,8 @@
         <translation>Varmista &amp;viesti...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -211,19 +211,19 @@
     </message>
     <message>
         <source>Show or hide the main Window</source>
-        <translation>Näytä tai piilota GravityCoin-ikkuna</translation>
+        <translation>Näytä tai piilota BitcoinZero-ikkuna</translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
         <translation>Suojaa yksityiset avaimet, jotka kuuluvat lompakkoosi</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Allekirjoita viestisi omalla GravityCoin -osoitteellasi todistaaksesi, että omistat ne</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Allekirjoita viestisi omalla BitcoinZero -osoitteellasi todistaaksesi, että omistat ne</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>Varmista, että viestisi on allekirjoitettu määritetyllä GravityCoin -osoitteella</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>Varmista, että viestisi on allekirjoitettu määritetyllä BitcoinZero -osoitteella</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -242,8 +242,8 @@
         <translation>Välilehtipalkki</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
-        <translation>Pyydä maksuja (Luo QR koodit ja GravityCoin: URIt)</translation>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
+        <translation>Pyydä maksuja (Luo QR koodit ja BitcoinZero: URIt)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -254,16 +254,16 @@
         <translation>Näytä vastaanottamiseen käytettyjen osoitteiden ja nimien lista</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>Avaa GravityCoin: URI tai maksupyyntö</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>Avaa BitcoinZero: URI tai maksupyyntö</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Komentorivin valinnat</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to GravityCoin network</source>
-        <translation><numerusform>%n aktiivinen yhteys GravityCoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä GravityCoin-verkkoon</numerusform></translation>
+        <source>%n active connection(s) to BitcoinZero network</source>
+        <translation><numerusform>%n aktiivinen yhteys BitcoinZero-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä BitcoinZero-verkkoon</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -330,8 +330,8 @@
         <translation>Rahansiirtohistoria on ajan tasalla</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible GravityCoin command-line options</source>
-        <translation>Näytä %1 ohjeet saadaksesi listan mahdollisista GravityCoinin komentorivivalinnoista</translation>
+        <source>Show the %1 help message to get a list with possible BitcoinZero command-line options</source>
+        <translation>Näytä %1 ohjeet saadaksesi listan mahdollisista BitcoinZeroin komentorivivalinnoista</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -583,8 +583,8 @@
         <translation>Tämä on ensimmäinen kerta, kun %1 on käynnistetty, joten voit valita data-hakemiston paikan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the GravityCoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 lataa ja tallentaa kopion GravityCoinin lohkoketjusta. Vähintään %2Gt dataa tullaan tallentamaan tähän hakemistoon, ja tarve kasvaa ajan myötä. Lompakko tullaan myös tallentamaan tähän hakemistoon.</translation>
+        <source>%1 will download and store a copy of the BitcoinZero block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 lataa ja tallentaa kopion BitcoinZeroin lohkoketjusta. Vähintään %2Gt dataa tullaan tallentamaan tähän hakemistoon, ja tarve kasvaa ajan myötä. Lompakko tullaan myös tallentamaan tähän hakemistoon.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -725,16 +725,16 @@
         <translation>&amp;Käytä varmistamattomia vaihtorahoja</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Avaa GravityCoin-asiakasohjelman portti reitittimellä automaattisesti. Tämä toimii vain, jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Avaa BitcoinZero-asiakasohjelman portti reitittimellä automaattisesti. Tämä toimii vain, jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Portin uudelleenohjaus &amp;UPnP:llä</translation>
     </message>
     <message>
-        <source>Connect to the GravityCoin network through a SOCKS5 proxy.</source>
-        <translation>Yhdistä GravityCoin-verkkoon SOCKS5-välityspalvelimen kautta.</translation>
+        <source>Connect to the BitcoinZero network through a SOCKS5 proxy.</source>
+        <translation>Yhdistä BitcoinZero-verkkoon SOCKS5-välityspalvelimen kautta.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -773,8 +773,8 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the GravityCoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Yhdistä GravityCoin-verkkoon erillisen SOCKS5-välityspalvelimen kautta piilotettuja Tor-palveluja varten.</translation>
+        <source>Connect to the BitcoinZero network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Yhdistä BitcoinZero-verkkoon erillisen SOCKS5-välityspalvelimen kautta piilotettuja Tor-palveluja varten.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -810,11 +810,11 @@
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>Yksikkö jona GravityCoin-määrät näytetään</translation>
+        <translation>Yksikkö jona BitcoinZero-määrät näytetään</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation>Valitse mitä yksikköä käytetään ensisijaisesti GravityCoin-määrien näyttämiseen.</translation>
+        <translation>Valitse mitä yksikköä käytetään ensisijaisesti BitcoinZero-määrien näyttämiseen.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -864,8 +864,8 @@
         <translation>Lomake</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the GravityCoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Näytetyt tiedot eivät välttämättä ole ajantasalla. Lompakkosi synkronoituu GravityCoin-verkon kanssa automaattisesti yhteyden muodostamisen jälkeen, mutta synkronointi on vielä meneillään.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the BitcoinZero network after a connection is established, but this process has not completed yet.</source>
+        <translation>Näytetyt tiedot eivät välttämättä ole ajantasalla. Lompakkosi synkronoituu BitcoinZero-verkon kanssa automaattisesti yhteyden muodostamisen jälkeen, mutta synkronointi on vielä meneillään.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -905,7 +905,7 @@
     </message>
     <message>
         <source>Your current total balance</source>
-        <translation>Tililläsi tällä hetkellä olevien GravityCoinien määrä</translation>
+        <translation>Tililläsi tällä hetkellä olevien BitcoinZeroien määrä</translation>
     </message>
     <message>
         <source>Your current balance in watch-only addresses</source>
@@ -957,8 +957,8 @@
         <translation>Määrä</translation>
     </message>
     <message>
-        <source>Enter a GravityCoin address (e.g. %1)</source>
-        <translation>Syötä GravityCoin-osoite (esim. %1)</translation>
+        <source>Enter a BitcoinZero address (e.g. %1)</source>
+        <translation>Syötä BitcoinZero-osoite (esim. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1302,8 +1302,8 @@
         <translation>&amp;Uudelleenkäytä vastaanotto-osoitetta (ei suositella)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the GravityCoin network.</source>
-        <translation>Valinnainen viesti liitetään maksupyyntöön ja näytetään avattaessa. Viestiä ei lähetetä GravityCoin-verkkoon.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the BitcoinZero network.</source>
+        <translation>Valinnainen viesti liitetään maksupyyntöön ja näytetään avattaessa. Viestiä ei lähetetä BitcoinZero-verkkoon.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1376,7 +1376,7 @@
     <name>SendCoinsDialog</name>
     <message>
         <source>Send Coins</source>
-        <translation>Lähetä GravityCoineja</translation>
+        <translation>Lähetä BitcoinZeroeja</translation>
     </message>
     <message>
         <source>Coin Control Features</source>
@@ -1538,8 +1538,8 @@
         <translation>Tämä on normaali maksu.</translation>
     </message>
     <message>
-        <source>The GravityCoin address to send the payment to</source>
-        <translation>GravityCoin-osoite johon maksu lähetetään</translation>
+        <source>The BitcoinZero address to send the payment to</source>
+        <translation>BitcoinZero-osoite johon maksu lähetetään</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -1558,8 +1558,8 @@
         <translation>Poista tämä alkio</translation>
     </message>
     <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less gravitycoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation>Kulu vähennetään lähetettävästä määrästä. Saaja vastaanottaa vähemmän GravityCoineja kuin merkitset Määrä-kenttään. Jos saajia on monia, kulu jaetaan tasan.</translation>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoinzeros than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Kulu vähennetään lähetettävästä määrästä. Saaja vastaanottaa vähemmän BitcoinZeroeja kuin merkitset Määrä-kenttään. Jos saajia on monia, kulu jaetaan tasan.</translation>
     </message>
     <message>
         <source>S&amp;ubtract fee from amount</source>
@@ -1582,8 +1582,8 @@
         <translation>Aseta nimi tälle osoitteelle lisätäksesi sen käytettyjen osoitteiden listalle.</translation>
     </message>
     <message>
-        <source>A message that was attached to the GravityCoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the GravityCoin network.</source>
-        <translation>Viesti joka liitettiin GravityCoin: URI:iin tallennetaan rahansiirtoon viitteeksi. Tätä viestiä ei lähetetä GravityCoin-verkkoon.</translation>
+        <source>A message that was attached to the BitcoinZero: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the BitcoinZero network.</source>
+        <translation>Viesti joka liitettiin BitcoinZero: URI:iin tallennetaan rahansiirtoon viitteeksi. Tätä viestiä ei lähetetä BitcoinZero-verkkoon.</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -1619,8 +1619,8 @@
         <translation>&amp;Allekirjoita viesti</translation>
     </message>
     <message>
-        <source>The GravityCoin address to sign the message with</source>
-        <translation>GravityCoin-osoite jolla viesti allekirjoitetaan</translation>
+        <source>The BitcoinZero address to sign the message with</source>
+        <translation>BitcoinZero-osoite jolla viesti allekirjoitetaan</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1651,8 +1651,8 @@
         <translation>Kopioi tämänhetkinen allekirjoitus leikepöydälle</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
-        <translation>Allekirjoita viesti todistaaksesi, että omistat tämän GravityCoin-osoitteen</translation>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
+        <translation>Allekirjoita viesti todistaaksesi, että omistat tämän BitcoinZero-osoitteen</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -1671,12 +1671,12 @@
         <translation>&amp;Varmista viesti</translation>
     </message>
     <message>
-        <source>The GravityCoin address the message was signed with</source>
-        <translation>GravityCoin-osoite jolla viesti on allekirjoitettu</translation>
+        <source>The BitcoinZero address the message was signed with</source>
+        <translation>BitcoinZero-osoite jolla viesti on allekirjoitettu</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified GravityCoin address</source>
-        <translation>Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä GravityCoin-osoitteella</translation>
+        <source>Verify the message to ensure it was signed with the specified BitcoinZero address</source>
+        <translation>Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä BitcoinZero-osoitteella</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1734,7 +1734,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Asetukset:</translation>
@@ -1800,8 +1800,8 @@
         <translation>Hyväksy yhteyksiä ulkopuolelta (vakioasetus: 1 jos -proxy tai -connect ei määritelty)</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoin-ydin</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZero-ydin</translation>
     </message>
     <message>
         <source>The %s developers</source>

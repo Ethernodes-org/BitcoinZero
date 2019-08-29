@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "GravityCoin"
-            VALUE "FileDescription",    "GravityCoind"
+            VALUE "CompanyName",        "BitcoinZero"
+            VALUE "FileDescription",    "bitcoinzerod"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "GravityCoind"
+            VALUE "InternalName",       "bitcoinzerod"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "GravityCoind.exe"
-            VALUE "ProductName",        "GravityCoind"
+            VALUE "OriginalFilename",   "bitcoinzerod.exe"
+            VALUE "ProductName",        "bitcoinzerod"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

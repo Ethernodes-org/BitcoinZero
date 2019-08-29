@@ -224,14 +224,14 @@
         </widget>
        </item>
        <item row="9" column="0">
-        <widget class="QLabel" name="xnodeCountLabel">
+        <widget class="QLabel" name="bznodeCountLabel">
          <property name="text">
-          <string>Number of Xnodes</string>
+          <string>Number of Bznodes</string>
          </property>
         </widget>
        </item>
        <item row="9" column="1">
-        <widget class="QLabel" name="xnodeCount">
+        <widget class="QLabel" name="bznodeCount">
          <property name="text">
           <string>N/A</string>
          </property>

@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The GravityCoin Core Developers
+// Copyright (c) 2019 The BitcoinZero Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GRAVITYCOIN_HDMINT_H
-#define GRAVITYCOIN_HDMINT_H
+#ifndef BITCOINZERO_HDMINT_H
+#define BITCOINZERO_HDMINT_H
 
 #include "primitives/zerocoin.h"
 #include "sigma.h"
@@ -76,5 +76,5 @@ public:
     };
 };
 
-#endif //GRAVITYCOIN_HDMINT_H
+#endif //BITCOINZERO_HDMINT_H
 

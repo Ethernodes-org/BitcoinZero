@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_SIGMA_SIGMAPLUS_PROVER_H
-#define GRAVITYCOIN_SIGMA_SIGMAPLUS_PROVER_H
+#ifndef BITCOINZERO_SIGMA_SIGMAPLUS_PROVER_H
+#define BITCOINZERO_SIGMA_SIGMAPLUS_PROVER_H
 
 #include "r1_proof_generator.h"
 #include "sigmaplus_proof.h"
@@ -30,4 +30,4 @@ private:
 
 #include "sigmaplus_prover.hpp"
 
-#endif // GRAVITYCOIN_SIGMA_SIGMAPLUS_PROVER_H
+#endif // BITCOINZERO_SIGMA_SIGMAPLUS_PROVER_H

@@ -49,13 +49,13 @@ struct PrecomputedTransactionData;
 struct CNodeStateStats;
 struct LockPoints;
 
-/** btzc: update GravityCoin config */
+/** btzc: update BitcoinZero config */
 /** Default for DEFAULT_WHITELISTRELAY. */
 static const bool DEFAULT_WHITELISTRELAY = true;
 /** Default for DEFAULT_WHITELISTFORCERELAY. */
 static const bool DEFAULT_WHITELISTFORCERELAY = true;
 /** Default for -minrelaytxfee, minimum relay fee for transactions */
-//btzc: update GravityCoin fee
+//btzc: update BitcoinZero fee
 static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = 0.1 * CENT; //10000
 //! -maxtxfee default
 static const CAmount DEFAULT_TRANSACTION_MAXFEE = 1 * COIN;
@@ -79,11 +79,11 @@ static const unsigned int DEFAULT_DESCENDANT_LIMIT = 25;
 static const unsigned int DEFAULT_DESCENDANT_SIZE_LIMIT = 101;
 /** Default for -mempoolexpiry, expiration time for mempool transactions in hours */
 static const unsigned int DEFAULT_MEMPOOL_EXPIRY = 72;
-/** The maximum size of a blk?????.dat, btzc:GravityCoin: 128 MiB */
+/** The maximum size of a blk?????.dat, btzc:BitcoinZero: 128 MiB */
 static const unsigned int MAX_BLOCKFILE_SIZE = 0x8000000; // 128 MiB;
-/** The pre-allocation chunk size for blk?????.dat files (since 0.8), btzc:GravityCoin: 16MiB */
+/** The pre-allocation chunk size for blk?????.dat files (since 0.8), btzc:BitcoinZero: 16MiB */
 static const unsigned int BLOCKFILE_CHUNK_SIZE = 0x1000000; // 16 MiB
-/** The pre-allocation chunk size for rev?????.dat files (since 0.8), btzc:GravityCoin: 1MiB */
+/** The pre-allocation chunk size for rev?????.dat files (since 0.8), btzc:BitcoinZero: 1MiB */
 static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
 /** Default for -blockprioritysize, maximum space for zero/low-fee transactions **/
 static const unsigned int DEFAULT_BLOCK_PRIORITY_SIZE = 50000; // 50KB
@@ -292,7 +292,7 @@ std::string GetWarnings(const std::string& strFor);
 bool GetTransaction(const uint256 &hash, CTransaction &tx, const Consensus::Params& params, uint256 &hashBlock, bool fAllowSlow = false);
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, const CBlock* pblock = NULL);
-CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams, int nTime = 1475020800);
+CAmount GetBlockSubsidy(int nHeight);
 
 /**
  * Prune block and undo files (blk???.dat and undo???.dat) so that the disk space used is less than a user-defined target.
@@ -342,7 +342,7 @@ bool AcceptToMemoryPool(
         bool fOverrideMempoolLimit=false,
         const CAmount nAbsurdFee=0,
         bool isCheckWalletTransaction = false,
-        bool markGravityCoinSpendTransactionSerial = true);
+        bool markBitcoinZeroSpendTransactionSerial = true);
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
@@ -396,7 +396,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
 
 /** Context-independent validity checks */
-//BTZC: ADD params for GravityCoin works
+//BTZC: ADD params for BitcoinZero works
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, bool fStatefulZerocoinCheck = true, CZerocoinTxInfo *zerocoinTxInfo = NULL, sigma::CSigmaTxInfo *sigmaTxInfo = NULL);
 /**
  * Check if transaction is final and can be included in a block with the
@@ -535,7 +535,7 @@ int GetUTXOHeight(const COutPoint& outpoint);
 int GetInputAge(const CTxIn &txin);
 int GetInputAgeIX(const uint256 &nTXHash, const CTxIn &txin);
 int GetIXConfirmations(const uint256 &nTXHash);
-CAmount GetXnodePayment();
+CAmount GetBznodePayment(int nHeight);
 
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
 bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);

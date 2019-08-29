@@ -132,7 +132,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a GravityCoin address (e.g. %1)").arg(
+    widget->setPlaceholderText(QObject::tr("Enter a BitcoinZero address (e.g. %1)").arg(
         QString::fromStdString(DummyAddress(Params()))));
 #endif
     widget->setValidator(new BitcoinAddressEntryValidator(parent));
@@ -150,8 +150,8 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no GravityCoin: URI
-    if(!uri.isValid() || uri.scheme() != QString("GravityCoin"))
+    // return if URI is not valid or is no BitcoinZero: URI
+    if(!uri.isValid() || uri.scheme() != QString("BitcoinZero"))
         return false;
 
     SendCoinsRecipient rv;
@@ -211,13 +211,13 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 
 bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert GravityCoin:// to GravityCoin:
+    // Convert BitcoinZero:// to BitcoinZero:
     //
-    //    Cannot handle this later, because GravityCoin:// will cause Qt to see the part after // as host,
+    //    Cannot handle this later, because BitcoinZero:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("GravityCoin://", Qt::CaseInsensitive))
+    if(uri.startsWith("BitcoinZero://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 10, "GravityCoin:");
+        uri.replace(0, 10, "BitcoinZero:");
     }
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
@@ -225,7 +225,7 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 
 QString formatBitcoinURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("GravityCoin:%1").arg(info.address);
+    QString ret = QString("BitcoinZero:%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
@@ -610,10 +610,10 @@ boost::filesystem::path static StartupShortcutPath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "GravityCoin.lnk";
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "BitcoinZero.lnk";
     if (chain == CBaseChainParams::TESTNET) // Remove this special case when CBaseChainParams::TESTNET = "testnet4"
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "GravityCoin (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("GravityCoin (%s).lnk", chain);
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "BitcoinZero (testnet).lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("BitcoinZero (%s).lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -710,8 +710,8 @@ boost::filesystem::path static GetAutostartFilePath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetAutostartDir() / "GravityCoin.desktop";
-    return GetAutostartDir() / strprintf("GravityCoin-%s.lnk", chain);
+        return GetAutostartDir() / "BitcoinZero.desktop";
+    return GetAutostartDir() / strprintf("BitcoinZero-%s.lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -750,13 +750,13 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         if (!optionFile.good())
             return false;
         std::string chain = ChainNameFromCommandLine();
-        // Write a GravityCoin.desktop file to the autostart directory:
+        // Write a BitcoinZero.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         if (chain == CBaseChainParams::MAIN)
-            optionFile << "Name=GravityCoin\n";
+            optionFile << "Name=BitcoinZero\n";
         else
-            optionFile << strprintf("Name=GravityCoin (%s)\n", chain);
+            optionFile << strprintf("Name=BitcoinZero (%s)\n", chain);
         optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", GetBoolArg("-testnet", false), GetBoolArg("-regtest", false));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
@@ -775,7 +775,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl);
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl)
 {
-    // loop through the list of startup items and try to find the GravityCoin app
+    // loop through the list of startup items and try to find the BitcoinZero app
     CFArrayRef listSnapshot = LSSharedFileListCopySnapshot(list, NULL);
     for(int i = 0; i < CFArrayGetCount(listSnapshot); i++) {
         LSSharedFileListItemRef item = (LSSharedFileListItemRef)CFArrayGetValueAtIndex(listSnapshot, i);
@@ -820,7 +820,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
     LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
 
     if(fAutoStart && !foundItem) {
-        // add GravityCoin app to startup item list
+        // add BitcoinZero app to startup item list
         LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, bitcoinAppUrl, NULL, NULL);
     }
     else if(!fAutoStart && foundItem) {

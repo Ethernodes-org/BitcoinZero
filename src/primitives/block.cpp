@@ -28,42 +28,19 @@ uint256 CBlockHeader::GetHash() const {
     return SerializeHash(*this);
 }
 
-uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
-//    int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
-//            std::chrono::system_clock::now().time_since_epoch()).count();
-    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
-    if (!fTestNet) {
-        if (nHeight < 0) {
-            if (!mapPoWHash.count(1)) {
-//            std::cout << "Start Build Map" << std::endl;
-                buildMapPoWHash();
-            }
-        }
-        if (!forceCalc && mapPoWHash.count(nHeight)) {
-//        std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << mapPoWHash[nHeight].ToString() << std::endl;
-            return mapPoWHash[nHeight];
-        }
-    }
+uint256 CBlockHeader::GetPoWHash(int nHeight) const
+{
     uint256 powHash;
-
-    try
+    if (nHeight >= HF_ALGO)
     {
-        LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256);
+    lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
     }
-    catch (std::exception &e) {
-        LogPrintf("excepetion: %s", e.what());
+    else
+    {
+    LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256);
     }
-//    int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
-//            std::chrono::system_clock::now().time_since_epoch()).count();
-//    std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << powHash.ToString() << " done in= " << (end - start) << " miliseconds" << std::endl;
-    mapPoWHash.insert(make_pair(nHeight, powHash));
-//    SetPoWHash(thash);
-    return powHash;
-}
 
-void CBlockHeader::InvalidateCachedPoWHash(int nHeight) const {
-    if (nHeight >= 0 && mapPoWHash.count(nHeight) > 0)
-        mapPoWHash.erase(nHeight);
+    return powHash;
 }
 
 std::string CBlock::ToString() const {

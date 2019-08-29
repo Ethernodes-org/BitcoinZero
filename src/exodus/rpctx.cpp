@@ -200,7 +200,7 @@ UniValue exodus_senddexsell(const UniValue& params, bool fHelp)
             "1. fromaddress          (string, required) the address to send from\n"
             "2. propertyidforsale    (number, required) the identifier of the tokens to list for sale (must be 1 for EXODUS or 2 for TEXODUS)\n"
             "3. amountforsale        (string, required) the amount of tokens to list for sale\n"
-            "4. amountdesired        (string, required) the amount of gravitycoins desired\n"
+            "4. amountdesired        (string, required) the amount of bitcoinzeros desired\n"
             "5. paymentwindow        (number, required) a time limit in blocks a buyer has to pay following a successful accepting order\n"
             "6. minacceptfee         (string, required) a minimum mining fee a buyer has to pay to accept the offer\n"
             "7. action               (number, required) the action to take (1 for new offers, 2 to update\", 3 to cancel)\n"
@@ -386,8 +386,8 @@ UniValue exodus_sendissuancecrowdsale(const UniValue& params, bool fHelp)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("exodus_sendissuancecrowdsale", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"GravityCoin Mining\" \"Quantum Miner\" \"\" \"\" 2 \"100\" 1483228800 30 2")
-            + HelpExampleRpc("exodus_sendissuancecrowdsale", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"GravityCoin Mining\", \"Quantum Miner\", \"\", \"\", 2, \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("exodus_sendissuancecrowdsale", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"BitcoinZero Mining\" \"Quantum Miner\" \"\" \"\" 2 \"100\" 1483228800 30 2")
+            + HelpExampleRpc("exodus_sendissuancecrowdsale", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"BitcoinZero Mining\", \"Quantum Miner\", \"\", \"\", 2, \"100\", 1483228800, 30, 2")
         );
 
     // obtain parameters & info
@@ -455,8 +455,8 @@ UniValue exodus_sendissuancefixed(const UniValue& params, bool fHelp)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("exodus_sendissuancefixed", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"GravityCoin Mining\" \"Quantum Miner\" \"\" \"\" \"1000000\"")
-            + HelpExampleRpc("exodus_sendissuancefixed", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"GravityCoin Mining\", \"Quantum Miner\", \"\", \"\", \"1000000\"")
+            + HelpExampleCli("exodus_sendissuancefixed", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"BitcoinZero Mining\" \"Quantum Miner\" \"\" \"\" \"1000000\"")
+            + HelpExampleRpc("exodus_sendissuancefixed", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"BitcoinZero Mining\", \"Quantum Miner\", \"\", \"\", \"1000000\"")
         );
 
     // obtain parameters & info
@@ -517,8 +517,8 @@ UniValue exodus_sendissuancemanaged(const UniValue& params, bool fHelp)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("exodus_sendissuancemanaged", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"GravityCoin Mining\" \"Quantum Miner\" \"\" \"\"")
-            + HelpExampleRpc("exodus_sendissuancemanaged", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"GravityCoin Mining\", \"Quantum Miner\", \"\", \"\"")
+            + HelpExampleCli("exodus_sendissuancemanaged", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\" 2 1 0 \"Companies\" \"BitcoinZero Mining\" \"Quantum Miner\" \"\" \"\"")
+            + HelpExampleRpc("exodus_sendissuancemanaged", "\"aGoK6MF87K2SgT7cnJFhSWt7u2cAS5m18p\", 2, 1, 0, \"Companies\", \"BitcoinZero Mining\", \"Quantum Miner\", \"\", \"\"")
         );
 
     // obtain parameters & info

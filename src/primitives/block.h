@@ -107,7 +107,7 @@ public:
 //        powHash = hash;
     }
 
-    uint256 GetPoWHash(int nHeight, bool forceCalc = false) const;
+    uint256 GetPoWHash(int nHeight) const;
 
     uint256 GetHash() const;
 
@@ -115,7 +115,6 @@ public:
     {
         return (int64_t)nTime;
     }
-    void InvalidateCachedPoWHash(int nHeight) const;
 
 };
 
@@ -128,7 +127,7 @@ public:
     std::vector<CTransaction> vtx;
 
     // memory only
-    mutable CTxOut txoutXnode; // xnode payment
+    mutable CTxOut txoutBznode; // bznode payment
     mutable bool fChecked;
 
     // memory only, zerocoin tx info
@@ -172,7 +171,7 @@ public:
         ZerocoinClean();
         CBlockHeader::SetNull();
         vtx.clear();
-        txoutXnode = CTxOut();
+        txoutBznode = CTxOut();
         fChecked = false;
     }
 

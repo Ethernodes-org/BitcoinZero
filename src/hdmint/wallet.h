@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The GravityCoin Core Developers
+// Copyright (c) 2019 The BitcoinZero Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GRAVITYCOIN_HDMINTWALLET_H
-#define GRAVITYCOIN_HDMINTWALLET_H
+#ifndef BITCOINZERO_HDMINTWALLET_H
+#define BITCOINZERO_HDMINTWALLET_H
 
 #include <map>
 #include "libzerocoin/Zerocoin.h"
@@ -56,4 +56,4 @@ private:
     bool CreateZerocoinSeed(uint512& seedZerocoin, const int32_t& n, CKeyID& seedId, bool checkIndex=true);
 };
 
-#endif //GRAVITYCOIN_HDMINTWALLET_H
+#endif //BITCOINZERO_HDMINTWALLET_H

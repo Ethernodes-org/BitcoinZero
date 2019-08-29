@@ -98,13 +98,13 @@ namespace boost {
 
 using namespace std;
 
-// xnode fXnode
-bool fXNode = false;
+// bznode fBznode
+bool fBZNode = false;
 bool fLiteMode = false;
 int nWalletBackups = 10;
 
-const char * const BITCOIN_CONF_FILENAME = "GravityCoin.conf";
-const char * const BITCOIN_PID_FILENAME = "GravityCoind.pid";
+const char * const BITCOIN_CONF_FILENAME = "bitcoinzero.conf";
+const char * const BITCOIN_PID_FILENAME = "bitcoinzero.pid";
 
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
@@ -455,7 +455,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "GravityCoin";
+    const char* pszModule = "bitcoinzero";
 #endif
     if (pex)
         return strprintf(
@@ -475,13 +475,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\GravityCoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\GravityCoin
-    // Mac: ~/Library/Application Support/GravityCoin
-    // Unix: ~/.GravityCoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\bitcoinzero
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\bitcoinzero
+    // Mac: ~/Library/Application Support/bitcoinzero
+    // Unix: ~/.bitcoinzero
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "GravityCoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "bitcoinzero";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -491,10 +491,10 @@ boost::filesystem::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/GravityCoin";
+    return pathRet / "Library/Application Support/bitcoinzero";
 #else
     // Unix
-    return pathRet / ".GravityCoin";
+    return pathRet / ".bitcoinzero";
 #endif
 #endif
 }
@@ -576,9 +576,9 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
-boost::filesystem::path GetXnodeConfigFile()
+boost::filesystem::path GetBznodeConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-xnconf", "xnode.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-bznconf", "bznode.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
     LogPrintf("pathConfigFile=%s\n", pathConfigFile);
     return pathConfigFile;
@@ -604,8 +604,8 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                         "#rescan=0\n"
                         "#reindex=0\n"
                         "#reindex-chainstate=0\n"
-                        "#xnode=1\n"
-                        "#xnodeprivkey=123123123123123123123123 ## Replace with your xnode private key\n"
+                        "#bznode=1\n"
+                        "#bznodeprivkey=123123123123123123123123 ## Replace with your bznode private key\n"
                         "#externalip=123.123.123.123:29100 ## Replace with your node external IP\n";
 
                 fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);

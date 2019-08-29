@@ -228,7 +228,7 @@ public:
     bool IsDust(const CFeeRate &minRelayTxFee) const
     {
 //        return (nValue < GetDustThreshold(minRelayTxFee));
-        //GravityCoin: disable dust
+        //BitcoinZero: disable dust
         return false;
     }
 

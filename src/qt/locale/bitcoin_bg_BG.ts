@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Подпиши съобщение...</translation>
@@ -260,9 +260,9 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
-        <source>GravityCoin Core</source>
+        <source>BitcoinZero Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     </context>

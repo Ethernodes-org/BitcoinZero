@@ -52,7 +52,7 @@
     </message>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>&amp;Overview</source>
         <translation>&amp;கண்ணோட்டம்</translation>
@@ -90,8 +90,8 @@
         <translation>&amp;செய்தியை சரிசெய்...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -712,10 +712,10 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoin மையம்</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZero மையம்</translation>
     </message>
     <message>
         <source>(default: %u)</source>

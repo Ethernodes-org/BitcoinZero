@@ -34,8 +34,8 @@
 #include "ui_interface.h"
 #include "util.h"
 
-#include "xnode-sync.h"
-#include "xnodelist.h"
+#include "bznode-sync.h"
+#include "bznodelist.h"
 #include "exodus_qtutils.h"
 #include "zc2sigmapage.h"
 
@@ -123,7 +123,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     openAction(0),
     showHelpMessageAction(0),
     zc2SigmaAction(0),
-    xnodeAction(0),
+    bznodeAction(0),
     trayIcon(0),
     trayIconMenu(0),
     notificator(0),
@@ -303,7 +303,7 @@ void BitcoinGUI::createActions()
 	tabGroup->addAction(overviewAction);
 
 	sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&Send"), this);
-	sendCoinsAction->setStatusTip(tr(exodusEnabled ? "Send Exodus and GravityCoin transactions" : "Send coins to a GravityCoin address"));
+	sendCoinsAction->setStatusTip(tr(exodusEnabled ? "Send Exodus and BitcoinZero transactions" : "Send coins to a BitcoinZero address"));
 	sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
 	sendCoinsAction->setCheckable(true);
 	sendCoinsAction->setShortcut(QKeySequence(Qt::ALT + key++));
@@ -314,7 +314,7 @@ void BitcoinGUI::createActions()
 	sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
 	receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
-	receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and GravityCoin: URIs)"));
+	receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and BitcoinZero: URIs)"));
 	receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
 	receiveCoinsAction->setCheckable(true);
 	receiveCoinsAction->setShortcut(QKeySequence(Qt::ALT + key++));
@@ -350,16 +350,16 @@ void BitcoinGUI::createActions()
 #ifdef ENABLE_WALLET
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
-    xnodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/xnodes"), tr("&Xnodes"), this);
-    xnodeAction->setStatusTip(tr("Browse xnodes"));
-    xnodeAction->setToolTip(xnodeAction->statusTip());
-    xnodeAction->setCheckable(true);
+    bznodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/bznodes"), tr("&Bznodes"), this);
+    bznodeAction->setStatusTip(tr("Browse bznodes"));
+    bznodeAction->setToolTip(bznodeAction->statusTip());
+    bznodeAction->setCheckable(true);
 #ifdef Q_OS_MAC
-    xnodeAction->setShortcut(QKeySequence(Qt::CTRL + key++));
+    bznodeAction->setShortcut(QKeySequence(Qt::CTRL + key++));
 #else
-    xnodeAction->setShortcut(QKeySequence(Qt::ALT +  key++));
+    bznodeAction->setShortcut(QKeySequence(Qt::ALT +  key++));
 #endif
-    tabGroup->addAction(xnodeAction);
+    tabGroup->addAction(bznodeAction);
 #endif
 
     if (exodusEnabled) {
@@ -379,8 +379,8 @@ void BitcoinGUI::createActions()
     }
 
 #ifdef ENABLE_WALLET
-    connect(xnodeAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(xnodeAction, SIGNAL(triggered()), this, SLOT(gotoXnodePage()));
+    connect(bznodeAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(bznodeAction, SIGNAL(triggered()), this, SLOT(gotoBznodePage()));
 	connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
 	connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
 	connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -430,9 +430,9 @@ void BitcoinGUI::createActions()
     changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
     signMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/edit"), tr("Sign &message..."), this);
-    signMessageAction->setStatusTip(tr("Sign messages with your GravityCoin addresses to prove you own them"));
+    signMessageAction->setStatusTip(tr("Sign messages with your BitcoinZero addresses to prove you own them"));
     verifyMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/verify"), tr("&Verify message..."), this);
-    verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified GravityCoin addresses"));
+    verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified BitcoinZero addresses"));
 
     openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
@@ -445,11 +445,11 @@ void BitcoinGUI::createActions()
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
     openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
-    openAction->setStatusTip(tr("Open a GravityCoin: URI or payment request"));
+    openAction->setStatusTip(tr("Open a BitcoinZero: URI or payment request"));
 
     showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
-    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible GravityCoin command-line options").arg(tr(PACKAGE_NAME)));
+    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible BitcoinZero command-line options").arg(tr(PACKAGE_NAME)));
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
@@ -538,7 +538,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(historyAction);
         toolbar->addAction(sigmaAction);
         toolbar->addAction(zc2SigmaAction);
-        toolbar->addAction(xnodeAction);
+        toolbar->addAction(bznodeAction);
 
         if (isExodusEnabled()) {
             toolbar->addAction(exoAssetsAction);
@@ -649,7 +649,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     receiveCoinsMenuAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
     sigmaAction->setEnabled(enabled);
-    xnodeAction->setEnabled(enabled);
+    bznodeAction->setEnabled(enabled);
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
@@ -809,11 +809,11 @@ void BitcoinGUI::gotoToolboxPage()
     if (walletFrame) walletFrame->gotoToolboxPage();
 }
 
-void BitcoinGUI::gotoXnodePage()
+void BitcoinGUI::gotoBznodePage()
 {
     QSettings settings;
-    xnodeAction->setChecked(true);
-    if (walletFrame) walletFrame->gotoXnodePage();
+    bznodeAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoBznodePage();
 }
 
 void BitcoinGUI::gotoReceiveCoinsPage()
@@ -861,7 +861,7 @@ void BitcoinGUI::setNumConnections(int count)
     default: icon = ":/icons/connect_4"; break;
     }
     labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to GravityCoin network", "", count));
+    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to BitcoinZero network", "", count));
 }
 
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
@@ -907,7 +907,7 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 
     tooltip = tr("Processed %n block(s) of transaction history.", "", count);
 
-    if(!xnodeSync.IsBlockchainSynced())
+    if(!bznodeSync.IsBlockchainSynced())
     {
         // Represent time from last generated block in human readable text
         QString timeBehindText;
@@ -985,12 +985,12 @@ void BitcoinGUI::setAdditionalDataSyncProgress(int count, double nSyncProgress)
 
     // Set icon state: spinning if catching up, tick otherwise
 
-    if(xnodeSync.IsBlockchainSynced())
+    if(bznodeSync.IsBlockchainSynced())
     {
         QString strSyncStatus;
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
 
-        if(xnodeSync.IsSynced()) {
+        if(bznodeSync.IsSynced()) {
             progressBarLabel->setVisible(false);
             progressBar->setVisible(false);
             labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
@@ -1011,7 +1011,7 @@ void BitcoinGUI::setAdditionalDataSyncProgress(int count, double nSyncProgress)
             progressBar->setValue(nSyncProgress * 1000000000.0 + 0.5);
         }
 
-        strSyncStatus = QString(xnodeSync.GetSyncStatus().c_str());
+        strSyncStatus = QString(bznodeSync.GetSyncStatus().c_str());
         progressBarLabel->setText(strSyncStatus);
         tooltip = strSyncStatus + QString("<br>") + tooltip;
     }
@@ -1027,7 +1027,7 @@ void BitcoinGUI::setAdditionalDataSyncProgress(int count, double nSyncProgress)
 
 void BitcoinGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
 {
-    QString strTitle = tr("GravityCoin"); // default title
+    QString strTitle = tr("BitcoinZero"); // default title
     // Default to information icon
     int nMBoxIcon = QMessageBox::Information;
     int nNotifyIcon = Notificator::Information;
@@ -1053,7 +1053,7 @@ void BitcoinGUI::message(const QString &title, const QString &message, unsigned 
             break;
         }
     }
-    // Append title to "GravityCoin - "
+    // Append title to "BitcoinZero - "
     if (!msgType.isEmpty())
         strTitle += " - " + msgType;
 

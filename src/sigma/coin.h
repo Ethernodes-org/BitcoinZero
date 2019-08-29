@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_SIGMA_COIN_H
-#define GRAVITYCOIN_SIGMA_COIN_H
+#ifndef BITCOINZERO_SIGMA_COIN_H
+#define BITCOINZERO_SIGMA_COIN_H
 
 #include "params.h"
 #include "sigma_primitives.h"
@@ -154,4 +154,4 @@ template<> struct hash<sigma::CoinDenomination> {
 
 }// namespace std
 
-#endif // GRAVITYCOIN_SIGMA_COIN_H
+#endif // BITCOINZERO_SIGMA_COIN_H

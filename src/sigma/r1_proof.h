@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_SIGMA_R1_PROOF_H
-#define GRAVITYCOIN_SIGMA_R1_PROOF_H
+#ifndef BITCOINZERO_SIGMA_R1_PROOF_H
+#define BITCOINZERO_SIGMA_R1_PROOF_H
 
 #include <vector>
 #include <secp256k1/include/Scalar.h>
@@ -60,4 +60,4 @@ public:
 
 } // namespace sigma
 
-#endif // GRAVITYCOIN_SIGMA_R1_PROOF_H
+#endif // BITCOINZERO_SIGMA_R1_PROOF_H

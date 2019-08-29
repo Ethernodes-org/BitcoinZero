@@ -170,7 +170,7 @@ void SendMPDialog::updateFrom()
         if (CheckFee(currentSetFromAddress, 16)) {
             ui->feeWarningLabel->setVisible(false);
         } else {
-            ui->feeWarningLabel->setText("WARNING: The sending address is low on GXX for transaction fees. Please topup the GXX balance for the sending address to send Exodus transactions.");
+            ui->feeWarningLabel->setText("WARNING: The sending address is low on BZX for transaction fees. Please topup the BZX balance for the sending address to send Exodus transactions.");
             ui->feeWarningLabel->setVisible(true);
         }
     }

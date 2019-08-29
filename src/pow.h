@@ -16,12 +16,11 @@ class CBlockIndex;
 
 class uint256;
 
-unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHeader *pblock, const Consensus::Params&);
-
-unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nFirstBlockTime, const Consensus::Params&);
-
-unsigned int BorisRidiculouslyNamedDifficultyFunction(const CBlockIndex *pindexLast, uint32_t TargetBlocksSpacingSeconds,
-                                         uint32_t PastBlocksMin, uint32_t PastBlocksMax);
+unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHeader *pblock);
+int64_t Nexxt(const CBlockIndex* pindexPrev, const CBlockHeader* pblock);
+unsigned int NexxtD(const CBlockIndex* pindexPrev, const CBlockHeader* pblock);
+unsigned int NexxtDG(const CBlockIndex* pindexLast, const CBlockHeader *pblock);
+unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nFirstBlockTime);
 
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &);

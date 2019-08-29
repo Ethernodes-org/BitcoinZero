@@ -148,11 +148,11 @@ void WalletFrame::gotoToolboxPage()
         i.value()->gotoToolboxPage();
 }
 
-void WalletFrame::gotoXnodePage()
+void WalletFrame::gotoBznodePage()
 {
     QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        i.value()->gotoXnodePage();
+        i.value()->gotoBznodePage();
 }
 
 void WalletFrame::gotoReceiveCoinsPage()

@@ -106,13 +106,12 @@ public:
 
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
-        strSporkPubKey = "04964af71decbf046031d1bf6a13b747a433bc14dc97c6f7f0b5b33d26eea81dc2a8df57d50b07251975857592989f730d0e7153ca3bc65ebc29e0b21cb57683b5";
-
-        pchMessageStart[0] = { 'h' };
-        pchMessageStart[1] = { 'e' };
+        strSporkPubKey = "04d4a43d311ea1995b0c232af75697c81db5e1958d50d3d8ee4204c5fa980fe65af7c4ce57adda4a813bb6fcffcbedf0fc8ca0221aad17af50637daacd23c0f899";
+        pchMessageStart[0] = { 'b' };
+        pchMessageStart[1] = { 'z' };
         pchMessageStart[2] = { 'x' };
-        pchMessageStart[3] = { 'x' };
-        nDefaultPort = 29100;
+        pchMessageStart[3] = { '0' };
+        nDefaultPort = 29301;  //nRPCPort = 29201;
         nPruneAfterHeight = 100000;
         std::vector<unsigned char> extraNonce(4);
         extraNonce[0] = 0x82;
@@ -127,10 +126,8 @@ public:
         vSeeds.push_back(CDNSSeedData("51.83.43.2", "51.83.43.2"));
         vSeeds.push_back(CDNSSeedData("51.75.246.157", "51.75.246.157"));
         vSeeds.push_back(CDNSSeedData("95.211.244.14", "95.211.244.14"));
-
-        // Note that of those with the service bits flag, most only support a subset of possible options
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 40);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 10);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 75);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 34);
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 210);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container < std::vector < unsigned char > > ();
@@ -143,36 +140,20 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
-        checkpointData = (CCheckpointData) {
-                boost::assign::map_list_of
-                (   0, uint256S("0x322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f"))
-                (   1, uint256S("0xedcce7a202f07ea4ea2ca1883b7d70c6f44fa53f5f88ba62abe8f94284a1d7b3"))
-                ( 801, uint256S("0xb3a950b3d94c2d1298cacc9089c8e3ba90fb425306cfbf04cc39282ac6a794d2")) // chain revert to fix zerocoin
-                (15001, uint256S("0xc84d91a83ec6fa779e607fa7403e8708318f321c8364c6686205f7e70900cb98"))
-                (30001, uint256S("0x223dca0c2a6fd028dc4df4b5b4309985502ee839bc7dcd968494368007866540"))
-                (204045, uint256S("0x49cd241e4f6ca0bcd882b470d41484cd51a89b04c52c50dba0f4cd07befc2031"))
-                (220974, uint256S("0xd85b2231760133f521aec73e240c7867b62f4981aecbf4d2f797813925ecdccb"))
-                (222665, uint256S("0x348fda46a431cc2b66f94f9086df05491d8c645576de3d5ab783434fd9c47043"))
-                (258199, uint256S("0x012a7e8ad93aca202d3833f843e79b7eabf124e2697b7b411d51c352589ee2e6"))
-                (267697, uint256S("0x3f0726ac75b77902e94cd172fc997ed7979d8238e28133f5300d09c87ba3d479"))
-                (361565, uint256S("0x42fed9492d74eb36f42fc339ebe148ca051f65c767b21008b1bc4631ded020de"))
-                (372585, uint256S("0xd905d681e3a2142629ce1798a7563751115883e365ec8dab8e9fb409ebc47343"))
-                (384340, uint256S("0x73eae2884a4925ec3f195b0496ae0418fa65bbe04338fcb0d589cc1775c81079"))
-                (430613, uint256S("0xdf6356483a492cc70be90491370c6d4dd9af58e1540cbeea0ef84442baa02140"))
-                (431226, uint256S("0x46ddbd1c1a95ddd781537f87ee47cade6da702998bda5fcf74144e7bfdf2f6db"))
-                (437383, uint256S("0x600a4b22c3d1e1faf8a904dc0cf92e93dadacf6dcbc1cfebae1a039f528f7774"))
-                (484672, uint256S("0xfa24f2b1d0d368763db7a4dfe732f422d3ae5137060d2f17186bc1c6a90db698"))
-                (484673, uint256S("0x8aa6d262cfdf4d465e9a0999f2ab514f4f193245acf0c98e08987afe280ec165"))
-                (484714, uint256S("0x5a76f5146656b992981d164fb9d5110ca223d3ec58aaaea14ecb74f8eedf415a"))
-                (490050, uint256S("0x5f83eff285368cb3adb46a92cba2a2c11f3d215718218d515fe905f765eaf81c"))
-                (529590, uint256S("0xf936707a25ea1039b321990b51035c908fdc9d38a7a404d9cc8c7189e222a4c0")),
-
-
-                1566713931, // * UNIX timestamp of last checkpoint block
-                204045,    // * total number of transactions between genesis and last checkpoint
-                          //   (the tx=... number in the SetBestChain debug.log lines)
-                576.0 // * estimated number of transactions per day after checkpoint
-                };
+        checkpointData = (CCheckpointData)
+        {
+        boost::assign::map_list_of
+        (     0, uint256S("0x322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f"))
+        (     1, uint256S("0x795fcecd49d16d708b321b585f69bc263e5f40e5b1f79db1b8a0d657a366fdcf"))
+        (    44, uint256S("0xd80509a0be76e25d454f09b005f7c20adf50d9f57287cfcb6b78ebe2b5e90d11"))
+        ( 50981, uint256S("0x89d9afe555611e5baf616bd004f68d6a156d1c03619176a92d52221578170033"))
+        ( 52032, uint256S("0x7e6367d9977795e615927c1070c467308a4213377b160e547361a213cc0555b7"))
+        (146175, uint256S("0x39cf3d6ff60aeb8574d3dbd0156e2d22d397849351a6fe31bc7ae232c267547d")),
+        1567070120, // * UNIX timestamp of last checkpoint block
+        43798,    // * total number of transactions between genesis and last checkpoint
+                  //   (the tx=... number in the SetBestChain debug.log lines)
+        576.0 // * estimated number of transactions per day after checkpoint
+        };
 
         consensus.nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
         consensus.nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;

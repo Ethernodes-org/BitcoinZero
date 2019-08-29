@@ -80,7 +80,7 @@
     </message>
 </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Podpísať &amp;správu...</translation>
@@ -170,8 +170,8 @@
         <translation>Preindexúvam bloky na disku...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Poslať gravitycoins na adresu</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Poslať bitcoinzeros na adresu</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -194,8 +194,8 @@
         <translation>O&amp;veriť správu...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -222,12 +222,12 @@
         <translation>Zašifruj súkromné kľúče ktoré patria do vašej peňaženky</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Podpísať správu s vašou adresou GravityCoin aby ste preukázali že ju vlastníte</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Podpísať správu s vašou adresou BitcoinZero aby ste preukázali že ju vlastníte</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>Overiť či správa bola podpísaná uvedenou GravityCoin adresou</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>Overiť či správa bola podpísaná uvedenou BitcoinZero adresou</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -246,8 +246,8 @@
         <translation>Lišta záložiek</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
-        <translation>Vyžiadať platby (vygeneruje QR kódy a GravityCoin: URI)</translation>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
+        <translation>Vyžiadať platby (vygeneruje QR kódy a BitcoinZero: URI)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -258,16 +258,16 @@
         <translation>Zobraziť zoznam použitých prijímacích adries a ich popisov</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>Otvoriť GravityCoin URI alebo výzvu k platbe</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>Otvoriť BitcoinZero URI alebo výzvu k platbe</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Možnosti príkazového riadku</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to GravityCoin network</source>
-        <translation><numerusform>%n aktívne pripojenie do siete GravityCoin</numerusform><numerusform>%n aktívne pripojenia do siete GravityCoin</numerusform><numerusform>%n aktívnych pripojení do siete GravityCoin</numerusform></translation>
+        <source>%n active connection(s) to BitcoinZero network</source>
+        <translation><numerusform>%n aktívne pripojenie do siete BitcoinZero</numerusform><numerusform>%n aktívne pripojenia do siete BitcoinZero</numerusform><numerusform>%n aktívnych pripojení do siete BitcoinZero</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -334,8 +334,8 @@
         <translation>Aktualizovaný</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible GravityCoin command-line options</source>
-        <translation>Ukáž %1 zoznam možných nastavení GravityCoinu pomocou príkazového riadku</translation>
+        <source>Show the %1 help message to get a list with possible BitcoinZero command-line options</source>
+        <translation>Ukáž %1 zoznam možných nastavení BitcoinZerou pomocou príkazového riadku</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -591,8 +591,8 @@
         <translation>Keďže toto je prvé spustenie programu, môžete si vybrať, kam %1 bude ukladať vaše údaje.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the GravityCoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 stiahne a uloží kópiu GravityCoin block chain. Minimálne %2GB dát bude uložených v tejto zložke, a bude sa zväčšovať postupom času. Peňaženka bude taktiež uložená v tejto zložke.</translation>
+        <source>%1 will download and store a copy of the BitcoinZero block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 stiahne a uloží kópiu BitcoinZero block chain. Minimálne %2GB dát bude uložených v tejto zložke, a bude sa zväčšovať postupom času. Peňaženka bude taktiež uložená v tejto zložke.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -733,16 +733,16 @@
         <translation>Minúť nepotvrdený výdavok</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automaticky otvorit port pre GravityCoin na routeri. Toto funguje len ak router podporuje UPnP a je táto podpora aktivovaná.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automaticky otvorit port pre BitcoinZero na routeri. Toto funguje len ak router podporuje UPnP a je táto podpora aktivovaná.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Mapovať port pomocou &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the GravityCoin network through a SOCKS5 proxy.</source>
-        <translation>Pripojiť do siete GravityCoin cez proxy server SOCKS5.</translation>
+        <source>Connect to the BitcoinZero network through a SOCKS5 proxy.</source>
+        <translation>Pripojiť do siete BitcoinZero cez proxy server SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -781,8 +781,8 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the GravityCoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Pripojiť k GravityCoinovej sieti cez separované SOCKS5 proxy pre skrytú službu Tor.</translation>
+        <source>Connect to the BitcoinZero network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Pripojiť k BitcoinZeroovej sieti cez separované SOCKS5 proxy pre skrytú službu Tor.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -829,8 +829,8 @@
         <translation>&amp;Zobrazovať hodnoty v jednotkách:</translation>
     </message>
     <message>
-        <source>Choose the default subdivision unit to show in the interface and when sending gravitycoins.</source>
-        <translation>Zvoľte ako deliť GravityCoin pri zobrazovaní pri platbách a užívateľskom rozhraní.</translation>
+        <source>Choose the default subdivision unit to show in the interface and when sending bitcoinzeros.</source>
+        <translation>Zvoľte ako deliť BitcoinZero pri zobrazovaní pri platbách a užívateľskom rozhraní.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -880,8 +880,8 @@
         <translation>Forma</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the GravityCoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Zobrazené informácie môžu byť neaktuálne. Vaša peňaženka sa automaticky synchronizuje so sieťou GravityCoin po nadviazaní spojenia, ale tento proces ešte nie je ukončený.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the BitcoinZero network after a connection is established, but this process has not completed yet.</source>
+        <translation>Zobrazené informácie môžu byť neaktuálne. Vaša peňaženka sa automaticky synchronizuje so sieťou BitcoinZero po nadviazaní spojenia, ale tento proces ešte nie je ukončený.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -973,8 +973,8 @@
         <translation>Suma</translation>
     </message>
     <message>
-        <source>Enter a GravityCoin address (e.g. %1)</source>
-        <translation>Zadajte GravityCoin adresu (napr. %1)</translation>
+        <source>Enter a BitcoinZero address (e.g. %1)</source>
+        <translation>Zadajte BitcoinZero adresu (napr. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1323,8 +1323,8 @@
         <translation>Znovu použiť jestvujúcu prijímaciu adresu (neodporúča sa)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the GravityCoin network.</source>
-        <translation>Pridať voliteľnú správu k výzve na zaplatenie, ktorá sa zobrazí keď bude výzva otvorená. Poznámka: Správa nebude poslaná s platbou cez sieť GravityCoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the BitcoinZero network.</source>
+        <translation>Pridať voliteľnú správu k výzve na zaplatenie, ktorá sa zobrazí keď bude výzva otvorená. Poznámka: Správa nebude poslaná s platbou cez sieť BitcoinZero.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1401,7 +1401,7 @@
     <name>SendCoinsDialog</name>
     <message>
         <source>Send Coins</source>
-        <translation>Poslať gravitycoins</translation>
+        <translation>Poslať bitcoinzeros</translation>
     </message>
     <message>
         <source>Coin Control Features</source>
@@ -1484,7 +1484,7 @@
         <translation>spolu aspoň</translation>
     </message>
     <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for GravityCoin transactions than the network can process.</source>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for BitcoinZero transactions than the network can process.</source>
         <translation>Zaplatenie len minimálneho poplatku je v poriadku, pokiaľ existuje menej transakcií ako miesta v blokoch. Uvedomte si však, že ak bude vyšší dopyt po transakciách ako dokáže sieť spracovať, môže byť vaša transakcia odsúvaná a nepotvrdená donekonečna.</translation>
     </message>
     <message>
@@ -1579,7 +1579,7 @@
         <translation>Toto je normálna platba.</translation>
     </message>
     <message>
-        <source>The GravityCoin address to send the payment to</source>
+        <source>The BitcoinZero address to send the payment to</source>
         <translation>Zvoľte adresu kam poslať platbu</translation>
     </message>
     <message>
@@ -1599,8 +1599,8 @@
         <translation>Odstrániť túto položku</translation>
     </message>
     <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less gravitycoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation>Poplatok sa odpočíta od čiastky, ktorú odosielate. Príjemca dostane menej GravityCoinov ako zadáte. Ak je vybraných viacero príjemcov, poplatok je rozdelený rovným dielom.</translation>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoinzeros than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Poplatok sa odpočíta od čiastky, ktorú odosielate. Príjemca dostane menej BitcoinZeroov ako zadáte. Ak je vybraných viacero príjemcov, poplatok je rozdelený rovným dielom.</translation>
     </message>
     <message>
         <source>S&amp;ubtract fee from amount</source>
@@ -1623,8 +1623,8 @@
         <translation>Vložte popis pre túto adresu aby sa uložila do zoznamu použitých adries</translation>
     </message>
     <message>
-        <source>A message that was attached to the GravityCoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the GravityCoin network.</source>
-        <translation>Správa ktorá bola pripojená k GravityCoin: URI a ktorá bude uložená s transakcou pre Vaše potreby. Poznámka: Táto správa nebude poslaná cez sieť GravityCoin.</translation>
+        <source>A message that was attached to the BitcoinZero: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the BitcoinZero network.</source>
+        <translation>Správa ktorá bola pripojená k BitcoinZero: URI a ktorá bude uložená s transakcou pre Vaše potreby. Poznámka: Táto správa nebude poslaná cez sieť BitcoinZero.</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -1660,8 +1660,8 @@
         <translation>&amp;Podpísať Správu</translation>
     </message>
     <message>
-        <source>The GravityCoin address to sign the message with</source>
-        <translation>GravityCoin adresa pre podpísanie správy s</translation>
+        <source>The BitcoinZero address to sign the message with</source>
+        <translation>BitcoinZero adresa pre podpísanie správy s</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1692,7 +1692,7 @@
         <translation>Kopírovať práve zvolenú adresu do systémového klipbordu</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
         <translation>Podpíšte správu aby ste dokázali že vlastníte túto adresu</translation>
     </message>
     <message>
@@ -1712,12 +1712,12 @@
         <translation>O&amp;veriť správu...</translation>
     </message>
     <message>
-        <source>The GravityCoin address the message was signed with</source>
-        <translation>Adresa GravityCoin, ktorou bola podpísaná správa</translation>
+        <source>The BitcoinZero address the message was signed with</source>
+        <translation>Adresa BitcoinZero, ktorou bola podpísaná správa</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified GravityCoin address</source>
-        <translation>Overím správy sa uistiť že bola podpísaná označenou GravityCoin adresou</translation>
+        <source>Verify the message to ensure it was signed with the specified BitcoinZero address</source>
+        <translation>Overím správy sa uistiť že bola podpísaná označenou BitcoinZero adresou</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1779,7 +1779,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Možnosti:</translation>
@@ -1833,8 +1833,8 @@
         <translation>Prijať spojenia zvonku (predvolené: 1 ak žiadne -proxy alebo -connect)</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>Jadro GravityCoin</translation>
+        <source>BitcoinZero Core</source>
+        <translation>Jadro BitcoinZero</translation>
     </message>
     <message>
         <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
@@ -1882,7 +1882,7 @@
     </message>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
-        <translation>Toto je pred-testovacia verzia - použitie je na vlastné riziko - nepoužívajte na tvorbu GravityCoin ani obchodovanie.</translation>
+        <translation>Toto je pred-testovacia verzia - použitie je na vlastné riziko - nepoužívajte na tvorbu BitcoinZero ani obchodovanie.</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>

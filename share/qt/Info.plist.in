@@ -29,16 +29,16 @@
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>GravityCoin-Qt</string>
+  <string>bitcoinzero-qt</string>
   
   <key>CFBundleName</key>
-  <string>GravityCoin-Qt</string>
+  <string>bitcoinzero-qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.GravityCoin.GravityCoin-Qt</string>
+  <string>io.BitcoinZero.bitcoinzero-qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -49,7 +49,7 @@
       <string>org.bitcoin.BitcoinPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>GravityCoin</string>
+        <string>BitcoinZero</string>
       </array>
     </dict>
   </array>

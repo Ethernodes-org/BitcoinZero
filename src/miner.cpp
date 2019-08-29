@@ -30,9 +30,9 @@
 #include "crypto/scrypt.h"
 #include "crypto/Lyra2Z/Lyra2Z.h"
 #include "crypto/Lyra2Z/Lyra2.h"
-#include "xnode-payments.h"
-#include "xnode-sync.h"
-#include "xnodeman.h"
+#include "bznode-payments.h"
+#include "bznode-sync.h"
+#include "bznodeman.h"
 #include "zerocoin.h"
 #include "sigma.h"
 #include "sigma/remint.h"
@@ -81,9 +81,14 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
     // Updating time can change work required on testnet:
     if (consensusParams.fPowAllowMinDifficultyBlocks)
-        pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
+        pblock->nBits = GetNextWorkRequired(pindexPrev, pblock);
 
     return nNewTime - nOldTime;
+}
+
+void UpdateDiff(CBlockHeader* pblock, const CBlockIndex* pindexPrev)
+{
+    pblock->nBits = NexxtD(pindexPrev, pblock);
 }
 
 BlockAssembler::BlockAssembler(const CChainParams& _chainparams) : chainparams(_chainparams)
@@ -163,27 +168,21 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
 
-    if (sporkManager.IsSporkActive(SPORK_2_F_PAYMENT_START))
+    if (sporkManager.IsSporkActive(SPORK_12_F_PAYMENT_START))
     {
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
         CScript FOUNDER_3_SCRIPT;
         CScript FOUNDER_4_SCRIPT;
-        CScript FOUNDER_5_SCRIPT;
-        CScript FOUNDER_6_SCRIPT;
-        coinbaseTx.vout[0].nValue = -5.0 * COIN;
-        FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("HNikz22Sw2VqMar8oPhznKEHaDqyjbxzGS").Get());
-        FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("HEEuJBoRMA7B6vsBG8G6EFRdpC6HacSkVq").Get());
-        FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("HRn1h7cwPekX1T2uUFAxrE9GtzJedx3FLs").Get());
-        FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("HSg33EurnbGit3oZGkgRddffxCwkaxECsW").Get());
-        FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("HB35YBC6Z5WFBUvNNZibUGkoAT1PmokEuc").Get());
-        FOUNDER_6_SCRIPT = GetScriptForDestination(CBitcoinAddress("HHWox7bdL6Q3mS2rJNfwWkrtVrnzcknsXQ").Get());
-        coinbaseTx.vout.push_back(CTxOut(2.0 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        coinbaseTx.vout.push_back(CTxOut(1.3 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-        coinbaseTx.vout.push_back(CTxOut(0.8 * COIN, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
-        coinbaseTx.vout.push_back(CTxOut(0.3 * COIN, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
-        coinbaseTx.vout.push_back(CTxOut(0.3 * COIN, CScript(FOUNDER_5_SCRIPT.begin(), FOUNDER_5_SCRIPT.end())));
-        coinbaseTx.vout.push_back(CTxOut(0.3 * COIN, CScript(FOUNDER_6_SCRIPT.begin(), FOUNDER_6_SCRIPT.end())));
+        coinbaseTx.vout[0].nValue = -23 * COIN;
+        FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("XCr6GWHTYtx5xckqGJXhmW7XgVQ7JrPXJv").Get());
+        FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("XXeBq9aGEjin8er6QCKyMevp6PNFWgiSby").Get());
+        FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("XTh9P3ji4N1ReMLD2bUUUY9QG8qA99afjc").Get());
+        FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("XZVbVRp43HBgVEVTSPfyPD9vkFSQpfYSaV").Get());
+        coinbaseTx.vout.push_back(CTxOut(8 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+        coinbaseTx.vout.push_back(CTxOut(8 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        coinbaseTx.vout.push_back(CTxOut(5 * COIN, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
+        coinbaseTx.vout.push_back(CTxOut(2 * COIN, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
     }
 
     // Add dummy coinbase tx as first transaction
@@ -355,7 +354,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
                     continue;
             }
 
-            if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+            if (sporkManager.IsSporkActive(SPORK_20_SIGMA))
             {
                 if (tx.IsSigmaMint() || tx.IsSigmaSpend()) {
                         continue;
@@ -481,13 +480,13 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
                 }
             }
         }
-        CAmount blockReward = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus(), nBlockTime);
-        // Update coinbase transaction with additional info about xnode and governance payments,
+        CAmount blockReward = nFees + GetBlockSubsidy(nHeight);
+        // Update coinbase transaction with additional info about bznode and governance payments,
         // get some info back to pass to getblocktemplate
-        if (sporkManager.IsSporkActive(SPORK_4_XNODE_PAYMENT_START)) {
-            CAmount xnodePayment = GetXnodePayment();
-            coinbaseTx.vout[0].nValue -= xnodePayment;
-            FillBlockPayments(coinbaseTx, nHeight, xnodePayment, pblock->txoutXnode);
+        if (sporkManager.IsSporkActive(SPORK_14_BZNODE_PAYMENT_START)) {
+            CAmount bznodePayment = GetBznodePayment(nHeight);
+            coinbaseTx.vout[0].nValue -= bznodePayment;
+            FillBlockPayments(coinbaseTx, nHeight, bznodePayment, pblock->txoutBznode);
         }
 
         nLastBlockTx = nBlockTx;
@@ -503,7 +502,8 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock);
+        UpdateDiff(pblock, pindexPrev);
         pblock->nNonce         = 0;
         pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(pblock->vtx[0]);
 
@@ -896,7 +896,7 @@ void BlockAssembler::addPriorityTxs()
         CTransaction tx = mi->GetTx();
         mempool.ApplyDeltas(tx.GetHash(), dPriority, dummy);
         vecPriority.push_back(TxCoinAgePriority(dPriority, mi));
-        //add GravityCoin validation
+        //add BitcoinZero validation
         if (tx.IsCoinBase() || !CheckFinalTx(tx))
             continue;
         if (tx.IsZerocoinSpend() || tx.IsSigmaSpend() || tx.IsZerocoinRemint()) {
@@ -1041,14 +1041,17 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
     // Process this block the same as if we had received it from another node
     CValidationState state;
     if (!ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL, false))
-        return error("GravityCoinMiner: ProcessNewBlock, block not accepted");
+        return error("BitcoinZeroMiner: ProcessNewBlock, block not accepted");
 
     return true;
 }
 
-void static GravityCoinMiner(const CChainParams &chainparams) {
+double dHashesPerSec = 0.0;
+int64_t nHPSTimerStart = 0;
+
+void static BitcoinZeroMiner(const CChainParams &chainparams) {
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("gravitycoin-miner");
+    RenameThread("bitcoinzero-miner");
 
     unsigned int nExtraNonce = 0;
 
@@ -1060,7 +1063,7 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
         if (!coinbaseScript || coinbaseScript->reserveScript.empty()) {
-            LogPrintf("GravityCoinMiner stop here coinbaseScript=%s, coinbaseScript->reserveScript.empty()=%s\n", coinbaseScript, coinbaseScript->reserveScript.empty());
+            LogPrintf("BitcoinZeroMiner stop here coinbaseScript=%s, coinbaseScript->reserveScript.empty()=%s\n", coinbaseScript, coinbaseScript->reserveScript.empty());
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
         }
 
@@ -1069,7 +1072,7 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
 
-                // Also try to wait for xnode winners unless we're on regtest chain
+                // Also try to wait for bznode winners unless we're on regtest chain
                 do {
                     bool fvNodesEmpty;
                     {
@@ -1095,13 +1098,13 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
                 coinbaseScript->reserveScript, {}));
             LogPrintf("AFTER: pblocktemplate\n");
             if (!pblocktemplate.get()) {
-                LogPrintf("Error in GravityCoinMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("Error in BitcoinZeroMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running GravityCoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
+            LogPrintf("Running BitcoinZeroMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                       ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             LogPrintf("BEFORE: search\n");
@@ -1120,16 +1123,25 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
             LogPrintf("powLimit: %s\n", Params().GetConsensus().powLimit.ToString());
 
             while (true) {
+                unsigned int nHashesDone = 0;
                 // Check if something found
                 uint256 thash;
 
-                while (true) {
+                while (true)
+                {
+                    if (pindexPrev->nHeight >= HF_ALGO -1)
+                    {
+                    lyra2z_hash(BEGIN(pblock->nVersion), BEGIN(thash));
+                    }
+                    else
+                    {
                     LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, 330, 256);
+                    }
+
                     if (UintToArith256(thash) <= hashTarget) {
                         // Found a solution
                         LogPrintf("Found a solution. Hash: %s", UintToArith256(thash).ToString());
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("GravityCoinMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", UintToArith256(thash).ToString(), hashTarget.ToString());
                         ProcessBlockFound(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -1140,9 +1152,35 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
                         break;
                     }
                     pblock->nNonce += 1;
+                    nHashesDone += 1;
                     if ((pblock->nNonce & 0xFF) == 0)
                         break;
                 }
+
+                // Meter hashes/sec
+                static int64_t nHashCounter;
+                if (nHPSTimerStart == 0) {
+                    nHPSTimerStart = GetTimeMillis();
+                    nHashCounter = 0;
+                } else
+                    nHashCounter += nHashesDone;
+                if (GetTimeMillis() - nHPSTimerStart > 4000) {
+                    static CCriticalSection cs;
+                    {
+                        LOCK(cs);
+                        if (GetTimeMillis() - nHPSTimerStart > 4000) {
+                            dHashesPerSec = 1000.0 * nHashCounter / (GetTimeMillis() - nHPSTimerStart);
+                            nHPSTimerStart = GetTimeMillis();
+                            nHashCounter = 0;
+                            static int64_t nLogTime;
+                            if (GetTime() - nLogTime > 3 * 60) {
+                                nLogTime = GetTime();
+                                LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerSec / 1000.0);
+                            }
+                        }
+                    }
+                }
+
                 // Check for stop or if block needs to be rebuilt
                 boost::this_thread::interruption_point();
                 // Regtest mode doesn't require peers
@@ -1156,22 +1194,20 @@ void static GravityCoinMiner(const CChainParams &chainparams) {
                     break;
 
                 // Update nTime every few seconds
+
                 if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
                     break; // Recreate the block if the clock has run backwards,
-                // so that we can use the correct time.
-                if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks) {
-                    // Changing pblock->nTime can change work required on testnet:
-                    hashTarget.SetCompact(pblock->nBits);
-                }
+                UpdateDiff(pblock, pindexPrev);
+
             }
         }
     }
     catch (const boost::thread_interrupted &) {
-        LogPrintf("GravityCoinMiner terminated\n");
+        LogPrintf("BitcoinZeroMiner terminated\n");
         throw;
     }
     catch (const std::runtime_error &e) {
-        LogPrintf("GravityCoinMiner runtime error: %s\n", e.what());
+        LogPrintf("BitcoinZeroMiner runtime error: %s\n", e.what());
         return;
     }
 }
@@ -1195,7 +1231,7 @@ void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainpar
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&GravityCoinMiner, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&BitcoinZeroMiner, boost::cref(chainparams)));
 }
 
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce)

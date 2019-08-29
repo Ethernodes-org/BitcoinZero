@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_SIGMA_COINSPEND_H
-#define GRAVITYCOIN_SIGMA_COINSPEND_H
+#ifndef BITCOINZERO_SIGMA_COINSPEND_H
+#define BITCOINZERO_SIGMA_COINSPEND_H
 
 #include "coin.h"
 #include "sigmaplus_proof.h"
@@ -87,4 +87,4 @@ private:
 
 } //namespace sigma
 
-#endif // GRAVITYCOIN_SIGMA_COINSPEND_H
+#endif // BITCOINZERO_SIGMA_COINSPEND_H

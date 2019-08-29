@@ -8,8 +8,8 @@
 #include "definition.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
-#include "xnode-payments.h"
-#include "xnode-sync.h"
+#include "bznode-payments.h"
+#include "bznode-sync.h"
 #include "sigma/remint.h"
 
 #include <atomic>
@@ -93,7 +93,7 @@ std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(
     return std::make_pair(std::move(spend), groupId);
 }
 
-bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
+bool CheckRemintBitcoinZeroTransaction(const CTransaction &tx,
                                 const Consensus::Params &params,
                                 CValidationState &state,
                                 uint256 hashTx,
@@ -122,11 +122,11 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     CDataStream inStream1(remintSerData, SER_NETWORK, PROTOCOL_VERSION);
     sigma::CoinRemintToV3 remint(inStream1);
 
-    LogPrintf("CheckRemintGravityCoinTransaction: nHeight=%d, denomination=%d, serial=%s\n", 
+    LogPrintf("CheckRemintBitcoinZeroTransaction: nHeight=%d, denomination=%d, serial=%s\n", 
             nHeight, remint.getDenomination(), remint.getSerialNumber().GetHex().c_str());
 
     if (remint.getMintVersion() != ZEROCOIN_TX_VERSION_2) {
-        LogPrintf("CheckRemintGravityCoinTransaction: only mint of version 2 is currently supported\n");
+        LogPrintf("CheckRemintBitcoinZeroTransaction: only mint of version 2 is currently supported\n");
         return false;
     }
 
@@ -134,7 +134,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     int64_t totalAmountInSigmaMints = 0;
 
     if (CZerocoinState::IsPublicCoinValueBlacklisted(remint.getPublicCoinValue())) {
-        LogPrintf("CheckRemintGravityCoinTransaction: coin is blacklisted\n");
+        LogPrintf("CheckRemintBitcoinZeroTransaction: coin is blacklisted\n");
         return false;
     }
 
@@ -150,7 +150,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
         secp_primitives::GroupElement mintPublicValue = sigma::ParseSigmaMintScript(out.scriptPubKey);
         sigma::PublicCoin *mint = new sigma::PublicCoin(mintPublicValue, d);
         if (!mint->validate()) {
-            LogPrintf("CheckRemintGravityCoinTransaction: sigma mint validation failure\n");
+            LogPrintf("CheckRemintBitcoinZeroTransaction: sigma mint validation failure\n");
             return false;
         }
 
@@ -159,7 +159,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     }
 
     if (remint.getDenomination()*COIN != totalAmountInSigmaMints) {
-        LogPrintf("CheckRemintGravityCoinTransaction: incorrect amount\n");
+        LogPrintf("CheckRemintBitcoinZeroTransaction: incorrect amount\n");
         return false;
     }
 
@@ -181,7 +181,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     libzerocoin::SpendMetaData metadata(remint.getCoinGroupId(), tempTx.GetHash());
 
     if (!remint.Verify(metadata)) {
-        LogPrintf("CheckRemintGravityCoinTransaction: remint input verification failure\n");
+        LogPrintf("CheckRemintBitcoinZeroTransaction: remint input verification failure\n");
         return false;
     }
 
@@ -196,7 +196,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     if ((mintHeight = zerocoinState->GetMintedCoinHeightAndId(remint.getPublicCoinValue(), (int)remint.getDenomination(), mintId) <= 0) 
                 || mintId != remint.getCoinGroupId()     /* inconsistent group id in remint data */
                 || mintHeight >= params.nSigmaStartBlock /* additional failsafe to ensure mint height is valid */) {
-        LogPrintf("CheckRemintGravityCoinTransaction: no such mint\n");
+        LogPrintf("CheckRemintBitcoinZeroTransaction: no such mint\n");
         return false;
     }
 
@@ -215,7 +215,7 @@ bool CheckRemintGravityCoinTransaction(const CTransaction &tx,
     return true;
 }
 
-bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
+bool CheckSpendBitcoinZeroTransaction(const CTransaction &tx,
                                 const Consensus::Params &params,
                                 const vector<libzerocoin::CoinDenomination>& targetDenominations,
                                 CValidationState &state,
@@ -255,7 +255,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
             return state.DoS(100,
                 false,
                 REJECT_MALFORMED,
-                "CheckSpendGravityCoinTransaction: invalid spend transaction");
+                "CheckSpendBitcoinZeroTransaction: invalid spend transaction");
         }
 
         bool fModulusV2 = pubcoinId >= ZC_MODULUS_V2_BASE_ID, fModulusV2InIndex = false;
@@ -307,14 +307,14 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
             txHashForMetadata = txTemp.GetHash();
         }
 
-        LogPrintf("CheckSpendGravityCoinTransaction: tx version=%d, tx metadata hash=%s, serial=%s\n", spend->getVersion(), txHashForMetadata.ToString(), spend->getCoinSerialNumber().ToString());
+        LogPrintf("CheckSpendBitcoinZeroTransaction: tx version=%d, tx metadata hash=%s, serial=%s\n", spend->getVersion(), txHashForMetadata.ToString(), spend->getCoinSerialNumber().ToString());
 
         int txHeight = chainActive.Height();
 
         if (spendVersion == ZEROCOIN_TX_VERSION_1 && nHeight == INT_MAX) {
             int allowedV1Height = params.nSpendV15StartBlock;
             if (txHeight >= allowedV1Height + ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD) {
-                LogPrintf("CheckSpendGravityCoinTransaction: cannot allow spend v1 into mempool after block %d\n",
+                LogPrintf("CheckSpendBitcoinZeroTransaction: cannot allow spend v1 into mempool after block %d\n",
                           allowedV1Height + ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD);
                 return false;
             }
@@ -325,14 +325,14 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
             if ((nHeight == INT_MAX && txHeight < params.nModulusV2StartBlock) || nHeight < params.nModulusV2StartBlock)
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendGravityCoinTransaction: cannon use modulus v2 at this point");
+                                 "CheckSpendBitcoinZeroTransaction: cannon use modulus v2 at this point");
         }
         else {
             if ((nHeight == INT_MAX && txHeight >= params.nModulusV1MempoolStopBlock) ||
                     (nHeight != INT_MAX && nHeight >= params.nModulusV1StopBlock))
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendGravityCoinTransaction: cannon use modulus v1 at this point");
+                                 "CheckSpendBitcoinZeroTransaction: cannon use modulus v1 at this point");
         }
 
         if (!fStatefulZerocoinCheck)
@@ -365,7 +365,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
 
         CZerocoinState::CoinGroupInfo coinGroup;
         if (!zerocoinState.GetCoinGroupInfo(targetDenominations[vinIndex], pubcoinId, coinGroup))
-            return state.DoS(100, false, NO_MINT_ZEROCOIN, "CheckSpendGravityCoinTransaction: Error: no coins were minted with such parameters");
+            return state.DoS(100, false, NO_MINT_ZEROCOIN, "CheckSpendBitcoinZeroTransaction: Error: no coins were minted with such parameters");
 
         bool passVerify = false;
         CBlockIndex *index = coinGroup.lastBlock;
@@ -395,7 +395,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
                 libzerocoin::Accumulator accumulator(zcParams,
                                                      (index->*accChanges)[denominationAndId].first,
                                                      targetDenominations[vinIndex]);
-                LogPrintf("CheckSpendGravityCoinTransaction: accumulator=%s\n", accumulator.getValue().ToString().substr(0,15));
+                LogPrintf("CheckSpendBitcoinZeroTransaction: accumulator=%s\n", accumulator.getValue().ToString().substr(0,15));
                 passVerify = spend->Verify(accumulator, newMetadata);
             }
 
@@ -426,7 +426,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
             libzerocoin::Accumulator accumulator(zcParams, targetDenominations[vinIndex]);
             BOOST_FOREACH(const CBigNum &pubCoin, pubCoins) {
                 accumulator += libzerocoin::PublicCoin(zcParams, pubCoin, (libzerocoin::CoinDenomination)targetDenominations[vinIndex]);
-                LogPrintf("CheckSpendGravityCoinTransaction: accumulator=%s\n", accumulator.getValue().ToString().substr(0,15));
+                LogPrintf("CheckSpendBitcoinZeroTransaction: accumulator=%s\n", accumulator.getValue().ToString().substr(0,15));
                 if ((passVerify = spend->Verify(accumulator, newMetadata)) == true)
                     break;
             }
@@ -437,7 +437,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
                 libzerocoin::Accumulator accumulator(zcParams, targetDenominations[vinIndex]);
                 BOOST_REVERSE_FOREACH(const CBigNum &pubCoin, pubCoins) {
                     accumulator += libzerocoin::PublicCoin(zcParams, pubCoin, (libzerocoin::CoinDenomination)targetDenominations[vinIndex]);
-                    LogPrintf("CheckSpendGravityCoinTransaction: accumulatorRev=%s\n", accumulator.getValue().ToString().substr(0,15));
+                    LogPrintf("CheckSpendBitcoinZeroTransaction: accumulatorRev=%s\n", accumulator.getValue().ToString().substr(0,15));
                     if ((passVerify = spend->Verify(accumulator, newMetadata)) == true)
                         break;
                 }
@@ -445,7 +445,7 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
         }
 
         if (!passVerify) {
-            LogPrintf("CheckSpendGravityCoinTransaction: verification failed at block %d\n", nHeight);
+            LogPrintf("CheckSpendBitcoinZeroTransaction: verification failed at block %d\n", nHeight);
             return false;
         }
     }
@@ -455,14 +455,14 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
             // mixing zerocoin spend input with non-zerocoin inputs is prohibited
             return state.DoS(100, false,
                             REJECT_MALFORMED,
-                            "CheckSpendGravityCoinTransaction: can't mix zerocoin spend input with regular ones");
+                            "CheckSpendBitcoinZeroTransaction: can't mix zerocoin spend input with regular ones");
         }
         else if (tx.vin.size() > 1) {
             // having tx with several zerocoin spend inputs is possible since nMultipleSpendInputsInOneTxStartBlock
             if (true) {
                 return state.DoS(100, false,
                              REJECT_MALFORMED,
-                             "CheckSpendGravityCoinTransaction: can't have more than one input");
+                             "CheckSpendBitcoinZeroTransaction: can't have more than one input");
             }
         }
     }
@@ -470,13 +470,13 @@ bool CheckSpendGravityCoinTransaction(const CTransaction &tx,
     return true;
 }
 
-bool CheckMintGravityCoinTransaction(const CTxOut &txout,
+bool CheckMintBitcoinZeroTransaction(const CTxOut &txout,
                                CValidationState &state,
                                uint256 hashTx,
                                CZerocoinTxInfo *zerocoinTxInfo) {
     CBigNum pubCoin;
 
-    LogPrintf("CheckMintGravityCoinTransaction txHash = %s\n", txout.GetHash().ToString());
+    LogPrintf("CheckMintBitcoinZeroTransaction txHash = %s\n", txout.GetHash().ToString());
     LogPrintf("nValue = %d\n", txout.nValue);
 
     try {
@@ -542,74 +542,56 @@ bool CheckMintGravityCoinTransaction(const CTxOut &txout,
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight)
 
     {
-            if (sporkManager.IsSporkActive(SPORK_3_F_PAYMENT_ENFORCEMENT) && xnodeSync.IsSynced())
+            if (sporkManager.IsSporkActive(SPORK_13_F_PAYMENT_ENFORCEMENT) && bznodeSync.IsSynced())
             {
-                    bool found_1 = false;
-                    bool found_2 = false;
-                    bool found_3 = false;
-                    bool found_4 = false;
-                    bool found_5 = false;
-                    bool found_6 = false;
-                    int total_payment_tx = 0;
-                    CScript FOUNDER_1_SCRIPT;
-                    CScript FOUNDER_2_SCRIPT;
-                    CScript FOUNDER_3_SCRIPT;
-                    CScript FOUNDER_4_SCRIPT;
-                    CScript FOUNDER_5_SCRIPT;
-                    CScript FOUNDER_6_SCRIPT;
-                    FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("HNikz22Sw2VqMar8oPhznKEHaDqyjbxzGS").Get());
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("HEEuJBoRMA7B6vsBG8G6EFRdpC6HacSkVq").Get());
-                    FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("HRn1h7cwPekX1T2uUFAxrE9GtzJedx3FLs").Get());
-                    FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("HSg33EurnbGit3oZGkgRddffxCwkaxECsW").Get());
-                    FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("HB35YBC6Z5WFBUvNNZibUGkoAT1PmokEuc").Get());
-                    FOUNDER_6_SCRIPT = GetScriptForDestination(CBitcoinAddress("HHWox7bdL6Q3mS2rJNfwWkrtVrnzcknsXQ").Get());
-                    CAmount xnodePayment = GetXnodePayment();
-                    BOOST_FOREACH(const CTxOut &output, tx.vout)
+                bool found_1 = false;
+                bool found_2 = false;
+                bool found_3 = false;
+                bool found_4 = false;
+                int total_payment_tx = 0; // no more than 1 output for payment
+                CScript FOUNDER_1_SCRIPT;
+                CScript FOUNDER_2_SCRIPT;
+                CScript FOUNDER_3_SCRIPT;
+                CScript FOUNDER_4_SCRIPT;
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("XCr6GWHTYtx5xckqGJXhmW7XgVQ7JrPXJv").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("XXeBq9aGEjin8er6QCKyMevp6PNFWgiSby").Get());
+                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("XTh9P3ji4N1ReMLD2bUUUY9QG8qA99afjc").Get());
+                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("XZVbVRp43HBgVEVTSPfyPD9vkFSQpfYSaV").Get());
+                CAmount bznodePayment = GetBznodePayment(nHeight);
+                BOOST_FOREACH(const CTxOut &output, tx.vout)
+                {
+                    if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(8 * COIN))
                     {
-                        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(2.0 * COIN))
-                        {
-                            found_1 = true;
-                            continue;
-                        }
+                        found_1 = true;
+                        continue;
+                    }
 
-                        if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(1.3 * COIN))
-                        {
-                            found_2 = true;
-                            continue;
-                        }
+                    if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(8 * COIN))
+                    {
+                        found_2 = true;
+                        continue;
+                    }
 
-                        if (output.scriptPubKey == FOUNDER_3_SCRIPT && output.nValue == (int64_t)(0.8 * COIN))
-                        {
-                            found_3 = true;
-                            continue;
-                        }
+                    if (output.scriptPubKey == FOUNDER_3_SCRIPT && output.nValue == (int64_t)(5 * COIN))
+                    {
+                        found_3 = true;
+                        continue;
+                    }
 
-                        if (output.scriptPubKey == FOUNDER_4_SCRIPT && output.nValue == (int64_t)(0.3 * COIN))
-                        {
-                            found_4 = true;
-                            continue;
-                        }
+                    if (output.scriptPubKey == FOUNDER_4_SCRIPT && output.nValue == (int64_t)(2 * COIN))
+                    {
+                        found_4 = true;
+                        continue;
+                    }
 
-                        if (output.scriptPubKey == FOUNDER_5_SCRIPT && output.nValue == (int64_t)(0.3 * COIN))
-                        {
-                            found_5 = true;
-                            continue;
-                        }
-
-                        if (output.scriptPubKey == FOUNDER_6_SCRIPT && output.nValue == (int64_t)(0.3 * COIN))
-                        {
-                            found_6 = true;
-                            continue;
-                        }
-
-                        if (xnodePayment == output.nValue)
+                        if (bznodePayment == output.nValue)
                         {
                             total_payment_tx = total_payment_tx + 1;
                         }
                     }
 
 
-                if (!(found_1 && found_2 && found_3 && found_4 && found_5 && found_6))
+                if (!(found_1 && found_2 && found_3 && found_4))
                 {
                     return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
                                      "CTransaction::CheckTransaction() : founders reward missing");
@@ -617,8 +599,8 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
 
                 if (total_payment_tx > 1)
                 {
-                    return state.DoS(100, false, REJECT_INVALID_XNODE_PAYMENT,
-                                     "CTransaction::CheckTransaction() : invalid xnode payment");
+                    return state.DoS(100, false, REJECT_INVALID_BZNODE_PAYMENT,
+                                     "CTransaction::CheckTransaction() : invalid bznode payment");
                 }
             }
 
@@ -658,7 +640,7 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
             if (!isWalletCheck && realHeight > params.nDisableZerocoinStartBlock)
                 return state.DoS(100, false, REJECT_OBSOLETE, "bad-txns-mint-obsolete");
 
-            if (!CheckMintGravityCoinTransaction(txout, state, hashTx, zerocoinTxInfo))
+            if (!CheckMintBitcoinZeroTransaction(txout, state, hashTx, zerocoinTxInfo))
                 return false;
         }
     }
@@ -685,9 +667,9 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
             if(!txin.scriptSig.IsZerocoinSpend()) {
                 return state.DoS(100, false,
                                 REJECT_MALFORMED,
-                                "CheckSpendGravityCoinTransaction: can't mix zerocoin spend input with regular ones");
+                                "CheckSpendBitcoinZeroTransaction: can't mix zerocoin spend input with regular ones");
             }
-            // Get the CoinDenomination value of each vin for the CheckSpendGravityCoinTransaction function
+            // Get the CoinDenomination value of each vin for the CheckSpendBitcoinZeroTransaction function
             uint32_t pubcoinId = txin.nSequence;
             if (pubcoinId < 1 || pubcoinId >= INT_MAX) {
                  // coin id should be positive integer
@@ -709,7 +691,7 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
         {
             if(!isVerifyDB) {
                 if (txout.nValue == totalValue * COIN) {
-                    if(!CheckSpendGravityCoinTransaction(tx, params, denominations, state, hashTx, isVerifyDB, nHeight, isCheckWallet, fStatefulZerocoinCheck, zerocoinTxInfo)){
+                    if(!CheckSpendBitcoinZeroTransaction(tx, params, denominations, state, hashTx, isVerifyDB, nHeight, isCheckWallet, fStatefulZerocoinCheck, zerocoinTxInfo)){
                         return false;
                     }
                 }
@@ -721,7 +703,7 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
     }
 
     if (tx.IsZerocoinRemint())
-        return CheckRemintGravityCoinTransaction(tx, params, state, hashTx, isVerifyDB, nHeight, isCheckWallet, fStatefulZerocoinCheck, zerocoinTxInfo);
+        return CheckRemintBitcoinZeroTransaction(tx, params, state, hashTx, isVerifyDB, nHeight, isCheckWallet, fStatefulZerocoinCheck, zerocoinTxInfo);
 
     return true;
 }

@@ -74,7 +74,7 @@ void CSporkManager::ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStr
 void CSporkManager::ExecuteSpork(int nSporkID, int nValue)
 {
     //correct fork via spork technology
-    if(nSporkID == SPORK_7_RECONSIDER_BLOCKS && nValue > 0) {
+    if(nSporkID == SPORK_17_RECONSIDER_BLOCKS && nValue > 0) {
         // allow to reprocess 24h of blocks max, which should be enough to resolve any issues
         int64_t nMaxBlocks = 576;
         // this potentially can be a heavy operation, so only allow this to be executed once per 10 minutes
@@ -124,16 +124,24 @@ bool CSporkManager::IsSporkActive(int nSporkID)
         r = mapSporksActive[nSporkID].nValue;
     } else {
         switch (nSporkID) {
-            case SPORK_1_FIXX_ON:                           r = SPORK_1_FIXX_ON_DEFAULT; break;
-            case SPORK_2_F_PAYMENT_START:                   r = SPORK_2_F_PAYMENT_START_DEFAULT; break;
-            case SPORK_3_F_PAYMENT_ENFORCEMENT:             r = SPORK_3_F_PAYMENT_ENFORCEMENT_DEFAULT; break;
-            case SPORK_4_XNODE_PAYMENT_START:               r = SPORK_4_XNODE_PAYMENT_START_DEFAULT; break;
-            case SPORK_5_XNODE_PAYMENT_ENFORCEMENT:         r = SPORK_5_XNODE_PAYMENT_ENFORCEMENT_DEFAULT; break;
-            case SPORK_6_MIN_XNODE:                         r = SPORK_6_MIN_XNODE_DEFAULT; break;
-            case SPORK_7_RECONSIDER_BLOCKS:                 r = SPORK_7_RECONSIDER_BLOCKS_DEFAULT; break;
-            case SPORK_8_FIXX_MN:                           r = SPORK_8_FIXX_MN_DEFAULT; break;
-            case SPORK_9_FIXX_VN:                           r = SPORK_9_FIXX_VN_DEFAULT; break;
-            case SPORK_10_SIGMA:                            r = SPORK_10_SIGMA; break;
+            case SPORK_2_INSTANTSEND_ENABLED:                r = SPORK_2_INSTANTSEND_ENABLED_DEFAULT; break;
+            case SPORK_3_INSTANTSEND_BLOCK_FILTERING:        r = SPORK_3_INSTANTSEND_BLOCK_FILTERING_DEFAULT; break;
+            case SPORK_4_BAN_OLD:                            r = SPORK_4_BAN_OLD_DEFAULT; break;
+            case SPORK_5_INSTANTSEND_MAX_VALUE:              r = SPORK_5_INSTANTSEND_MAX_VALUE_DEFAULT; break;
+            case SPORK_6_RECONSIDER_BLOCKS:                  r = SPORK_6_RECONSIDER_BLOCKS_DEFAULT; break;
+            case SPORK_7_FEE_CHECKS:                         r = SPORK_7_FEE_CHECKS_DEFAULT; break;
+            case SPORK_8_PAY_NODES:                          r = SPORK_8_PAY_NODES_DEFAULT; break;
+            case SPORK_9_ZERO_OFF:                           r = SPORK_9_ZERO_OFF_DEFAULT; break;
+            case SPORK_11_MIN_V:                             r = SPORK_11_MIN_V_DEFAULT; break;
+            case SPORK_12_F_PAYMENT_START:                   r = SPORK_12_F_PAYMENT_START_DEFAULT; break;
+            case SPORK_13_F_PAYMENT_ENFORCEMENT:             r = SPORK_13_F_PAYMENT_ENFORCEMENT_DEFAULT; break;
+            case SPORK_14_BZNODE_PAYMENT_START:              r = SPORK_14_BZNODE_PAYMENT_START_DEFAULT; break;
+            case SPORK_15_BZNODE_PAYMENT_ENFORCEMENT:        r = SPORK_15_BZNODE_PAYMENT_ENFORCEMENT_DEFAULT; break;
+            case SPORK_16_MIN_BZNODE:                        r = SPORK_16_MIN_BZNODE_DEFAULT; break;
+            case SPORK_17_RECONSIDER_BLOCKS:                 r = SPORK_17_RECONSIDER_BLOCKS_DEFAULT; break;
+            case SPORK_18_FIXX_MN:                           r = SPORK_18_FIXX_MN_DEFAULT; break;
+            case SPORK_19_FIXX_VN:                           r = SPORK_19_FIXX_VN_DEFAULT; break;
+            case SPORK_20_SIGMA:                             r = SPORK_20_SIGMA; break;
             default:
                 LogPrint("spork", "CSporkManager::IsSporkActive -- Unknown Spork ID %d\n", nSporkID);
                 r = 4070908800ULL; // 2099-1-1 i.e. off by default
@@ -151,16 +159,24 @@ int64_t CSporkManager::GetSporkValue(int nSporkID)
         return mapSporksActive[nSporkID].nValue;
 
     switch (nSporkID) {
-        case SPORK_1_FIXX_ON:                           return SPORK_1_FIXX_ON_DEFAULT;
-        case SPORK_2_F_PAYMENT_START:                   return SPORK_2_F_PAYMENT_START_DEFAULT;
-        case SPORK_3_F_PAYMENT_ENFORCEMENT:             return SPORK_3_F_PAYMENT_ENFORCEMENT_DEFAULT;
-        case SPORK_4_XNODE_PAYMENT_START:               return SPORK_4_XNODE_PAYMENT_START_DEFAULT;
-        case SPORK_5_XNODE_PAYMENT_ENFORCEMENT:         return SPORK_5_XNODE_PAYMENT_ENFORCEMENT_DEFAULT;
-        case SPORK_6_MIN_XNODE:                         return SPORK_6_MIN_XNODE_DEFAULT;
-        case SPORK_7_RECONSIDER_BLOCKS:                 return SPORK_7_RECONSIDER_BLOCKS_DEFAULT;
-        case SPORK_8_FIXX_MN:                           return SPORK_8_FIXX_MN_DEFAULT;
-        case SPORK_9_FIXX_VN:                           return SPORK_9_FIXX_VN_DEFAULT;
-        case SPORK_10_SIGMA:                            return SPORK_10_SIGMA_DEFAULT;
+        case SPORK_2_INSTANTSEND_ENABLED:                return SPORK_2_INSTANTSEND_ENABLED_DEFAULT;
+        case SPORK_3_INSTANTSEND_BLOCK_FILTERING:        return SPORK_3_INSTANTSEND_BLOCK_FILTERING_DEFAULT;
+        case SPORK_4_BAN_OLD:                            return SPORK_4_BAN_OLD_DEFAULT;
+        case SPORK_5_INSTANTSEND_MAX_VALUE:              return SPORK_5_INSTANTSEND_MAX_VALUE_DEFAULT;
+        case SPORK_6_RECONSIDER_BLOCKS:                  return SPORK_6_RECONSIDER_BLOCKS_DEFAULT;
+        case SPORK_7_FEE_CHECKS:                         return SPORK_7_FEE_CHECKS_DEFAULT;
+        case SPORK_8_PAY_NODES:                          return SPORK_8_PAY_NODES_DEFAULT;
+        case SPORK_9_ZERO_OFF:                           return SPORK_9_ZERO_OFF_DEFAULT;
+        case SPORK_11_MIN_V:                             return SPORK_11_MIN_V_DEFAULT;
+        case SPORK_12_F_PAYMENT_START:                   return SPORK_12_F_PAYMENT_START_DEFAULT;
+        case SPORK_13_F_PAYMENT_ENFORCEMENT:             return SPORK_13_F_PAYMENT_ENFORCEMENT_DEFAULT;
+        case SPORK_14_BZNODE_PAYMENT_START:              return SPORK_14_BZNODE_PAYMENT_START_DEFAULT;
+        case SPORK_15_BZNODE_PAYMENT_ENFORCEMENT:        return SPORK_15_BZNODE_PAYMENT_ENFORCEMENT_DEFAULT;
+        case SPORK_16_MIN_BZNODE:                        return SPORK_16_MIN_BZNODE_DEFAULT;
+        case SPORK_17_RECONSIDER_BLOCKS:                 return SPORK_17_RECONSIDER_BLOCKS_DEFAULT;
+        case SPORK_18_FIXX_MN:                           return SPORK_18_FIXX_MN_DEFAULT;
+        case SPORK_19_FIXX_VN:                           return SPORK_19_FIXX_VN_DEFAULT;
+        case SPORK_20_SIGMA:                             return SPORK_20_SIGMA_DEFAULT;
         default:
             LogPrint("spork", "CSporkManager::GetSporkValue -- Unknown Spork ID %d\n", nSporkID);
             return -1;
@@ -170,16 +186,24 @@ int64_t CSporkManager::GetSporkValue(int nSporkID)
 
 int CSporkManager::GetSporkIDByName(std::string strName)
 {
-    if (strName == "SPORK_1_FIXX_ON")                       return SPORK_1_FIXX_ON;
-    if (strName == "SPORK_2_F_PAYMENT_START")               return SPORK_2_F_PAYMENT_START;
-    if (strName == "SPORK_3_F_PAYMENT_ENFORCEMENT")         return SPORK_3_F_PAYMENT_ENFORCEMENT;
-    if (strName == "SPORK_4_XNODE_PAYMENT_START")           return SPORK_4_XNODE_PAYMENT_START;
-    if (strName == "SPORK_5_XNODE_PAYMENT_ENFORCEMENT")     return SPORK_5_XNODE_PAYMENT_ENFORCEMENT;
-    if (strName == "SPORK_6_MIN_XNODE")                     return SPORK_6_MIN_XNODE;
-    if (strName == "SPORK_7_RECONSIDER_BLOCKS")             return SPORK_7_RECONSIDER_BLOCKS;
-    if (strName == "SPORK_8_FIXX_MN")                       return SPORK_8_FIXX_MN;
-    if (strName == "SPORK_9_FIXX_VN")                       return SPORK_9_FIXX_VN;
-    if (strName == "SPORK_10_SIGMA")                        return SPORK_10_SIGMA;
+    if (strName == "SPORK_2_INSTANTSEND_ENABLED")            return SPORK_2_INSTANTSEND_ENABLED;
+    if (strName == "SPORK_3_INSTANTSEND_BLOCK_FILTERING")    return SPORK_3_INSTANTSEND_BLOCK_FILTERING;
+    if (strName == "SPORK_4_BAN_OLD")                        return SPORK_4_BAN_OLD;
+    if (strName == "SPORK_5_INSTANTSEND_MAX_VALUE")          return SPORK_5_INSTANTSEND_MAX_VALUE;
+    if (strName == "SPORK_6_RECONSIDER_BLOCKS")              return SPORK_6_RECONSIDER_BLOCKS;
+    if (strName == "SPORK_7_FEE_CHECKS")                     return SPORK_7_FEE_CHECKS;
+    if (strName == "SPORK_8_PAY_NODES")                      return SPORK_8_PAY_NODES;
+    if (strName == "SPORK_9_ZERO_OFF")                       return SPORK_9_ZERO_OFF;
+    if (strName == "SPORK_11_MIN_V")                         return SPORK_11_MIN_V;
+    if (strName == "SPORK_12_F_PAYMENT_START")               return SPORK_12_F_PAYMENT_START;
+    if (strName == "SPORK_13_F_PAYMENT_ENFORCEMENT")         return SPORK_13_F_PAYMENT_ENFORCEMENT;
+    if (strName == "SPORK_14_BZNODE_PAYMENT_START")          return SPORK_14_BZNODE_PAYMENT_START;
+    if (strName == "SPORK_15_BZNODE_PAYMENT_ENFORCEMENT")    return SPORK_15_BZNODE_PAYMENT_ENFORCEMENT;
+    if (strName == "SPORK_16_MIN_BZNODE")                    return SPORK_16_MIN_BZNODE;
+    if (strName == "SPORK_17_RECONSIDER_BLOCKS")             return SPORK_17_RECONSIDER_BLOCKS;
+    if (strName == "SPORK_18_FIXX_MN")                       return SPORK_18_FIXX_MN;
+    if (strName == "SPORK_19_FIXX_VN")                       return SPORK_19_FIXX_VN;
+    if (strName == "SPORK_20_SIGMA")                         return SPORK_20_SIGMA;
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
 }
@@ -187,16 +211,24 @@ int CSporkManager::GetSporkIDByName(std::string strName)
 std::string CSporkManager::GetSporkNameByID(int nSporkID)
 {
     switch (nSporkID) {
-        case SPORK_1_FIXX_ON:                           return "SPORK_1_FIXX_ON";
-        case SPORK_2_F_PAYMENT_START:                   return "SPORK_2_F_PAYMENT_START";
-        case SPORK_3_F_PAYMENT_ENFORCEMENT:             return "SPORK_3_F_PAYMENT_ENFORCEMENT";
-        case SPORK_4_XNODE_PAYMENT_START:               return "SPORK_4_XNODE_PAYMENT_START";
-        case SPORK_5_XNODE_PAYMENT_ENFORCEMENT:         return "SPORK_5_XNODE_PAYMENT_ENFORCEMENT";
-        case SPORK_6_MIN_XNODE:                         return "SPORK_6_MIN_XNODE";
-        case SPORK_7_RECONSIDER_BLOCKS:                 return "SPORK_7_RECONSIDER_BLOCKS";
-        case SPORK_8_FIXX_MN:                           return "SPORK_8_FIXX_MN";
-        case SPORK_9_FIXX_VN:                           return "SPORK_9_FIXX_VN";
-        case SPORK_10_SIGMA:                            return "SPORK_10_SIGMA";
+        case SPORK_2_INSTANTSEND_ENABLED:                return "SPORK_2_INSTANTSEND_ENABLED";
+        case SPORK_3_INSTANTSEND_BLOCK_FILTERING:        return "SPORK_3_INSTANTSEND_BLOCK_FILTERING";
+        case SPORK_4_BAN_OLD:                            return "SPORK_4_BAN_OLD";
+        case SPORK_5_INSTANTSEND_MAX_VALUE:              return "SPORK_5_INSTANTSEND_MAX_VALUE";
+        case SPORK_6_RECONSIDER_BLOCKS:                  return "SPORK_6_RECONSIDER_BLOCKS";
+        case SPORK_7_FEE_CHECKS:                         return "SPORK_7_FEE_CHECKS";
+        case SPORK_8_PAY_NODES:                          return "SPORK_8_PAY_NODES";
+        case SPORK_9_ZERO_OFF:                           return "SPORK_9_ZERO_OFF";
+        case SPORK_11_MIN_V:                             return "SPORK_11_MIN_V";
+        case SPORK_12_F_PAYMENT_START:                   return "SPORK_12_F_PAYMENT_START";
+        case SPORK_13_F_PAYMENT_ENFORCEMENT:             return "SPORK_13_F_PAYMENT_ENFORCEMENT";
+        case SPORK_14_BZNODE_PAYMENT_START:              return "SPORK_14_BZNODE_PAYMENT_START";
+        case SPORK_15_BZNODE_PAYMENT_ENFORCEMENT:        return "SPORK_15_BZNODE_PAYMENT_ENFORCEMENT";
+        case SPORK_16_MIN_BZNODE:                        return "SPORK_16_MIN_BZNODE";
+        case SPORK_17_RECONSIDER_BLOCKS:                 return "SPORK_17_RECONSIDER_BLOCKS";
+        case SPORK_18_FIXX_MN:                           return "SPORK_18_FIXX_MN";
+        case SPORK_19_FIXX_VN:                           return "SPORK_19_FIXX_VN";
+        case SPORK_20_SIGMA:                             return "SPORK_20_SIGMA";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

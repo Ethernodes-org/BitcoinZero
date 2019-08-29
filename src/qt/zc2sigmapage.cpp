@@ -16,7 +16,7 @@
 #include "guiutil.h"
 #include "platformstyle.h"
 #include "zc2sigmamodel.h"
-#include "xnode-sync.h"
+#include "bznode-sync.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 
@@ -31,7 +31,7 @@
 #include <QStackedWidget>
 
 
-extern CXnodeSync xnodeSync;
+extern CBznodeSync bznodeSync;
 
 
 Zc2SigmaPage::Zc2SigmaPage(const PlatformStyle *platformStyle, QWidget *parent)
@@ -177,7 +177,7 @@ void Zc2SigmaPage::updateAvailableRemints() {
 bool Zc2SigmaPage::showZc2SigmaPage() {
     if(!Params().GetConsensus().IsRegtest()) {
         LOCK(cs_main);
-        if(!xnodeSync.IsBlockchainSynced()) {
+        if(!bznodeSync.IsBlockchainSynced()) {
             return false;
         }
     }

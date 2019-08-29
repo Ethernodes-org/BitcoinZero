@@ -71,7 +71,7 @@ struct Params {
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
     int nInstantSendKeepLock; // in blocks
-    int nXnodeMinimumConfirmations;
+    int nBznodeMinimumConfirmations;
 
 	/** Zerocoin-related block numbers when features are changed */
     int nCheckBugFixedAtBlock;

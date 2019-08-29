@@ -68,7 +68,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Падпісаць паведамленне...</translation>
@@ -146,7 +146,7 @@
         <translation>Пераіндэксацыя блокаў на дыску...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
+        <source>Send coins to a BitcoinZero address</source>
         <translation>Даслаць манеты на Біткойн-адрас</translation>
     </message>
     <message>
@@ -170,7 +170,7 @@
         <translation>Праверыць паведамленне...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
+        <source>BitcoinZero</source>
         <translation>Біткойн</translation>
     </message>
     <message>
@@ -198,11 +198,11 @@
         <translation>Зашыфраваць прыватныя ключы, якия належаць вашаму гаманцу</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
         <translation>Падпісаць паведамленне з дапамогай Біткойн-адраса каб даказаць, што яно належыць вам</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
         <translation>Спраўдзіць паведамленне з дапамогай Біткойн-адраса каб даказаць, што яно належыць вам</translation>
     </message>
     <message>
@@ -218,7 +218,7 @@
         <translation>Дапамога</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
         <translation>Запатрабаваць плацёж (генеруецца QR-код для біткойн URI)</translation>
     </message>
     <message>
@@ -230,7 +230,7 @@
         <translation>Паказаць спіс адрасоў і метак для прымання</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
+        <source>Open a BitcoinZero: URI or payment request</source>
         <translation>Адкрыць біткойн: URI ці запыт плацяжу</translation>
     </message>
     <message>
@@ -238,8 +238,8 @@
         <translation>Опцыі каманднага радка</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to GravityCoin network</source>
-        <translation><numerusform>%n актыўнае злучэнне з сецівам GravityCoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам GravityCoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам GravityCoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам GravityCoin</numerusform></translation>
+        <source>%n active connection(s) to BitcoinZero network</source>
+        <translation><numerusform>%n актыўнае злучэнне з сецівам BitcoinZero</numerusform><numerusform>%n актыўных злучэнняў з сецівам BitcoinZero</numerusform><numerusform>%n актыўных злучэнняў з сецівам BitcoinZero</numerusform><numerusform>%n актыўных злучэнняў з сецівам BitcoinZero</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -718,7 +718,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Опцыі:</translation>
@@ -736,8 +736,8 @@
         <translation>Запусціць у фоне як дэман і прымаць каманды</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoin Core</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZero Core</translation>
     </message>
     <message>
         <source>Do you want to rebuild the block database now?</source>

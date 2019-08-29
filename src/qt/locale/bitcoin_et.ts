@@ -62,12 +62,12 @@
         <translation>Vastuvõtvad aadressid</translation>
     </message>
     <message>
-        <source>These are your GravityCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Need on sinu GravityCoin aadressid maksete saatmiseks. Ennem müntide saatmist kontrolli alati summat ja makse saaja aadressi.</translation>
+        <source>These are your BitcoinZero addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Need on sinu BitcoinZero aadressid maksete saatmiseks. Ennem müntide saatmist kontrolli alati summat ja makse saaja aadressi.</translation>
     </message>
     <message>
-        <source>These are your GravityCoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Need on sinu GravityCoin aadressid sisenevate maksete vastu võtmiseks. Soovitav on iga tehingu tarbeks kasutada uut aadressi.</translation>
+        <source>These are your BitcoinZero addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Need on sinu BitcoinZero aadressid sisenevate maksete vastu võtmiseks. Soovitav on iga tehingu tarbeks kasutada uut aadressi.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -216,7 +216,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Signeeri &amp;sõnum</translation>
@@ -286,8 +286,8 @@
         <translation>Kettal olevate blokkide re-indekseerimine...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Saada münte GravityCoini aadressile</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Saada münte BitcoinZeroi aadressile</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -310,8 +310,8 @@
         <translation>&amp;Kontrolli sõnumit...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -338,12 +338,12 @@
         <translation>Krüpteeri oma rahakoti privaatvõtmed</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Omandi tõestamiseks allkirjasta sõnumid oma GravityCoini aadressiga</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Omandi tõestamiseks allkirjasta sõnumid oma BitcoinZeroi aadressiga</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>Kinnita sõnumid kindlustamaks et need allkirjastati määratud GravityCoini aadressiga</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>Kinnita sõnumid kindlustamaks et need allkirjastati määratud BitcoinZeroi aadressiga</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -362,20 +362,20 @@
         <translation>Vahelehe tööriistariba</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
-        <translation>Loo maksepäring (genereerib QR koodid ja GravityCoini: URId)</translation>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
+        <translation>Loo maksepäring (genereerib QR koodid ja BitcoinZeroi: URId)</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>Ava GravityCoini: URI või maksepäring</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>Ava BitcoinZeroi: URI või maksepäring</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Käsurea valikud</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to GravityCoin network</source>
-        <translation><numerusform>%n aktiivne ühendus GravityCoini võrku</numerusform><numerusform>%n aktiivset ühendust GravityCoini võrku</numerusform></translation>
+        <source>%n active connection(s) to BitcoinZero network</source>
+        <translation><numerusform>%n aktiivne ühendus BitcoinZeroi võrku</numerusform><numerusform>%n aktiivset ühendust BitcoinZeroi võrku</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -710,8 +710,8 @@
         <translation>Muuda saatvat aadressi</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid GravityCoin address.</source>
-        <translation>Sisestatud aadress "%1" ei ole korrektne GravityCoin aadress.</translation>
+        <source>The entered address "%1" is not a valid BitcoinZero address.</source>
+        <translation>Sisestatud aadress "%1" ei ole korrektne BitcoinZero aadress.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -825,8 +825,8 @@
         <translation>Ekspert</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>GravityCoini kliendi pordi automaatne avamine ruuteris. Toimib, kui sinu ruuter aktsepteerib UPnP ühendust.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>BitcoinZeroi kliendi pordi automaatne avamine ruuteris. Toimib, kui sinu ruuter aktsepteerib UPnP ühendust.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -908,7 +908,7 @@
         <translation>Vorm</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the GravityCoin network after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the BitcoinZero network after a connection is established, but this process has not completed yet.</source>
         <translation>Kuvatav info ei pruugi olla ajakohane. Ühenduse loomisel süngitakse sinu rahakott automaatselt Bitconi võrgustikuga, kuid see toiming on hetkel lõpetamata.</translation>
     </message>
     <message>
@@ -1375,8 +1375,8 @@
         <translation>Maksepäring aegunud.</translation>
     </message>
     <message>
-        <source>Warning: Invalid GravityCoin address</source>
-        <translation>Hoiatus: Ebakorrektne GravityCoin aadress</translation>
+        <source>Warning: Invalid BitcoinZero address</source>
+        <translation>Hoiatus: Ebakorrektne BitcoinZero aadress</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1455,8 +1455,8 @@
         <translation>&amp;Allkirjastamise teade</translation>
     </message>
     <message>
-        <source>The GravityCoin address to sign the message with</source>
-        <translation>GravityCoin aadress millega sõnum allkirjastada</translation>
+        <source>The BitcoinZero address to sign the message with</source>
+        <translation>BitcoinZero aadress millega sõnum allkirjastada</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1487,8 +1487,8 @@
         <translation>Kopeeri praegune signatuur vahemällu</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
-        <translation>Allkirjasta sõnum GravityCoini aadressi sulle kuulumise tõestamiseks</translation>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
+        <translation>Allkirjasta sõnum BitcoinZeroi aadressi sulle kuulumise tõestamiseks</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -1507,12 +1507,12 @@
         <translation>&amp;Kinnita Sõnum</translation>
     </message>
     <message>
-        <source>The GravityCoin address the message was signed with</source>
-        <translation>GravityCoin aadress millega sõnum on allkirjastatud</translation>
+        <source>The BitcoinZero address the message was signed with</source>
+        <translation>BitcoinZero aadress millega sõnum on allkirjastatud</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified GravityCoin address</source>
-        <translation>Kinnita sõnum tõestamaks selle allkirjastatust määratud GravityCoini aadressiga.</translation>
+        <source>Verify the message to ensure it was signed with the specified BitcoinZero address</source>
+        <translation>Kinnita sõnum tõestamaks selle allkirjastatust määratud BitcoinZeroi aadressiga.</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1770,7 +1770,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Valikud:</translation>
@@ -1800,8 +1800,8 @@
         <translation>Luba välisühendusi (vaikeväärtus: 1 kui puudub -proxy või -connect)</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>GravityCoini tuumik</translation>
+        <source>BitcoinZero Core</source>
+        <translation>BitcoinZeroi tuumik</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>

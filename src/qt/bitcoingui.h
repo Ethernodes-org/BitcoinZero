@@ -60,7 +60,7 @@ public:
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
-        The wallet model represents a GravityCoin wallet, and offers access to the list of transactions, address book and sending
+        The wallet model represents a BitcoinZero wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
     bool addWallet(const QString& name, WalletModel *walletModel);
@@ -117,7 +117,7 @@ private:
     QAction *showHelpMessageAction;
     QAction *sigmaAction;
     QAction *zc2SigmaAction;
-    QAction *xnodeAction;
+    QAction *bznodeAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -200,12 +200,12 @@ private Q_SLOTS:
     void gotoHistoryPage();
     /** Switch directly to Exodus history tab */
     void gotoExodusHistoryTab();
-    /** Switch directly to GravityCoin history tab */
+    /** Switch directly to BitcoinZero history tab */
     void gotoBitcoinHistoryTab();
     /** Switch to utility page */
     void gotoToolboxPage();
-    /** Switch to xnode page */
-    void gotoXnodePage();
+    /** Switch to bznode page */
+    void gotoBznodePage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

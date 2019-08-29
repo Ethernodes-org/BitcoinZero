@@ -72,16 +72,16 @@ CMPSPInfo::CMPSPInfo(const boost::filesystem::path& path, bool fWipe)
     implied_exodus.category = "N/A";
     implied_exodus.subcategory = "N/A";
     implied_exodus.name = "Exodus";
-    implied_exodus.url = "https://www.gravitycoin.io";
-    implied_exodus.data = "Exodus serve as the binding between GravityCoin, smart properties and contracts created on the Exodus Layer.";
+    implied_exodus.url = "https://www.bitcoinzero.io";
+    implied_exodus.data = "Exodus serve as the binding between BitcoinZero, smart properties and contracts created on the Exodus Layer.";
     implied_texodus.issuer = ExodusAddress().ToString();
     implied_texodus.prop_type = EXODUS_PROPERTY_TYPE_DIVISIBLE;
     implied_texodus.num_tokens = 700000;
     implied_texodus.category = "N/A";
     implied_texodus.subcategory = "N/A";
     implied_texodus.name = "Test Exodus";
-    implied_texodus.url = "https://www.gravitycoin.io";
-    implied_texodus.data = "Test Exodus serve as the binding between GravityCoin, smart properties and contracts created on the Exodus Layer.";
+    implied_texodus.url = "https://www.bitcoinzero.io";
+    implied_texodus.data = "Test Exodus serve as the binding between BitcoinZero, smart properties and contracts created on the Exodus Layer.";
 
     init();
 }

@@ -128,7 +128,7 @@ namespace tfm = tinyformat;
 #endif
 
 #if !defined(TINYFORMAT_USE_VARIADIC_TEMPLATES) && !defined(TINYFORMAT_NO_VARIADIC_TEMPLATES)
-#   ifdef __GXX_EXPERIMENTAL_CXX0X__
+#   ifdef __BZX_EXPERIMENTAL_CXX0X__
 #       define TINYFORMAT_USE_VARIADIC_TEMPLATES
 #   endif
 #endif

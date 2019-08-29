@@ -84,10 +84,10 @@ LIBBITCOIN_CONSENSUS=libbitcoin_consensus.a
 LIBBITCOIN_CLI=libbitcoin_cli.a
 LIBBITCOIN_UTIL=libbitcoin_util.a
 LIBBITCOIN_CRYPTO=crypto/libbitcoin_crypto.a
-LIBBITCOINQT=qt/libGravityCoinqt.a
+LIBBITCOINQT=qt/libbitcoinzeroqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
-LIBGRAVITYCOIN_SIGMA=libsigma.a
+LIBBITCOINZERO_SIGMA=libsigma.a
 
 if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libbitcoin_zmq.a
@@ -115,7 +115,7 @@ EXTRA_LIBRARIES += \
   $(LIBBITCOIN_CLI) \
   $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_ZMQ) \
-  $(LIBGRAVITYCOIN_SIGMA)
+  $(LIBBITCOINZERO_SIGMA)
 
 lib_LTLIBRARIES = $(LIBBITCOINCONSENSUS)
 
@@ -125,17 +125,17 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += GravityCoind
+  bin_PROGRAMS += bitcoinzerod
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += GravityCoin-cli GravityCoin-tx
+  bin_PROGRAMS += bitcoinzero-cli bitcoinzero-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
 # bitcoin core #
 BITCOIN_CORE_H = \
-  activexnode.h \
+  activebznode.h \
   addressindex.h \
   spentindex.h \
   addrman.h \
@@ -172,11 +172,11 @@ BITCOIN_CORE_H = \
   limitedmap.h \
   threadinterrupt.h \
   main.h \
-  xnode.h \
-  xnode-payments.h \
-  xnode-sync.h \
-  xnodeman.h \
-  xnodeconfig.h \
+  bznode.h \
+  bznode-payments.h \
+  bznode-sync.h \
+  bznodeman.h \
+  bznodeconfig.h \
   memusage.h \
   merkleblock.h \
   miner.h \
@@ -251,7 +251,7 @@ obj/build.h: FORCE
 	  $(abs_top_srcdir)
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between GravityCoind and GravityCoin-qt
+# server: shared between bitcoinzerod and bitcoinzero-qt
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
@@ -281,7 +281,7 @@ libbitcoin_server_a_SOURCES = \
   rpc/misc.cpp \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
-  rpc/rpcxnode.cpp \
+  rpc/rpcbznode.cpp \
   rpc/server.cpp \
   script/sigcache.cpp \
   script/ismine.cpp \
@@ -308,20 +308,20 @@ libbitcoin_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between GravityCoind and GravityCoin-qt, but only linked
+# wallet: shared between bitcoinzerod and bitcoinzero-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
-  activexnode.cpp \
+  activebznode.cpp \
   darksend.cpp \
   hdmint/hdmint.cpp \
-  xnode.cpp \
+  bznode.cpp \
   instantx.cpp \
-  xnode-payments.cpp \
-  xnode-sync.cpp \
-  xnodeconfig.cpp \
-  xnodeman.cpp \
+  bznode-payments.cpp \
+  bznode-sync.cpp \
+  bznodeconfig.cpp \
+  bznodeman.cpp \
   hdmint/mintpool.cpp \
   hdmint/wallet.cpp \
   sigma.cpp \
@@ -410,7 +410,7 @@ libbitcoin_consensus_a_SOURCES = \
   crypto/Lyra2Z/Sponge.c \
   crypto/Lyra2Z/Sponge.h
 
-# common: shared between GravityCoind, and GravityCoin-qt and non-server tools
+# common: shared between bitcoinzerod, and bitcoinzero-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -515,7 +515,7 @@ if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
 
-# cli: shared between GravityCoin-cli and GravityCoin-qt
+# cli: shared between bitcoinzero-cli and bitcoinzero-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -526,22 +526,22 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-GravityCoind_SOURCES = bitcoind.cpp
-GravityCoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-GravityCoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-GravityCoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+bitcoinzerod_SOURCES = bitcoind.cpp
+bitcoinzerod_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+bitcoinzerod_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bitcoinzerod_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GravityCoind_SOURCES += bitcoind-res.rc
+bitcoinzerod_SOURCES += bitcoind-res.rc
 endif
 
-GravityCoind_LDADD = \
+bitcoinzerod_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_WALLET) \
-  $(LIBGRAVITYCOIN_SIGMA) \
+  $(LIBBITCOINZERO_SIGMA) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
@@ -551,38 +551,38 @@ GravityCoind_LDADD = \
 
 
 
-GravityCoind_LDADD += $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
+bitcoinzerod_LDADD += $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
 
 # bitcoin-cli binary #
-GravityCoin_cli_SOURCES = bitcoin-cli.cpp
-GravityCoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-GravityCoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-GravityCoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+bitcoinzero_cli_SOURCES = bitcoin-cli.cpp
+bitcoinzero_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+bitcoinzero_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bitcoinzero_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GravityCoin_cli_SOURCES += bitcoin-cli-res.rc
+bitcoinzero_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-GravityCoin_cli_LDADD = \
+bitcoinzero_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-GravityCoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+bitcoinzero_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-GravityCoin_tx_SOURCES = bitcoin-tx.cpp
-GravityCoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-GravityCoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-GravityCoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+bitcoinzero_tx_SOURCES = bitcoin-tx.cpp
+bitcoinzero_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+bitcoinzero_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bitcoinzero_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GravityCoin_tx_SOURCES += bitcoin-tx-res.rc
+bitcoinzero_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-GravityCoin_tx_LDADD = \
+bitcoinzero_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -590,7 +590,7 @@ GravityCoin_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-GravityCoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+bitcoinzero_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #

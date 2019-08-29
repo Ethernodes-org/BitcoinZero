@@ -72,12 +72,12 @@
 #include <event2/util.h>
 #include <event2/event.h>
 #include <event2/thread.h>
-#include "activexnode.h"
+#include "activebznode.h"
 #include "darksend.h"
-#include "xnode-payments.h"
-#include "xnode-sync.h"
-#include "xnodeman.h"
-#include "xnodeconfig.h"
+#include "bznode-payments.h"
+#include "bznode-sync.h"
+#include "bznodeman.h"
+#include "bznodeconfig.h"
 #include "netfulfilledman.h"
 #include "flat-database.h"
 #include "instantx.h"
@@ -241,9 +241,9 @@ void Shutdown() {
     GenerateBitcoins(false, 0, Params());
     StopNode();
 
-    CFlatDB<CXnodeMan> flatdb1("xncache.dat", "magicXnodeCache");
+    CFlatDB<CBznodeMan> flatdb1("bzncache.dat", "magicBznodeCache");
     flatdb1.Dump(mnodeman);
-    CFlatDB<CXnodePayments> flatdb2("xnpayments.dat", "magicXnodePaymentsCache");
+    CFlatDB<CBznodePayments> flatdb2("bznpayments.dat", "magicBznodePaymentsCache");
     flatdb2.Dump(mnpayments);
     CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
     flatdb4.Dump(netfulfilledman);
@@ -684,8 +684,8 @@ std::string HelpMessage(HelpMessageMode mode) {
 }
 
 std::string LicenseInfo() {
-    const std::string URL_SOURCE_CODE = "<https://github.com/GravityCoinOfficial/GravityCoin/>";
-    const std::string URL_WEBSITE = "<https://gravitycoin.io/>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/BitcoinZeroOfficial/BitcoinZero/>";
+    const std::string URL_WEBSITE = "<https://bitcoinzero.io/>";
     // todo: remove urls from translations on next change
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +
@@ -1092,7 +1092,7 @@ void InitLogging() {
     fLogIPs = GetBoolArg("-logips", DEFAULT_LOGIPS);
 
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("GravityCoin version %s\n", FormatFullVersion());
+    LogPrintf("BitcoinZero version %s\n", FormatFullVersion());
 }
 
 /** Initialize bitcoin.
@@ -1939,46 +1939,46 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
                      chainparams);
 
     // ********************************************************* Step 11a: setup PrivateSend
-    fXNode = GetBoolArg("-xnode", false);
+    fBZNode = GetBoolArg("-bznode", false);
 
-    LogPrintf("fXNode = %s\n", fXNode);
-    LogPrintf("xnodeConfig.getCount(): %s\n", xnodeConfig.getCount());
+    LogPrintf("fBZNode = %s\n", fBZNode);
+    LogPrintf("bznodeConfig.getCount(): %s\n", bznodeConfig.getCount());
 
-    if ((fXNode || xnodeConfig.getCount() > 0) && !fTxIndex) {
-        return InitError("Enabling Xnode support requires turning on transaction indexing."
+    if ((fBZNode || bznodeConfig.getCount() > 0) && !fTxIndex) {
+        return InitError("Enabling Bznode support requires turning on transaction indexing."
                                  "Please add txindex=1 to your configuration and start with -reindex");
     }
 
-    if (fXNode) {
-        LogPrintf("XNODE:\n");
+    if (fBZNode) {
+        LogPrintf("BZNODE:\n");
 
-        if (!GetArg("-xnodeaddr", "").empty()) {
-            // Hot Xnode (either local or remote) should get its address in
-            // CActiveXnode::ManageState() automatically and no longer relies on Xnodeaddr.
-            return InitError(_("xnodeaddr option is deprecated. Please use xnode.conf to manage your remote xnodes."));
+        if (!GetArg("-bznodeaddr", "").empty()) {
+            // Hot Bznode (either local or remote) should get its address in
+            // CActiveBznode::ManageState() automatically and no longer relies on Bznodeaddr.
+            return InitError(_("bznodeaddr option is deprecated. Please use bznode.conf to manage your remote bznodes."));
         }
 
-        std::string strXnodePrivKey = GetArg("-xnodeprivkey", "");
-        if (!strXnodePrivKey.empty()) {
-            if (!darkSendSigner.GetKeysFromSecret(strXnodePrivKey, activeXnode.keyXnode,
-                                                  activeXnode.pubKeyXnode))
-                return InitError(_("Invalid xnodeprivkey. Please see documentation."));
+        std::string strBznodePrivKey = GetArg("-bznodeprivkey", "");
+        if (!strBznodePrivKey.empty()) {
+            if (!darkSendSigner.GetKeysFromSecret(strBznodePrivKey, activeBznode.keyBznode,
+                                                  activeBznode.pubKeyBznode))
+                return InitError(_("Invalid bznodeprivkey. Please see documentation."));
 
-            LogPrintf("  pubKeyXnode: %s\n", CBitcoinAddress(activeXnode.pubKeyXnode.GetID()).ToString());
+            LogPrintf("  pubKeyBznode: %s\n", CBitcoinAddress(activeBznode.pubKeyBznode.GetID()).ToString());
         } else {
             return InitError(
-                    _("You must specify a xnodeprivkey in the configuration. Please see documentation for help."));
+                    _("You must specify a bznodeprivkey in the configuration. Please see documentation for help."));
         }
     }
 
-    LogPrintf("Using Xnode config file %s\n", GetXnodeConfigFile().string());
+    LogPrintf("Using Bznode config file %s\n", GetBznodeConfigFile().string());
 
-    if (GetBoolArg("-xnconflock", true) && pwalletMain && (xnodeConfig.getCount() > 0)) {
+    if (GetBoolArg("-xnconflock", true) && pwalletMain && (bznodeConfig.getCount() > 0)) {
         LOCK(pwalletMain->cs_wallet);
-        LogPrintf("Locking Xnodes:\n");
+        LogPrintf("Locking Bznodes:\n");
         uint256 mnTxHash;
         int outputIndex;
-        BOOST_FOREACH(CXnodeConfig::CXnodeEntry mne, xnodeConfig.getEntries()) {
+        BOOST_FOREACH(CBznodeConfig::CBznodeEntry mne, bznodeConfig.getEntries()) {
             mnTxHash.SetHex(mne.getTxHash());
             outputIndex = boost::lexical_cast<unsigned int>(mne.getOutputIndex());
             COutPoint outpoint = COutPoint(mnTxHash, outputIndex);
@@ -2009,10 +2009,10 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 //    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
 //    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
 
-    // lite mode disables all Xnode and Darksend related functionality
+    // lite mode disables all Bznode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
-    if (fXNode && fLiteMode) {
-        return InitError("You can not start a xnode in litemode");
+    if (fBZNode && fLiteMode) {
+        return InitError("You can not start a bznode in litemode");
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
@@ -2025,21 +2025,21 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     // ********************************************************* Step 11b: Load cache data
 
     // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
-    if (GetBoolArg("-persistentxnodestate", true)) {
-        uiInterface.InitMessage(_("Loading xnode cache..."));
-        CFlatDB<CXnodeMan> flatdb1("xncache.dat", "magicXnodeCache");
+    if (GetBoolArg("-persistentbznodestate", true)) {
+        uiInterface.InitMessage(_("Loading bznode cache..."));
+        CFlatDB<CBznodeMan> flatdb1("bzncache.dat", "magicBznodeCache");
         if (!flatdb1.Load(mnodeman)) {
-            return InitError("Failed to load xnode cache from xncache.dat");
+            return InitError("Failed to load bznode cache from bzncache.dat");
         }
 
         if (mnodeman.size()) {
-            uiInterface.InitMessage(_("Loading Xnode payment cache..."));
-            CFlatDB<CXnodePayments> flatdb2("xnpayments.dat", "magicXnodePaymentsCache");
+            uiInterface.InitMessage(_("Loading Bznode payment cache..."));
+            CFlatDB<CBznodePayments> flatdb2("bznpayments.dat", "magicBznodePaymentsCache");
             if (!flatdb2.Load(mnpayments)) {
-                return InitError("Failed to load xnode payments cache from xnpayments.dat");
+                return InitError("Failed to load bznode payments cache from bznpayments.dat");
             }
         } else {
-            uiInterface.InitMessage(_("Xnode cache is empty, skipping payments cache..."));
+            uiInterface.InitMessage(_("Bznode cache is empty, skipping payments cache..."));
         }
 
         uiInterface.InitMessage(_("Loading fulfilled requests cache..."));
@@ -2051,7 +2051,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     //     LogPrint"Failed to load fulfilled requests cache from netfulfilled.dat");
     // }
 
-    // ********************************************************* Step 11c: update block tip in GravityCoin modules
+    // ********************************************************* Step 11c: update block tip in BitcoinZero modules
 
     // force UpdatedBlockTip to initialize pCurrentBlockIndex for DS, MN payments and budgets
     // but don't call it directly to prevent triggering of other listeners like zmq etc.
@@ -2059,7 +2059,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     mnodeman.UpdatedBlockTip(chainActive.Tip());
     darkSendPool.UpdatedBlockTip(chainActive.Tip());
     mnpayments.UpdatedBlockTip(chainActive.Tip());
-    xnodeSync.UpdatedBlockTip(chainActive.Tip());
+    bznodeSync.UpdatedBlockTip(chainActive.Tip());
     // governance.UpdatedBlockTip(chainActive.Tip());
 
     // ********************************************************* Step 11d: start dash-privatesend thread

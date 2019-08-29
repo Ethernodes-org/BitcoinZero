@@ -317,11 +317,6 @@ public:
         return *phashBlock;
     }
 
-    uint256 GetBlockPoWHash(bool forceCalc = false) const
-    {
-        return GetBlockHeader().GetPoWHash(nHeight, forceCalc);
-    }
-
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;

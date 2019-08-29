@@ -37,8 +37,8 @@ const std::string ExodusVersion()
     }
 }
 
-//! Returns formatted GravityCoin Core version, e.g. "0.10", "0.9.3"
-const std::string GravityCoinCoreVersion()
+//! Returns formatted BitcoinZero Core version, e.g. "0.10", "0.9.3"
+const std::string BitcoinZeroCoreVersion()
 {
     if (CLIENT_VERSION_BUILD) {
         return strprintf("%d.%d.%d.%d",

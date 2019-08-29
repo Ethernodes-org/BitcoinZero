@@ -17,7 +17,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
-#include "xnodeconfig.h"
+#include "bznodeconfig.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
@@ -88,7 +88,7 @@ bool AppInit(int argc, char* argv[])
         else
         {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  GravityCoind [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
+                  "  bitcoinzerod [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }
@@ -119,29 +119,29 @@ bool AppInit(int argc, char* argv[])
             return false;
         }
 
-        // parse xnode.conf
+        // parse bznode.conf
         std::string strErr;
-        if(!xnodeConfig.read(strErr)) {
-            fprintf(stderr,"Error reading xnode configuration file: %s\n", strErr.c_str());
+        if(!bznodeConfig.read(strErr)) {
+            fprintf(stderr,"Error reading bznode configuration file: %s\n", strErr.c_str());
             return false;
         }
 
         // Command-line RPC
         bool fCommandLine = false;
         for (int i = 1; i < argc; i++)
-            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "GravityCoin:"))
+            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "BitcoinZero:"))
                 fCommandLine = true;
 
         if (fCommandLine)
         {
-            fprintf(stderr, "Error: There is no RPC client functionality in GravityCoind anymore. Use the GravityCoin-cli utility instead.\n");
+            fprintf(stderr, "Error: There is no RPC client functionality in bitcoinzerod anymore. Use the bitcoinzero-cli utility instead.\n");
             exit(EXIT_FAILURE);
         }
 #ifndef WIN32
         fDaemon = GetBoolArg("-daemon", false);
         if (fDaemon)
         {
-            fprintf(stdout, "GravityCoin server starting\n");
+            fprintf(stdout, "BitcoinZero server starting\n");
 
             // Daemonize
             pid_t pid = fork();

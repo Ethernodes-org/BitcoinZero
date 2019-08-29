@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The GravityCoin Core developers
+// Copyright (c) 2009-2016 The BitcoinZero Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,12 +22,12 @@
 #include "wallet.h"
 #include "walletdb.h"
 #include "hdmint/tracker.h"
-#include "xnode-sync.h"
+#include "bznode-sync.h"
 #include "zerocoin.h"
 #include "walletexcept.h"
 #include "spork.h"
 
-#include <xnode-payments.h>
+#include <bznode-payments.h>
 
 #include <stdint.h>
 
@@ -154,13 +154,13 @@ UniValue getnewaddress(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getnewaddress ( \"account\" )\n"
-            "\nReturns a new GravityCoin address for receiving payments.\n"
+            "\nReturns a new BitcoinZero address for receiving payments.\n"
             "If 'account' is specified (DEPRECATED), it is added to the address book \n"
             "so payments received with the address will be credited to 'account'.\n"
             "\nArguments:\n"
             "1. \"account\"        (string, optional) DEPRECATED. The account name for the address to be linked to. If not provided, the default account \"\" is used. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"gravitycoinaddress\"    (string) The new GravityCoin address\n"
+            "\"bitcoinzeroaddress\"    (string) The new BitcoinZero address\n"
             "\nExamples:\n"
             + HelpExampleCli("getnewaddress", "")
             + HelpExampleRpc("getnewaddress", "")
@@ -206,11 +206,11 @@ UniValue getaccountaddress(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress \"account\"\n"
-            "\nDEPRECATED. Returns the current GravityCoin address for receiving payments to this account.\n"
+            "\nDEPRECATED. Returns the current BitcoinZero address for receiving payments to this account.\n"
             "\nArguments:\n"
             "1. \"account\"       (string, required) The account name for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"gravitycoinaddress\"   (string) The account GravityCoin address\n"
+            "\"bitcoinzeroaddress\"   (string) The account BitcoinZero address\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccountaddress", "")
             + HelpExampleCli("getaccountaddress", "\"\"")
@@ -238,7 +238,7 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getrawchangeaddress\n"
-            "\nReturns a new GravityCoin address, for receiving change.\n"
+            "\nReturns a new BitcoinZero address, for receiving change.\n"
             "This is for use with raw transactions, NOT normal use.\n"
             "\nResult:\n"
             "\"address\"    (string) The address\n"
@@ -272,10 +272,10 @@ UniValue setaccount(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount \"gravitycoinaddress\" \"account\"\n"
+            "setaccount \"bitcoinzeroaddress\" \"account\"\n"
             "\nDEPRECATED. Sets the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"gravitycoinaddress\"  (string, required) The GravityCoin address to be associated with an account.\n"
+            "1. \"bitcoinzeroaddress\"  (string, required) The BitcoinZero address to be associated with an account.\n"
             "2. \"account\"         (string, required) The account to assign the address to.\n"
             "\nExamples:\n"
             + HelpExampleCli("setaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"tabby\"")
@@ -286,7 +286,7 @@ UniValue setaccount(const UniValue& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
 
     string strAccount;
     if (params.size() > 1)
@@ -318,10 +318,10 @@ UniValue getaccount(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount \"gravitycoinaddress\"\n"
+            "getaccount \"bitcoinzeroaddress\"\n"
             "\nDEPRECATED. Returns the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"gravitycoinaddress\"  (string, required) The GravityCoin address for account lookup.\n"
+            "1. \"bitcoinzeroaddress\"  (string, required) The BitcoinZero address for account lookup.\n"
             "\nResult:\n"
             "\"accountname\"        (string) the account address\n"
             "\nExamples:\n"
@@ -333,7 +333,7 @@ UniValue getaccount(const UniValue& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
 
     string strAccount;
     map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
@@ -372,7 +372,7 @@ UniValue getaddressesbyaccount(const UniValue& params, bool fHelp)
             "1. \"account\"  (string, required) The account name.\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"gravitycoinaddress\"  (string) a GravityCoin address associated with the given account\n"
+            "  \"bitcoinzeroaddress\"  (string) a BitcoinZero address associated with the given account\n"
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
@@ -407,7 +407,7 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
     if (nValue > curBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
 
-    // Parse GravityCoin address
+    // Parse BitcoinZero address
     CScript scriptPubKey = GetScriptForDestination(address);
 
     // Create and send the transaction
@@ -434,11 +434,11 @@ UniValue sendtoaddress(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
-            "sendtoaddress \"gravitycoinaddress\" amount ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
+            "sendtoaddress \"bitcoinzeroaddress\" amount ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
             "\nSend an amount to a given address.\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-            "1. \"gravitycoinaddress\"  (string, required) The GravityCoin address to send to.\n"
+            "1. \"bitcoinzeroaddress\"  (string, required) The BitcoinZero address to send to.\n"
             "2. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -460,7 +460,7 @@ UniValue sendtoaddress(const UniValue& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
 
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
@@ -500,7 +500,7 @@ UniValue listaddressgroupings(const UniValue& params, bool fHelp)
             "[\n"
             "  [\n"
             "    [\n"
-            "      \"gravitycoinaddress\",     (string) The GravityCoin address\n"
+            "      \"bitcoinzeroaddress\",     (string) The BitcoinZero address\n"
             "      amount,                 (numeric) The amount in " + CURRENCY_UNIT + "\n"
             "      \"account\"             (string, optional) The account (DEPRECATED)\n"
             "    ]\n"
@@ -543,11 +543,11 @@ UniValue signmessage(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage \"gravitycoinaddress\" \"message\"\n"
+            "signmessage \"bitcoinzeroaddress\" \"message\"\n"
             "\nSign a message with the private key of an address"
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"gravitycoinaddress\"  (string, required) The GravityCoin address to use for the private key.\n"
+            "1. \"bitcoinzeroaddress\"  (string, required) The BitcoinZero address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -599,10 +599,10 @@ UniValue getreceivedbyaddress(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress \"gravitycoinaddress\" ( minconf )\n"
-            "\nReturns the total amount received by the given gravitycoinaddress in transactions with at least minconf confirmations.\n"
+            "getreceivedbyaddress \"bitcoinzeroaddress\" ( minconf )\n"
+            "\nReturns the total amount received by the given bitcoinzeroaddress in transactions with at least minconf confirmations.\n"
             "\nArguments:\n"
-            "1. \"gravitycoinaddress\"  (string, required) The GravityCoin address for transactions.\n"
+            "1. \"bitcoinzeroaddress\"  (string, required) The BitcoinZero address for transactions.\n"
             "2. minconf             (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "amount   (numeric) The total amount in " + CURRENCY_UNIT + " received at this address.\n"
@@ -619,10 +619,10 @@ UniValue getreceivedbyaddress(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    // GravityCoin address
+    // BitcoinZero address
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     if (!IsMine(*pwalletMain, scriptPubKey))
         return ValueFromAmount(0);
@@ -852,12 +852,12 @@ UniValue sendfrom(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"togravitycoinaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
-            "\nDEPRECATED (use sendtoaddress). Sent an amount from an account to a GravityCoin address."
+            "sendfrom \"fromaccount\" \"tobitcoinzeroaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "\nDEPRECATED (use sendtoaddress). Sent an amount from an account to a BitcoinZero address."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"       (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
-            "2. \"togravitycoinaddress\"  (string, required) The GravityCoin address to send funds to.\n"
+            "2. \"tobitcoinzeroaddress\"  (string, required) The BitcoinZero address to send funds to.\n"
             "3. amount                (numeric or string, required) The amount in " + CURRENCY_UNIT + " (transaction fee is added on top).\n"
             "4. minconf               (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"           (string, optional) A comment used to store what the transaction is for. \n"
@@ -881,7 +881,7 @@ UniValue sendfrom(const UniValue& params, bool fHelp)
     string strAccount = AccountFromValue(params[0]);
     CBitcoinAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
     CAmount nAmount = AmountFromValue(params[2]);
     if (nAmount <= 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
@@ -923,7 +923,7 @@ UniValue sendmany(const UniValue& params, bool fHelp)
             "1. \"fromaccount\"         (string, required) DEPRECATED. The account to send the funds from. Should be \"\" for the default account\n"
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
-            "      \"address\":amount   (numeric or string) The GravityCoin address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
+            "      \"address\":amount   (numeric or string) The BitcoinZero address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
             "      ,...\n"
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
@@ -976,7 +976,7 @@ UniValue sendmany(const UniValue& params, bool fHelp)
     {
         CBitcoinAddress address(name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid GravityCoin address: ")+name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid BitcoinZero address: ")+name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+name_);
@@ -1032,20 +1032,20 @@ UniValue addmultisigaddress(const UniValue& params, bool fHelp)
     {
         string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet.\n"
-            "Each key is a GravityCoin address or hex-encoded public key.\n"
+            "Each key is a BitcoinZero address or hex-encoded public key.\n"
             "If 'account' is specified (DEPRECATED), assign address to that account.\n"
 
             "\nArguments:\n"
             "1. nrequired        (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keysobject\"   (string, required) A json array of GravityCoin addresses or hex-encoded public keys\n"
+            "2. \"keysobject\"   (string, required) A json array of BitcoinZero addresses or hex-encoded public keys\n"
             "     [\n"
-            "       \"address\"  (string) GravityCoin address or hex-encoded public key\n"
+            "       \"address\"  (string) BitcoinZero address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
             "3. \"account\"      (string, optional) DEPRECATED. An account to assign the addresses to.\n"
 
             "\nResult:\n"
-            "\"gravitycoinaddress\"  (string) A GravityCoin address associated with the keys.\n"
+            "\"bitcoinzeroaddress\"  (string) A BitcoinZero address associated with the keys.\n"
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
@@ -1146,7 +1146,7 @@ UniValue addwitnessaddress(const UniValue& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
 
     Witnessifier w;
     CTxDestination dest = address.Get();
@@ -1445,7 +1445,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
                     ExtractDestination(payee, payeeDest);
                     CBitcoinAddress payeeAddr(payeeDest);
                     if(addr.ToString() == payeeAddr.ToString()){
-                        entry.push_back(Pair("category", "xnode"));
+                        entry.push_back(Pair("category", "bznode"));
                     }
                     else if (wtx.GetDepthInMainChain() < 1)
                         entry.push_back(Pair("category", "orphan"));
@@ -1505,7 +1505,7 @@ UniValue listtransactions(const UniValue& params, bool fHelp)
             "  {\n"
             "    \"account\":\"accountname\",       (string) DEPRECATED. The account name associated with the transaction. \n"
             "                                                It will be \"\" for the default account.\n"
-            "    \"address\":\"gravitycoinaddress\",    (string) The GravityCoin address of the transaction. Not present for \n"
+            "    \"address\":\"bitcoinzeroaddress\",    (string) The BitcoinZero address of the transaction. Not present for \n"
             "                                                move transactions (category = move).\n"
             "    \"category\":\"send|receive|move\", (string) The transaction category. 'move' is a local (off blockchain)\n"
             "                                                transaction between accounts, and not associated with an address,\n"
@@ -1709,7 +1709,7 @@ UniValue listsinceblock(const UniValue& params, bool fHelp)
             "{\n"
             "  \"transactions\": [\n"
             "    \"account\":\"accountname\",       (string) DEPRECATED. The account name associated with the transaction. Will be \"\" for the default account.\n"
-            "    \"address\":\"gravitycoinaddress\",    (string) The GravityCoin address of the transaction. Not present for move transactions (category = move).\n"
+            "    \"address\":\"bitcoinzeroaddress\",    (string) The BitcoinZero address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
             "    \"amount\": x.xxx,          (numeric) The amount in " + CURRENCY_UNIT + ". This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
@@ -1811,7 +1811,7 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
             "  \"details\" : [\n"
             "    {\n"
             "      \"account\" : \"accountname\",  (string) DEPRECATED. The account name involved in the transaction, can be \"\" for the default account.\n"
-            "      \"address\" : \"gravitycoinaddress\",   (string) The GravityCoin address involved in the transaction\n"
+            "      \"address\" : \"bitcoinzeroaddress\",   (string) The BitcoinZero address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
             "      \"amount\" : x.xxx,                 (numeric) The amount in " + CURRENCY_UNIT + "\n"
             "      \"label\" : \"label\",              (string) A comment for the address/transaction, if any\n"
@@ -1978,7 +1978,7 @@ UniValue walletpassphrase(const UniValue& params, bool fHelp)
         throw runtime_error(
             "walletpassphrase \"passphrase\" timeout\n"
             "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-            "This is needed prior to performing transactions related to private keys such as sending gravitycoins\n"
+            "This is needed prior to performing transactions related to private keys such as sending bitcoinzeros\n"
             "\nArguments:\n"
             "1. \"passphrase\"     (string, required) The wallet passphrase\n"
             "2. timeout            (numeric, required) The time to keep the decryption key in seconds.\n"
@@ -2136,7 +2136,7 @@ UniValue encryptwallet(const UniValue& params, bool fHelp)
             "\nNow set the passphrase to use the wallet, such as for signing or sending bitcoin\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n"
-            + HelpExampleCli("signmessage", "\"gravitycoinaddress\" \"test message\"") +
+            + HelpExampleCli("signmessage", "\"bitcoinzeroaddress\" \"test message\"") +
             "\nNow lock the wallet again by removing the passphrase\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs a json rpc call\n"
@@ -2168,7 +2168,7 @@ UniValue encryptwallet(const UniValue& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; GravityCoin server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
+    return "wallet encrypted; BitcoinZero server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
 }
 
 UniValue lockunspent(const UniValue& params, bool fHelp)
@@ -2323,8 +2323,8 @@ UniValue settxfee(const UniValue& params, bool fHelp)
             "\nResult\n"
             "true|false        (boolean) Returns true if successful\n"
             "\nExamples:\n"
-            + HelpExampleCli("settxfee", "0.00000001 GXX")
-            + HelpExampleRpc("settxfee", "0.00000001 GXX")
+            + HelpExampleCli("settxfee", "0.00000001 BZX")
+            + HelpExampleRpc("settxfee", "0.00000001 BZX")
         );
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
@@ -2421,9 +2421,9 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. minconf          (numeric, optional, default=1) The minimum confirmations to filter\n"
             "2. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter\n"
-            "3. \"addresses\"    (string) A json array of GravityCoin addresses to filter\n"
+            "3. \"addresses\"    (string) A json array of BitcoinZero addresses to filter\n"
             "    [\n"
-            "      \"address\"   (string) GravityCoin address\n"
+            "      \"address\"   (string) BitcoinZero address\n"
             "      ,...\n"
             "    ]\n"
             "\nResult\n"
@@ -2431,7 +2431,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             "  {\n"
             "    \"txid\" : \"txid\",          (string) the transaction id \n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"address\" : \"address\",    (string) the GravityCoin address\n"
+            "    \"address\" : \"address\",    (string) the BitcoinZero address\n"
             "    \"account\" : \"account\",    (string) DEPRECATED. The associated account, or \"\" for the default account\n"
             "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
             "    \"amount\" : x.xxx,         (numeric) the transaction amount in " + CURRENCY_UNIT + "\n"
@@ -2466,7 +2466,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             const UniValue& input = inputs[idx];
             CBitcoinAddress address(input.get_str());
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid GravityCoin address: ")+input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid BitcoinZero address: ")+input.get_str());
             if (setAddress.count(address))
                 throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+input.get_str());
            setAddress.insert(address);
@@ -2539,7 +2539,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
                             "1. \"hexstring\"           (string, required) The hex string of the raw transaction\n"
                             "2. options               (object, optional)\n"
                             "   {\n"
-                            "     \"changeAddress\"     (string, optional, default pool address) The GravityCoin address to receive the change\n"
+                            "     \"changeAddress\"     (string, optional, default pool address) The BitcoinZero address to receive the change\n"
                             "     \"changePosition\"    (numeric, optional, default random) The index of the change output\n"
                             "     \"includeWatching\"   (boolean, optional, default false) Also select inputs which are watch only\n"
                             "     \"lockUnspents\"      (boolean, optional, default false) Lock selected unspent outputs\n"
@@ -2597,7 +2597,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
             CBitcoinAddress address(options["changeAddress"].get_str());
 
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "changeAddress must be a valid GravityCoin address");
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "changeAddress must be a valid BitcoinZero address");
 
             changeAddress = address.Get();
         }
@@ -2690,12 +2690,12 @@ UniValue regeneratemintpool(const UniValue &params, bool fHelp) {
     }
 
     if(reindexRequired)
-        return "Mintpool issue corrected. Please shutdown GravityCoin and restart with -reindex flag.";
+        return "Mintpool issue corrected. Please shutdown BitcoinZero and restart with -reindex flag.";
 
     return "No issues with mintpool detected.";
 }
 
-//GravityCoin: zerocoin section
+//BitcoinZero: zerocoin section
 // zerocoin section
 
 UniValue listunspentmintzerocoins(const UniValue &params, bool fHelp) {
@@ -2842,7 +2842,7 @@ UniValue mint(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma is not activated yet");
     }
 
-    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    if (sporkManager.IsSporkActive(SPORK_20_SIGMA))
     {
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma maintenance!");
     }
@@ -2979,7 +2979,7 @@ UniValue mintmanyzerocoin(const UniValue& params, bool fHelp)
                 "\nArguments:\n"
                 "1. \"denomination\"             (integer, required) zerocoin denomination\n"
                 "2. \"numberOfMints\"            (integer, required) amount of mints for chosen denomination\n"
-                "\nExamples:\nThe first example mints denomination 1, one time, for a total GXX valuation of 1.\nThe next example mints denomination 25, ten times, and denomination 50, five times, for a total GXX valuation of 500.\n"
+                "\nExamples:\nThe first example mints denomination 1, one time, for a total BZX valuation of 1.\nThe next example mints denomination 25, ten times, and denomination 50, five times, for a total BZX valuation of 500.\n"
                     + HelpExampleCli("mintmanyzerocoin", "1 1")
                     + HelpExampleCli("mintmanyzerocoin", "25 10 50 5")
         );
@@ -3089,11 +3089,11 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp) {
 
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-                "spendzerocoin <amount>(1,10,100,250,500) (\"gravitycoinaddress\")\n"
+                "spendzerocoin <amount>(1,10,100,250,500) (\"bitcoinzeroaddress\")\n"
                 + HelpRequiringPassphrase() +
 				"\nArguments:\n"
 				"1. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. currently options are following 1, 10, 25, 50 and 100 only\n"
-                "2. \"gravitycoinaddress\"  (string, optional) The GravityCoin address to send to third party.\n"
+                "2. \"bitcoinzeroaddress\"  (string, optional) The BitcoinZero address to send to third party.\n"
 				"\nExamples:\n"
 				            + HelpExampleCli("spendzerocoin", "10 \"a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U\"")
         );
@@ -3120,7 +3120,7 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp) {
         nAmount = AmountFromValue(params[0]);
     } else {
         throw runtime_error(
-                "spendzerocoin <amount>(1,10,100,250,500) (\"gravitycoinaddress\")\n");
+                "spendzerocoin <amount>(1,10,100,250,500) (\"bitcoinzeroaddress\")\n");
     }
 
     CBitcoinAddress address;
@@ -3130,7 +3130,7 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp) {
     	thirdPartyaddress = params[1].get_str();
     	address = CBitcoinAddress(params[1].get_str());
 		 if (!address.IsValid())
-			 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+			 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
     }
 
     EnsureWalletIsUnlocked();
@@ -3242,7 +3242,7 @@ UniValue spendmanyzerocoin(const UniValue& params, bool fHelp) {
                 break;
             default:
                 throw runtime_error(
-                    "spendmanyzerocoin <amount>(1,10,100,250,500) (\"gravitycoinaddress\")\n");
+                    "spendmanyzerocoin <amount>(1,10,100,250,500) (\"bitcoinzeroaddress\")\n");
         }
         for(int64_t j=0; j<amount; j++){
             denominations.push_back(std::make_pair(value * COIN, denomination));
@@ -3253,7 +3253,7 @@ UniValue spendmanyzerocoin(const UniValue& params, bool fHelp) {
     if (!(addressStr == "")){
         CBitcoinAddress address(addressStr);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address");
         thirdPartyAddress = addressStr;
     }
 
@@ -3292,14 +3292,14 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
                 "1. \"fromaccount\"         (string, required) DEPRECATED. The account to send the funds from. Should be \"\" for the default account\n"
                 "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
                 "    {\n"
-                "      \"address\":amount   (numeric or string) The GravityCoin address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
+                "      \"address\":amount   (numeric or string) The BitcoinZero address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
                 "      ,...\n"
                 "    }\n"
                 "3. minconf                 (numeric, optional, default=6) NOT IMPLEMENTED. Only use the balance confirmed at least this many times.\n"
                 "4. \"comment\"             (string, optional) A comment\n"
                 "5. subtractfeefromamount   (string, optional) A json array with addresses.\n"
                 "                           The fee will be equally deducted from the amount of each selected address.\n"
-                "                           Those recipients will receive less gravitycoins than you enter in their corresponding amount field.\n"
+                "                           Those recipients will receive less bitcoinzeros than you enter in their corresponding amount field.\n"
                 "                           If no addresses are specified here, the sender pays the fee.\n"
                 "    [\n"
                 "      \"address\"            (string) Subtract fee from this address\n"
@@ -3319,7 +3319,7 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma is not activated yet");
     }
 
-    if (sporkManager.IsSporkActive(SPORK_10_SIGMA))
+    if (sporkManager.IsSporkActive(SPORK_20_SIGMA))
     {
         throw JSONRPCError(RPC_WALLET_ERROR, "Sigma maintenance!");
     }
@@ -3360,7 +3360,7 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
     for (const auto& strAddr : keys) {
         CBitcoinAddress address(strAddr);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid GravityCoin address: " + strAddr);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid BitcoinZero address: " + strAddr);
 
         if (!setAddress.insert(address).second)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, duplicated address: " + strAddr);

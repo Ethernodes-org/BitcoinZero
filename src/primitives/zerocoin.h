@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The GravityCoin Core Developers
+// Copyright (c) 2019 The BitcoinZero Core Developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 

@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>التوقيع و الرسائل</translation>
@@ -158,7 +158,7 @@
         <translation>إعادة الفهرسة الكتل على القرص ...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
+        <source>Send coins to a BitcoinZero address</source>
         <translation>ارسل عملات الى عنوان بيتكوين</translation>
     </message>
     <message>
@@ -182,7 +182,7 @@
         <translation>&amp;التحقق من الرسالة...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
+        <source>BitcoinZero</source>
         <translation>بت كوين</translation>
     </message>
     <message>
@@ -210,12 +210,12 @@
         <translation>تشفير المفتاح الخاص بمحفظتك</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>وقَع الرسائل بواسطة ال: GravityCoin الخاص بك لإثبات امتلاكك لهم</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>وقَع الرسائل بواسطة ال: BitcoinZero الخاص بك لإثبات امتلاكك لهم</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>تحقق من الرسائل للتأكد من أنَها وُقعت برسائل GravityCoin محدَدة</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>تحقق من الرسائل للتأكد من أنَها وُقعت برسائل BitcoinZero محدَدة</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -234,7 +234,7 @@
         <translation>شريط أدوات علامات التبويب</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
         <translation>أطلب دفعات (يولد كودات الرمز المربع وبيت كوين: العناوين المعطاة)</translation>
     </message>
     <message>
@@ -246,8 +246,8 @@
         <translation>عرض قائمة عناوين الإستقبال المستخدمة والملصقات</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>فتح URI : GravityCoin أو طلب دفع</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>فتح URI : BitcoinZero أو طلب دفع</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -1014,7 +1014,7 @@
         <translation>هذا دفع اعتيادي</translation>
     </message>
     <message>
-        <source>The GravityCoin address to send the payment to</source>
+        <source>The BitcoinZero address to send the payment to</source>
         <translation>عنوان البت كوين المرسل اليه الدفع</translation>
     </message>
     <message>
@@ -1083,7 +1083,7 @@
         <translation>التوقيع</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
         <translation>وقع الرسالة لتثبت انك تمتلك عنوان البت كوين هذا</translation>
     </message>
     <message>
@@ -1142,7 +1142,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>خيارات: </translation>
@@ -1156,7 +1156,7 @@
         <translation>قبول الاتصالات من خارج</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
+        <source>BitcoinZero Core</source>
         <translation>جوهر البيت كوين</translation>
     </message>
     <message>

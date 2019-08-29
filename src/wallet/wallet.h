@@ -79,7 +79,7 @@ extern const char * DEFAULT_WALLET_DAT;
 const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 const uint32_t BIP44_INDEX = 0x2C;
 const uint32_t BIP44_TEST_INDEX = 0x1;   // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
-const uint32_t BIP44_GRAVITYCOIN_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
+const uint32_t BIP44_BITCOINZERO_INDEX = 0x88; // https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
 const uint32_t BIP44_MINT_INDEX = 0x2;
 
 class CBlockIndex;
@@ -99,7 +99,7 @@ enum WalletFeature
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
 
     FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
-    FEATURE_LATEST = 4000608 // HD is optional, use FEATURE_COMPRPUBKEY as latest version
+    FEATURE_LATEST = 5000301 // HD is optional, use FEATURE_COMPRPUBKEY as latest version
 };
 
 enum AvailableCoinsType
@@ -108,7 +108,7 @@ enum AvailableCoinsType
     ONLY_DENOMINATED = 2,
     ONLY_NOT1000IFMN = 3,
     ONLY_NONDENOMINATED_NOT1000IFMN = 4,
-    ONLY_1000 = 5, // find xnode outputs including locked ones (use with caution)
+    ONLY_1000 = 5, // find bznode outputs including locked ones (use with caution)
     ONLY_PRIVATESEND_COLLATERAL = 6,
     ONLY_MINTS = 7,
     WITH_MINTS = 8
@@ -267,7 +267,7 @@ public:
         CValidationState& state,
         bool fCheckInputs,
         bool isCheckWalletTransaction = false,
-        bool markGravityCoinSpendTransactionSerial = true);
+        bool markBitcoinZeroSpendTransactionSerial = true);
 
     bool hashUnset() const { return (hashBlock.IsNull() || hashBlock == ABANDON_HASH); }
     bool isAbandoned() const { return (hashBlock == ABANDON_HASH); }
@@ -685,7 +685,7 @@ public:
 
     std::set<int64_t> setKeyPool;
     std::map<CKeyID, CKeyMetadata> mapKeyMetadata;
-    //xnode
+    //bznode
     int64_t nKeysLeftSinceAutoBackup;
 
     typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
@@ -779,9 +779,9 @@ public:
     void UnlockAllCoins();
     void ListLockedCoins(std::vector<COutPoint>& vOutpts);
 
-    // xnode
-    /// Get 1000 GXX output and keys which can be used for the Xnode
-    bool GetXnodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
+    // bznode
+    /// Get 1000 BZX output and keys which can be used for the Bznode
+    bool GetBznodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
     /// Extract txin information and keys from output
     bool GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet);
     bool HasCollateralInputs(bool fOnlyConfirmed = true) const;
@@ -845,7 +845,7 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime);
-    //xnode
+    //bznode
     CAmount GetBalance() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;

@@ -82,9 +82,9 @@ static int AppInitRPC(int argc, char* argv[])
         std::string strUsage = strprintf(_("%s RPC client version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n";
         if (!mapArgs.count("-version")) {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  GravityCoin-cli [options] <command> [params]  " + strprintf(_("Send command to %s"), _(PACKAGE_NAME)) + "\n" +
-                  "  GravityCoin-cli [options] help                " + _("List commands") + "\n" +
-                  "  GravityCoin-cli [options] help <command>      " + _("Get help for a command") + "\n";
+                  "  bitcoinzero-cli [options] <command> [params]  " + strprintf(_("Send command to %s"), _(PACKAGE_NAME)) + "\n" +
+                  "  bitcoinzero-cli [options] help                " + _("List commands") + "\n" +
+                  "  bitcoinzero-cli [options] help <command>      " + _("Get help for a command") + "\n";
 
             strUsage += "\n" + HelpMessageCli();
         }

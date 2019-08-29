@@ -45,7 +45,7 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>&amp;Options...</source>
         <translation>Pilihan</translation>
@@ -161,6 +161,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     </context>
 </TS>

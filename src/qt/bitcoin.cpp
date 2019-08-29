@@ -19,7 +19,7 @@
 #include "splashscreen.h"
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
-#include "xnodeconfig.h"
+#include "bznodeconfig.h"
 
 #ifdef ENABLE_WALLET
 #include "paymentserver.h"
@@ -101,7 +101,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("GravityCoin-core", psz).toStdString();
+    return QCoreApplication::translate("BitcoinZero-core", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -636,11 +636,11 @@ int main(int argc, char *argv[])
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
 #ifdef ENABLE_WALLET
-    /// 7a. parse xnode.conf
+    /// 7a. parse bznode.conf
     std::string strErr;
-    if(!xnodeConfig.read(strErr)) {
-        QMessageBox::critical(0, QObject::tr("GravityCoin Core"),
-                              QObject::tr("Error reading xnode configuration file: %1").arg(strErr.c_str()));
+    if(!bznodeConfig.read(strErr)) {
+        QMessageBox::critical(0, QObject::tr("BitcoinZero Core"),
+                              QObject::tr("Error reading bznode configuration file: %1").arg(strErr.c_str()));
         return EXIT_FAILURE;
     }
 

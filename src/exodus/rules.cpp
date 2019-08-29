@@ -535,8 +535,8 @@ bool IsTransactionTypeAllowed(int txBlock, uint32_t txProperty, uint16_t txType,
         if (entry.txType != txType || entry.txVersion != version) {
             continue;
         }
-        // a property identifier of 0 (= GXX) may be used as wildcard
-        if (EXODUS_PROPERTY_GXX == txProperty && !entry.allowWildcard) {
+        // a property identifier of 0 (= BZX) may be used as wildcard
+        if (EXODUS_PROPERTY_BZX == txProperty && !entry.allowWildcard) {
             continue;
         }
         // transactions are not restricted in the test ecosystem

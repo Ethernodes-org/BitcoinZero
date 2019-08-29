@@ -64,7 +64,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>GravityCoinGUI</name>
+    <name>BitcoinZeroGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>&amp;Asinar mensaxe...</translation>
@@ -130,8 +130,8 @@
         <translation>Reindexando bloques no disco...</translation>
     </message>
     <message>
-        <source>Send coins to a GravityCoin address</source>
-        <translation>Enviar moedas a unha dirección GravityCoin</translation>
+        <source>Send coins to a BitcoinZero address</source>
+        <translation>Enviar moedas a unha dirección BitcoinZero</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -154,8 +154,8 @@
         <translation>&amp;Verificar mensaxe...</translation>
     </message>
     <message>
-        <source>GravityCoin</source>
-        <translation>GravityCoin</translation>
+        <source>BitcoinZero</source>
+        <translation>BitcoinZero</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -182,12 +182,12 @@
         <translation>Encriptar as claves privadas que pertencen ao teu moedeiro</translation>
     </message>
     <message>
-        <source>Sign messages with your GravityCoin addresses to prove you own them</source>
-        <translation>Asina mensaxes coas túas direccións GravityCoin para probar que te pertencen</translation>
+        <source>Sign messages with your BitcoinZero addresses to prove you own them</source>
+        <translation>Asina mensaxes coas túas direccións BitcoinZero para probar que te pertencen</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified GravityCoin addresses</source>
-        <translation>Verificar mensaxes para asegurar que foron asinados con direccións GravityCoin dadas.</translation>
+        <source>Verify messages to ensure they were signed with specified BitcoinZero addresses</source>
+        <translation>Verificar mensaxes para asegurar que foron asinados con direccións BitcoinZero dadas.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -206,8 +206,8 @@
         <translation>Barra de ferramentas</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and GravityCoin: URIs)</source>
-        <translation>Solicitar pagos (xenera códigos QR e GravityCoin: URIs)</translation>
+        <source>Request payments (generates QR codes and BitcoinZero: URIs)</source>
+        <translation>Solicitar pagos (xenera códigos QR e BitcoinZero: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -218,8 +218,8 @@
         <translation>Amosar a listaxe de etiquetas e direccións para recibir empregadas</translation>
     </message>
     <message>
-        <source>Open a GravityCoin: URI or payment request</source>
-        <translation>Abrir un GravityCoin: URI ou solicitude de pago</translation>
+        <source>Open a BitcoinZero: URI or payment request</source>
+        <translation>Abrir un BitcoinZero: URI ou solicitude de pago</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -467,8 +467,8 @@
         <translation>Moedeiro</translation>
     </message>
     <message>
-        <source>Automatically open the GravityCoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Abrir automáticamente o porto do cliente GravityCoin no router. Esto so funciona se o teu router soporta UPnP e está habilitado.</translation>
+        <source>Automatically open the BitcoinZero client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Abrir automáticamente o porto do cliente BitcoinZero no router. Esto so funciona se o teu router soporta UPnP e está habilitado.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -546,8 +546,8 @@
         <translation>Formulario</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the GravityCoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>A información amosada por estar desactualizada. O teu moedeiro sincronízase automáticamente coa rede GravityCoin despois de que se estableza unha conexión, pero este proceso non está todavía rematado.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the BitcoinZero network after a connection is established, but this process has not completed yet.</source>
+        <translation>A información amosada por estar desactualizada. O teu moedeiro sincronízase automáticamente coa rede BitcoinZero despois de que se estableza unha conexión, pero este proceso non está todavía rematado.</translation>
     </message>
     <message>
         <source>Your current spendable balance</source>
@@ -929,8 +929,8 @@
         <translation>Copiar a sinatura actual ao portapapeis do sistema</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this GravityCoin address</source>
-        <translation>Asina a mensaxe para probar que posees esta dirección GravityCoin</translation>
+        <source>Sign the message to prove you own this BitcoinZero address</source>
+        <translation>Asina a mensaxe para probar que posees esta dirección BitcoinZero</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -949,8 +949,8 @@
         <translation>&amp;Verificar Mensaxe</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified GravityCoin address</source>
-        <translation>Verificar a mensaxe para asegurar que foi asinada coa dirección GravityCoin especificada</translation>
+        <source>Verify the message to ensure it was signed with the specified BitcoinZero address</source>
+        <translation>Verificar a mensaxe para asegurar que foi asinada coa dirección BitcoinZero especificada</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1004,7 +1004,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>GravityCoin-Core</name>
+    <name>BitcoinZero-Core</name>
     <message>
         <source>Options:</source>
         <translation>Opcións:</translation>
@@ -1034,8 +1034,8 @@
         <translation>Aceptar conexións de fóra (por defecto: 1 se non -proxy ou -connect)</translation>
     </message>
     <message>
-        <source>GravityCoin Core</source>
-        <translation>Core de GravityCoin</translation>
+        <source>BitcoinZero Core</source>
+        <translation>Core de BitcoinZero</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>

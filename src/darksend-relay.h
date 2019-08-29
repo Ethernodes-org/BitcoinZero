@@ -7,14 +7,14 @@
 #define DARKSEND_RELAY_H
 
 #include "main.h"
-#include "activexnode.h"
-#include "xnodeman.h"
+#include "activebznode.h"
+#include "bznodeman.h"
 
 
 class CDarkSendRelay
 {
 public:
-    CTxIn vinXnode;
+    CTxIn vinBznode;
     vector<unsigned char> vchSig;
     vector<unsigned char> vchSig2;
     int nBlockHeight;
@@ -23,13 +23,13 @@ public:
     CTxOut out;
 
     CDarkSendRelay();
-    CDarkSendRelay(CTxIn& vinXnodeIn, vector<unsigned char>& vchSigIn, int nBlockHeightIn, int nRelayTypeIn, CTxIn& in2, CTxOut& out2);
+    CDarkSendRelay(CTxIn& vinBznodeIn, vector<unsigned char>& vchSigIn, int nBlockHeightIn, int nRelayTypeIn, CTxIn& in2, CTxOut& out2);
     
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(vinXnode);
+        READWRITE(vinBznode);
         READWRITE(vchSig);
         READWRITE(vchSig2);
         READWRITE(nBlockHeight);

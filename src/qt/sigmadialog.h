@@ -1,5 +1,5 @@
-#ifndef GRAVITYCOIN_QT_SIGMAPAGE_H
-#define GRAVITYCOIN_QT_SIGMAPAGE_H
+#ifndef BITCOINZERO_QT_SIGMAPAGE_H
+#define BITCOINZERO_QT_SIGMAPAGE_H
 
 #include "addresstablemodel.h"
 #include "clientmodel.h"
@@ -84,4 +84,4 @@ Q_SIGNALS:
     void message(const QString &title, const QString &message, unsigned int style);
 };
 
-#endif // GRAVITYCOIN_QT_SIGMAPAGE_H
+#endif // BITCOINZERO_QT_SIGMAPAGE_H

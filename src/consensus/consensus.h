@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2016-2017 The GravityCoin developers
+// Copyright (c) 2016-2017 The BitcoinZero developers
 
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -11,17 +11,21 @@
 #include <stdint.h>
 
 // HF constants
-static const int HF_XNODE_HEIGHT = 66550;
-static const int HF_XNODE_PAYMENT_START = HF_XNODE_HEIGHT + 150; // 66700 - about 25h after HF
+static const int HF_FEE_FORK = 51000;
+static const int HF_ALGO = 1;
+static const int HF_FORK_END = 46;
+static const int HF_FORK_DGW = 100;
+static const int HF_FORK_REW = 576;
+static const int HF_SIGMA_REW = 156111 + 576;
 
 /** The maximum allowed size for a serialized block, in bytes (only for buffer size limits) */
-static const unsigned int MAX_BLOCK_SERIALIZED_SIZE = 2000000;
+static const unsigned int MAX_BLOCK_SERIALIZED_SIZE = 4000000;
 /** The maximum allowed weight for a block, see BIP 141 (network rule) */
-static const unsigned int MAX_BLOCK_WEIGHT = 2000000;
+static const unsigned int MAX_BLOCK_WEIGHT = 4000000;
 /** The maximum allowed size for a block excluding witness data, in bytes (network rule) */
-static const unsigned int MAX_BLOCK_BASE_SIZE = 2000000;
+static const unsigned int MAX_BLOCK_BASE_SIZE = 4000000;
 /** The maximum allowed number of signature check operations in a block (network rule) */
-static const int64_t MAX_BLOCK_SIGOPS_COST = 400000;
+static const int64_t MAX_BLOCK_SIGOPS_COST = 80000;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 static const int COINBASE_MATURITY = 100;
 
