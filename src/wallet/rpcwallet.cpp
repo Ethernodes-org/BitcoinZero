@@ -2647,14 +2647,13 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 
 UniValue regeneratemintpool(const UniValue &params, bool fHelp) {
 
-    if (pwalletMain->IsLocked())
-        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED,
-                           "Error: Please enter the wallet passphrase with walletpassphrase first.");
+		if (pwalletMain->IsLocked()) {
+			LogPrintf("Please enter the wallet passphrase with walletpassphrase first.\n");
+			return "Please enter the wallet passphrase with walletpassphrase first"; }
 
-    if (!pwalletMain->IsHDSeedAvailable() || !zwalletMain) {
-        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED,
-                           "Error: Can only regenerate mintpool on a HD-enabled wallet.");
-    }
+		if (!pwalletMain->IsHDSeedAvailable() || !zwalletMain) {
+			LogPrintf("Can only regenerate mintpool on a HD-enabled wallet.\n");
+			return "Can only regenerate mintpool on a HD-enabled wallet."; }
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     vector<std::pair<uint256, MintPoolEntry>> listMintPool = walletdb.ListMintPool();
