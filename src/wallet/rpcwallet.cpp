@@ -4026,11 +4026,11 @@ UniValue removetxwallet(const UniValue& params, bool fHelp) {
 
 
 
-extern UniValue dumpprivkey_gcoin(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue dumpprivkey_bzx(const UniValue& params, bool fHelp); // in rpcdump.cpp
 extern UniValue importprivkey(const UniValue& params, bool fHelp);
 extern UniValue importaddress(const UniValue& params, bool fHelp);
 extern UniValue importpubkey(const UniValue& params, bool fHelp);
-extern UniValue dumpwallet_gcoin(const UniValue& params, bool fHelp);
+extern UniValue dumpwallet_bzx(const UniValue& params, bool fHelp);
 extern UniValue importwallet(const UniValue& params, bool fHelp);
 extern UniValue importprunedfunds(const UniValue& params, bool fHelp);
 extern UniValue removeprunedfunds(const UniValue& params, bool fHelp);
@@ -4044,8 +4044,8 @@ static const CRPCCommand commands[] =
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       true  },
     { "wallet",             "addwitnessaddress",        &addwitnessaddress,        true  },
     { "wallet",             "backupwallet",             &backupwallet,             true  },
-    { "wallet",             "dumpprivkey",              &dumpprivkey_gcoin,        true  },
-    { "wallet",             "dumpwallet",               &dumpwallet_gcoin,         true  },
+    { "wallet",             "dumpprivkey",              &dumpprivkey_bzx,        true  },
+    { "wallet",             "dumpwallet",               &dumpwallet_bzx,         true  },
     { "wallet",             "encryptwallet",            &encryptwallet,            true  },
     { "wallet",             "getaccountaddress",        &getaccountaddress,        true  },
     { "wallet",             "getaccount",               &getaccount,               true  },
