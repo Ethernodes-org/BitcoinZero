@@ -1,5 +1,5 @@
-#ifndef BITCOINZERO_SIGMA_COINSPEND_H
-#define BITCOINZERO_SIGMA_COINSPEND_H
+#ifndef SIGMA_COINSPEND_H
+#define SIGMA_COINSPEND_H
 
 #include "coin.h"
 #include "sigmaplus_proof.h"
@@ -17,7 +17,7 @@ public:
     CoinSpend(const Params* p,  Stream& strm):
         params(p),
         denomination(CoinDenomination::SIGMA_DENOM_X1),
-        sigmaProof(p) {
+        sigmaProof(p->get_n(), p->get_m()) {
             strm >> * this;
         }
 
@@ -87,4 +87,4 @@ private:
 
 } //namespace sigma
 
-#endif // BITCOINZERO_SIGMA_COINSPEND_H
+#endif // SIGMA_COINSPEND_H
