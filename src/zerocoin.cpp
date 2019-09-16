@@ -597,7 +597,7 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
                                      "CTransaction::CheckTransaction() : founders reward missing");
                 }
 
-                if (total_payment_tx > 1)
+                if (total_payment_tx > 2)
                 {
                     return state.DoS(100, false, REJECT_INVALID_BZNODE_PAYMENT,
                                      "CTransaction::CheckTransaction() : invalid bznode payment");
