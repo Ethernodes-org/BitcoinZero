@@ -2823,13 +2823,13 @@ UniValue mint(const UniValue& params, bool fHelp)
             "\nAutomatically choose denominations to mint by amount."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to mint, must be a multiple of 0.05\n"
+            "1. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to mint, must be a multiple of 1\n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("mint", "0.15")
-            + HelpExampleCli("mint", "100.9")
-            + HelpExampleRpc("mint", "0.15")
+            + HelpExampleCli("mint", "1")
+            + HelpExampleCli("mint", "10")
+            + HelpExampleRpc("mint", "99")
         );
 
     EnsureWalletIsUnlocked();
@@ -3309,9 +3309,9 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
                 "                                    the number of addresses.\n"
                 "\nExamples:\n"
                 "\nSend two amounts to two different addresses:\n"
-                + HelpExampleCli("spendmany", "\"\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\"") +
+                + HelpExampleCli("spendmany", "\"\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":1,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":2}\"") +
                 "\nSend two amounts to two different addresses and subtract fee from amount:\n"
-                + HelpExampleCli("spendmany", "\"\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\" 6 \"testing\" \"[\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\",\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\"]\"")
+                + HelpExampleCli("spendmany", "\"\" \"{\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":1,\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":2}\" 6 \"testing\" \"[\\\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\",\\\"1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\"]\"")
         );
 
     if (!sigma::IsSigmaAllowed()) {
