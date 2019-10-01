@@ -410,7 +410,7 @@ bool CheckSigmaTransaction(
         realHeight = chainActive.Height();
     }
 
-    if (sporkManager.IsSporkActive(SPORK_20_SIGMA))
+    if (sporkManager.IsSporkActive(SPORK_20_SIGMA) && (bznodeSync.IsBlockchainSynced()))
     {
         return false;
     }

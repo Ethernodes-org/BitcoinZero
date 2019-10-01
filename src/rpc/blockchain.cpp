@@ -1214,6 +1214,16 @@ UniValue invalidateblock(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
+UniValue resetblock(const UniValue& params, bool fHelp)
+{
+    CBlockIndex* const pindexPrev = chainActive.Tip();
+    ResetBlockFailureFlags(pindexPrev);
+    CValidationState state;
+    ActivateBestChain(state, Params());
+
+    return NullUniValue;
+}
+
 UniValue reconsiderblock(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
@@ -1276,6 +1286,7 @@ static const CRPCCommand commands[] =
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        true  },
     { "hidden",             "reconsiderblock",        &reconsiderblock,        true  },
+    { "hidden",             "resetblock",             &resetblock,             true  },
 };
 
 void RegisterBlockchainRPCCommands(CRPCTable &tableRPC)

@@ -45,7 +45,6 @@
 #include "versionbits.h"
 #include "definition.h"
 #include "utiltime.h"
-
 #include "darksend.h"
 #include "instantx.h"
 #include "bznode-payments.h"
@@ -1182,7 +1181,8 @@ bool CheckTransaction(
 		    }
 	    }
 
-        if (tx.IsZerocoinV3SigmaTransaction()) {
+        if (tx.IsZerocoinV3SigmaTransaction() && (bznodeSync.IsBlockchainSynced()))
+        {
             if (!CheckSigmaTransaction(
                     tx,
                     state,
@@ -1195,18 +1195,22 @@ bool CheckTransaction(
             return false;
         }
 
-        if (!CheckZerocoinTransaction(
-            tx,
-            state,
-            Params().GetConsensus(),
-            hashTx,
-            isVerifyDB,
-            nHeight,
-            isCheckWallet,
-            fStatefulZerocoinCheck,
-            zerocoinTxInfo)) {
-            return false;
+        if (nHeight > 157000)
+        {
+            if (tx.IsZerocoinSpend())
+                {
+                LogPrintf("zspend false!\n");
+                return false;
+                }
+
+            BOOST_FOREACH(const CTxOut &txout, tx.vout)
+            if (txout.scriptPubKey.IsZerocoinMint())
+                {
+                LogPrintf("zmint false!\n");
+                return false;
+                }
         }
+
     }
 
     return true;

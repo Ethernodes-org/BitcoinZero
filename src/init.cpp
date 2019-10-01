@@ -116,7 +116,7 @@ enum BindFlags {
 };
 
 static const char *FEE_ESTIMATES_FILENAME = "fee_estimates.dat";
-
+int nBackups = GetArg("-backups", DEFAULT_BACKUPS);
 extern CTxMemPool stempool;
 
 namespace fs = boost::filesystem;
@@ -218,6 +218,43 @@ void Shutdown() {
     TRY_LOCK(cs_Shutdown, lockShutdown);
     if (!lockShutdown)
         return;
+
+        boost::filesystem::path backupDir = GetDataDir() / "backups";
+        if (nBackups > 0)
+        {
+            if (!boost::filesystem::exists(backupDir))
+            {
+                // Always create backup folder to not confuse the operating system's file browser
+                boost::filesystem::create_directories(backupDir);
+            }
+
+                if (boost::filesystem::exists(backupDir))
+
+                {   std::string strWalletFile = GetArg("-wallet", "wallet.dat");
+                    // Create backup of the wallet
+                    std::string dateTimeStr = DateTimeStrFormat(".%Y-%m-%d-%H-%M-CLOSED", GetTime());
+                    std::string backupPathStr = backupDir.string();
+                    backupPathStr += "/" + strWalletFile;
+                    std::string sourcePathStr = GetDataDir().string();
+                    sourcePathStr += "/" + strWalletFile;
+                    boost::filesystem::path sourceFile = sourcePathStr;
+                    boost::filesystem::path backupFile = backupPathStr + dateTimeStr;
+                    sourceFile.make_preferred();
+                    backupFile.make_preferred();
+                    if (boost::filesystem::exists(sourceFile))
+                    {
+                        try
+                        {
+                            boost::filesystem::copy_file(sourceFile, backupFile);
+                            LogPrintf("Creating backup of %s -> %s\n", sourceFile, backupFile);
+                        } catch (boost::filesystem::filesystem_error& error)
+                        {
+                            LogPrintf("Failed to create backup %s\n", error.what());
+                        }
+
+                    }
+                }
+        }
 
     /// Note: Shutdown() must be able to handle cases in which AppInit2() failed part of the way,
     /// for example if the data directory was found to be locked.
@@ -406,6 +443,7 @@ std::string HelpMessage(HelpMessageMode mode) {
             MIN_DISK_SPACE_FOR_BLOCK_FILES / 1024 / 1024));
     strUsage += HelpMessageOpt("-reindex-chainstate", _("Rebuild chain state from the currently indexed blocks"));
     strUsage += HelpMessageOpt("-reindex", _("Rebuild chain state and block index from the blk*.dat files on disk"));
+    strUsage += HelpMessageOpt("-resync", _("Delete blockchain folders and resync from scratch") + " " + _("on startup"));
 #ifndef WIN32
     strUsage += HelpMessageOpt("-sysperms",
                                _("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
@@ -508,6 +546,7 @@ std::string HelpMessage(HelpMessageMode mode) {
 
 #ifdef ENABLE_WALLET
     strUsage += CWallet::GetWalletHelpString(showDebug);
+    strUsage += HelpMessageOpt("-backups=<n>", strprintf("Number of automatic wallet backups <n> transactions (default: %u)", DEFAULT_BACKUPS));
 #endif
 
 #if ENABLE_ZMQ
@@ -1440,6 +1479,107 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
         if (!CWallet::Verify())
             return false;
     } // (!fDisableWallet)
+
+    boost::filesystem::path backupDir = GetDataDir() / "backups";
+
+     if (nBackups > 0)
+     {
+     if (!boost::filesystem::exists(backupDir))
+     {
+         // Always create backup folder to not confuse the operating system's file browser
+         boost::filesystem::create_directories(backupDir);
+     }
+         if (boost::filesystem::exists(backupDir))
+
+         {   std::string strWalletFile = GetArg("-wallet", "wallet.dat");
+             // Create backup of the wallet
+             std::string dateTimeStr = DateTimeStrFormat(".%Y-%m-%d-%H-%M-OPENED", GetTime());
+             std::string backupPathStr = backupDir.string();
+             backupPathStr += "/" + strWalletFile;
+             std::string sourcePathStr = GetDataDir().string();
+             sourcePathStr += "/" + strWalletFile;
+             boost::filesystem::path sourceFile = sourcePathStr;
+             boost::filesystem::path backupFile = backupPathStr + dateTimeStr;
+             sourceFile.make_preferred();
+             backupFile.make_preferred();
+             if (boost::filesystem::exists(sourceFile))
+             {
+                 try
+                 {
+                     boost::filesystem::copy_file(sourceFile, backupFile);
+                     LogPrintf("Creating backup of %s -> %s\n", sourceFile, backupFile);
+                 } catch (boost::filesystem::filesystem_error& error)
+                 {
+                     LogPrintf("Failed to create backup %s\n", error.what());
+                 }
+             }
+
+             // Keep only the last 25 backups, including the new one of course
+             typedef std::multimap<std::time_t, boost::filesystem::path> folder_set_t;
+             folder_set_t folder_set;
+             boost::filesystem::directory_iterator end_iter;
+             boost::filesystem::path backupFolder = backupDir.string();
+             backupFolder.make_preferred();
+             // Build map of backup files for current(!) wallet sorted by last write time
+             boost::filesystem::path currentFile;
+             for (boost::filesystem::directory_iterator dir_iter(backupFolder); dir_iter != end_iter; ++dir_iter) {
+                 // Only check regular files
+                 if (boost::filesystem::is_regular_file(dir_iter->status())) {
+                     currentFile = dir_iter->path().filename();
+                     // Only add the backups for the current wallet, e.g. wallet.dat.*
+                     if (dir_iter->path().stem().string() == strWalletFile) {
+                         folder_set.insert(folder_set_t::value_type(boost::filesystem::last_write_time(dir_iter->path()), *dir_iter));
+                     }
+                 }
+             }
+             // Loop backward through backup files and keep the N newest ones (1 <= N <= 10)
+             int counter = 0;
+             BOOST_REVERSE_FOREACH (PAIRTYPE(const std::time_t, boost::filesystem::path) file, folder_set) {
+                 counter++;
+                 if (counter > nBackups) {
+                     // More than nBackups backups: delete oldest one(s)
+                     try {
+                         boost::filesystem::remove(file.second);
+                         LogPrintf("Old backup deleted: %s\n", file.second);
+                     } catch (boost::filesystem::filesystem_error& error) {
+                         LogPrintf("Failed to delete backup %s\n", error.what());
+                     }
+                 }
+             }
+         }
+     }
+
+     // *********************************************************
+
+         if (GetBoolArg("-resync", false)) {
+             uiInterface.InitMessage(_("Preparing for resync..."));
+             // Delete the local blockchain folders to force a resync from scratch to get a consitent blockchain-state
+             boost::filesystem::path blocksDir = GetDataDir() / "blocks";
+             boost::filesystem::path chainstateDir = GetDataDir() / "chainstate";
+             boost::filesystem::path pathBanlist = GetDataDir() / "banlist.dat";
+
+             LogPrintf("Deleting blockchain folders blocks, chainstate and sporks\n");
+             try {
+                 if (boost::filesystem::exists(blocksDir)){
+                     boost::filesystem::remove_all(blocksDir);
+                     LogPrintf("-resync: folder deleted: %s\n", blocksDir.string().c_str());
+                 }
+
+                 if (boost::filesystem::exists(chainstateDir)){
+                     boost::filesystem::remove_all(chainstateDir);
+                     LogPrintf("-resync: folder deleted: %s\n", chainstateDir.string().c_str());
+                 }
+
+                 if (boost::filesystem::exists(pathBanlist)){
+                     boost::filesystem::remove(pathBanlist);
+                     LogPrintf("-resync: Banlist deleted: %s\n", pathBanlist.string().c_str());
+                 }
+
+             } catch (boost::filesystem::filesystem_error& error) {
+                 LogPrintf("Failed to delete blockchain folders %s\n", error.what());
+             }
+         }
+
 #endif // ENABLE_WALLET
     // ********************************************************* Step 6: network initialization
     LogPrintf("*** Step 6: network initialization");
