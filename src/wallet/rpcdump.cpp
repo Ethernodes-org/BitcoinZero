@@ -464,18 +464,18 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         if (vstr.size() < 2)
             continue;
         CBitcoinSecret vchSecret;
-        // begin zerocoin
-        if(vstr[0] == "zerocoin=1"){    
-            CZerocoinEntry zerocoinEntry;
-            zerocoinEntry.value.SetHex(vstr[1]);
-            zerocoinEntry.denomination = stoi(vstr[2]);
-            zerocoinEntry.randomness.SetHex(vstr[3]);
-            zerocoinEntry.serialNumber.SetHex(vstr[4]);
-            zerocoinEntry.IsUsed = stoi(vstr[5]);
-            zerocoinEntry.nHeight = stoi(vstr[6]);
-            zerocoinEntry.id = stoi(vstr[7]);
-            zerocoinEntry.ecdsaSecretKey = ParseHex(vstr[8]);
-            walletdb.WriteZerocoinEntry(zerocoinEntry);
+        // begin Sigma
+        if(vstr[0] == "sigma=1"){
+            CSigmaEntry SigmaEntry;
+            //SigmaEntry.value.SetHex(vstr[1]);
+            SigmaEntry.set_denomination = stoi(vstr[2]);
+            SigmaEntry.randomness.SetHex(vstr[3]);
+            SigmaEntry.serialNumber.SetHex(vstr[4]);
+            SigmaEntry.IsUsed = stoi(vstr[5]);
+            SigmaEntry.nHeight = stoi(vstr[6]);
+            SigmaEntry.id = stoi(vstr[7]);
+            SigmaEntry.ecdsaSecretKey = ParseHex(vstr[8]);
+            walletdb.WriteZerocoinEntry(SigmaEntry);
         }
         else {
             if (!vchSecret.SetString(vstr[0]))
@@ -607,46 +607,6 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     return CBitcoinSecret(vchSecret).ToString();
 }
 
-UniValue dumpprivkey_bzx(const UniValue& params, bool fHelp)
-{
-#ifndef UNSAFE_DUMPPRIVKEY
-    if (fHelp || params.size() < 1 || params.size() > 2)
-        throw runtime_error(
-            "dumpprivkey \"bitcoinzeroaddress\"\n"
-            "\nReveals the private key corresponding to 'bitcoinzeroaddress'.\n"
-            "Then the importprivkey can be used with this output\n"
-            "\nArguments:\n"
-            "1. \"bitcoinzeroaddress\"   (string, required) The BitcoinZero address for the private key\n"
-            "2. \"one-time-auth-code\"   (string, optional) A one time authorization code received from a previous call of dumpprivkey"
-            "\nResult:\n"
-            "\"key\"                (string) The private key\n"
-            "\nExamples:\n"
-            + HelpExampleCli("dumpprivkey", "\"myaddress\"")
-            + HelpExampleCli("dumpprivkey", "\"myaddress\" \"12aB\"")
-            + HelpExampleRpc("dumpprivkey", "\"myaddress\"")
-            + HelpExampleRpc("dumpprivkey", "\"myaddress\",\"12aB\"")
-            + HelpExampleCli("importprivkey", "\"mykey\"")
-        );
-
-    if(params.size() == 1 || !AuthorizationHelper::inst().authorize(__FUNCTION__ + params[0].get_str(), params[1].get_str()))
-    {
-        std::string warning =
-            "WARNING! Your one time authorization code is: " + AuthorizationHelper::inst().generateAuthorizationCode(__FUNCTION__ + params[0].get_str()) + "\n"
-            "This command exports your wallet private key. Anyone with this key has complete control over your funds. \n"
-            "If someone asked you to type in this command, chances are they want to steal your coins. \n"
-            "BitcoinZero team members will never ask for this command's output and it is not needed for Bznode setup or diagnosis!\n"
-            ;
-        throw runtime_error(warning);
-    }
-#endif
-
-    UniValue dumpParams;
-    dumpParams.setArray();
-    dumpParams.push_back(params[0]);
-
-    return dumpprivkey(dumpParams, false);
-}
-
 UniValue dumpwallet(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -686,7 +646,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by BitcoinZero %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -743,21 +703,21 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
         }
     }
 
-    // Begin dump Zerocoins
-    list <CZerocoinEntry> listZerocoinEntries;
+    // Begin dump Sigma
+    list <CSigmaEntry> listPubcoin;
     CWalletDB walletdb(pwalletMain->strWalletFile);
-    walletdb.ListPubCoin(listZerocoinEntries);
+    listPubcoin = zwalletMain->GetTracker().MintsAsZerocoinEntries(false, false);
 
-    for (auto& zerocoinEntry : listZerocoinEntries) {
-        file << "zerocoin=1 ";
-        file << strprintf("%s ", zerocoinEntry.value.GetHex()); // value
-        file << strprintf("%d ", zerocoinEntry.denomination); // denomination
-        file << strprintf("%s ", zerocoinEntry.randomness.GetHex()); // randomness
-        file << strprintf("%s ", zerocoinEntry.serialNumber.GetHex()); // serialNumber
-        file << strprintf("%d ", zerocoinEntry.IsUsed); // IsUsed
-        file << strprintf("%d ", zerocoinEntry.nHeight); // nHeight
-        file << strprintf("%d ", zerocoinEntry.id); // id
-        file << strprintf("%s ", HexStr(zerocoinEntry.ecdsaSecretKey)); // ecdsaSecretKey
+    BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin)
+    {
+        file << "sigma=1 ";
+        file << strprintf("%d ", SigmaItem.get_denomination_value()); // denomination
+        file << strprintf("%s ", SigmaItem.randomness.GetHex()); // randomness
+        file << strprintf("%s ", SigmaItem.serialNumber.GetHex()); // serialNumber
+        file << strprintf("%d ", SigmaItem.IsUsed); // IsUsed
+        file << strprintf("%d ", SigmaItem.nHeight); // nHeight
+        file << strprintf("%d ", SigmaItem.id); // id
+        file << strprintf("%s ", HexStr(SigmaItem.ecdsaSecretKey)); // ecdsaSecretKey
         file << "#\n"; // --
     }
 
@@ -767,38 +727,114 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
-UniValue dumpwallet_bzx(const UniValue& params, bool fHelp)
+UniValue dumpsigma(const UniValue& params, bool fHelp)
 {
-#ifndef UNSAFE_DUMPPRIVKEY
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
         throw runtime_error(
             "dumpwallet \"filename\"\n"
             "\nDumps all wallet keys in a human-readable format.\n"
             "\nArguments:\n"
-            "1. \"filename\"             (string, required) The filename\n"
-            "2. \"one-time-auth-code\"   (string, optional) A one time authorization code received from a previous call of dumpwallet"
+            "1. \"filename\"    (string, required) The filename\n"
             "\nExamples:\n"
-            + HelpExampleCli("dumpwallet", "\"test\"")
-            + HelpExampleCli("dumpwallet", "\"test\" \"12aB\"")
-            + HelpExampleRpc("dumpwallet", "\"test\"")
-            + HelpExampleRpc("dumpwallet", "\"test\",\"12aB\"")
+            + HelpExampleCli("dumpsigma", "\"test\"")
+            + HelpExampleRpc("dumpsigma", "\"test\"")
         );
 
-    if(params.size() == 1 || !AuthorizationHelper::inst().authorize(__FUNCTION__ + params[0].get_str(), params[1].get_str()))
-    {
-        std::string warning =
-            "WARNING! Your one time authorization code is: " + AuthorizationHelper::inst().generateAuthorizationCode(__FUNCTION__ + params[0].get_str()) + "\n"
-            "This command exports all your private keys. Anyone with these keys has complete control over your funds. \n"
-            "If someone asked you to type in this command, chances are they want to steal your coins. \n"
-            "BitcoinZero team members will never ask for this command's output and it is not needed for Bznode setup or diagnosis!\n"
-            ;
-        throw runtime_error(warning);
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    EnsureWalletIsUnlocked();
+
+    ofstream file;
+    file.open(params[0].get_str().c_str());
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
+
+    // produce output
+    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
+    file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
+    file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
+    file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
+    file << "\n";
+
+
+    // Begin dump Sigma
+    list <CSigmaEntry> listPubcoin;
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    listPubcoin = zwalletMain->GetTracker().MintsAsZerocoinEntries(false, false);
+
+    BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin) {
+        file << "sigma=1 ";
+        file << strprintf("%d ", SigmaItem.get_denomination_value()); // denomination
+        file << strprintf("%s ", SigmaItem.randomness.GetHex()); // randomness
+        file << strprintf("%s ", SigmaItem.serialNumber.GetHex()); // serialNumber
+        file << strprintf("%d ", SigmaItem.IsUsed); // IsUsed
+        file << strprintf("%d ", SigmaItem.nHeight); // nHeight
+        file << strprintf("%d ", SigmaItem.id); // id
+        file << strprintf("%s ", HexStr(SigmaItem.ecdsaSecretKey)); // ecdsaSecretKey
+        file << "#\n"; // --
     }
-#endif
 
-    UniValue dumpParams;
-    dumpParams.setArray();
-    dumpParams.push_back(params[0]);
+    file << "\n";
+    file << "# End of dump\n";
+    file.close();
+    return NullUniValue;
+}
 
-    return dumpwallet(dumpParams, false);
+UniValue dumpmasterkey(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "dumpmasterkey \"filename\"\n"
+            "\nDumps all wallet dumpmasterkey in a human-readable format.\n"
+            "\nArguments:\n"
+            "1. \"filename\"    (string, required) The filename\n"
+            "\nExamples:\n"
+            + HelpExampleCli("dumpmasterkey", "\"test\"")
+            + HelpExampleRpc("dumpmasterkey", "\"test\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    EnsureWalletIsUnlocked();
+
+    ofstream file;
+    file.open(params[0].get_str().c_str());
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
+
+    // produce output
+    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
+    file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
+    file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
+    file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
+    file << "\n";
+
+
+    // Begin dump
+    CKeyID masterKeyID = pwalletMain->GetHDChain().masterKeyID;
+    if (!masterKeyID.IsNull())
+    {
+        CKey key;
+        if (pwalletMain->GetKey(masterKeyID, key))
+        {
+            CExtKey masterKey;
+            masterKey.SetMaster(key.begin(), key.size());
+
+            CBitcoinExtKey b58extkey;
+            b58extkey.SetKey(masterKey);
+
+            file << "# extended private masterkey: " << b58extkey.ToString() << "\n\n";
+        }
+    }
+
+    file << "\n";
+    file << "# End of dump\n";
+    file.close();
+    return NullUniValue;
 }
