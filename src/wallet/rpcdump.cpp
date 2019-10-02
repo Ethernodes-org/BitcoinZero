@@ -758,7 +758,6 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
         file << strprintf("%d ", zerocoinEntry.nHeight); // nHeight
         file << strprintf("%d ", zerocoinEntry.id); // id
         file << strprintf("%s ", HexStr(zerocoinEntry.ecdsaSecretKey)); // ecdsaSecretKey
-        }
         file << "#\n"; // --
     }
 
