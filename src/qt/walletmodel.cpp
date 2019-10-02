@@ -719,7 +719,7 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins, 
         }
 
         CTxDestination address;
-        if(cout.tx->IsZerocoinMint() || cout.tx->IsSigmaMint() || cout.tx->IsZerocoinRemint()){
+        if(cout.tx->IsZerocoinMint() || cout.tx->IsSigmaMint()){
             mapCoins[QString::fromStdString("(mint)")].push_back(out);
             continue;
         }

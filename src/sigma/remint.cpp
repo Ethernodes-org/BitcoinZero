@@ -109,33 +109,12 @@ bool CoinRemintToV3::Verify(const libzerocoin::SpendMetaData &metadata) const {
 }
 
 CAmount CoinRemintToV3::GetAmount(const CTransaction &tx) {
-    if (!tx.IsZerocoinRemint() || tx.vin.size() != 1)
-        return 0;
-
-    try {
-        CDataStream serData(std::vector<unsigned char>(tx.vin[0].scriptSig.begin()+1, tx.vin[0].scriptSig.end()), SER_NETWORK, PROTOCOL_VERSION);
-        CoinRemintToV3 remint(serData);
-        return (int)remint.getDenomination();
-    }
-    catch (const std::ios_base::failure &) {
-        return 0;        
-    }
 
     return 0;
 }
 
 Bignum CoinRemintToV3::GetSerialNumber(const CTransaction &tx) {
-    if (!tx.IsZerocoinRemint() || tx.vin.size() != 1)
-        return 0;
 
-    try {
-        CDataStream serData(std::vector<unsigned char>(tx.vin[0].scriptSig.begin()+1, tx.vin[0].scriptSig.end()), SER_NETWORK, PROTOCOL_VERSION);
-        CoinRemintToV3 remint(serData);
-        return remint.getSerialNumber();
-    }
-    catch (const std::ios_base::failure &) {
-        return 0;        
-    }
 
     return 0;
 }

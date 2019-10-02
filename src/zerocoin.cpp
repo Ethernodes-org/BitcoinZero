@@ -115,7 +115,7 @@ bool CheckRemintBitcoinZeroTransaction(const CTransaction &tx,
         return false;
     
     // There should only one remint input
-    if (tx.vin.size() != 1 || tx.vin[0].scriptSig.size() == 0 || tx.vin[0].scriptSig[0] != OP_ZEROCOINTOSIGMAREMINT)
+    if (tx.vin.size() != 1 || tx.vin[0].scriptSig.size() == 0)
         return false;
 
     vector<unsigned char> remintSerData(tx.vin[0].scriptSig.begin()+1, tx.vin[0].scriptSig.end());
@@ -701,9 +701,6 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
             }
         }
     }
-
-    if (tx.IsZerocoinRemint())
-        return CheckRemintBitcoinZeroTransaction(tx, params, state, hashTx, isVerifyDB, nHeight, isCheckWallet, fStatefulZerocoinCheck, zerocoinTxInfo);
 
     return true;
 }

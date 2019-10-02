@@ -478,7 +478,7 @@ void handleInput(CTxIn const & input, size_t inputNo, uint256 const & txHash, in
 void handleRemint(CTxIn const & input, size_t inputNo, uint256 const & txHash, int height, int txNumber, CAmount nValue,
         AddressIndexPtr & addressIndex, AddressUnspentIndexPtr & addressUnspentIndex, SpentIndexPtr & spentIndex)
 {
-    if(!input.IsZerocoinRemint())
+    if(true)
         return;
 
     if (addressIndex) {
@@ -540,7 +540,7 @@ void handleOutput(const CTxOut &out, size_t outNo, uint256 const & txHash, int h
 void CDbIndexHelper::ConnectTransaction(CTransaction const & tx, int height, int txNumber, CCoinsViewCache const & view)
 {
     size_t no = 0;
-    if(!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) {
+    if(!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) {
         for (std::vector<CTxIn>::const_iterator iter = tx.vin.begin(); iter != tx.vin.end(); ++iter) {
             CTxIn const & input = *iter;
             handleInput(input, no++, tx.GetHash(), height, txNumber, view, addressIndex, addressUnspentIndex, spentIndex);
@@ -548,14 +548,6 @@ void CDbIndexHelper::ConnectTransaction(CTransaction const & tx, int height, int
     }
 
     no = 0;
-    if(tx.IsZerocoinRemint()) {
-        for (std::vector<CTxIn>::const_iterator iter = tx.vin.begin(); iter != tx.vin.end(); ++iter) {
-            CTxIn const & input = *iter;
-            handleRemint(input, no, tx.GetHash(), height, txNumber, tx.vout[no].nValue, addressIndex, addressUnspentIndex, spentIndex);
-            ++no;
-        }
-    }
-
     if(tx.IsZerocoinSpend() || tx.IsSigmaSpend())
         handleZerocoinSpend(tx.vout.begin(), tx.vout.end(), tx.GetHash(), height, txNumber, view, addressIndex, tx.IsSigmaSpend());
 
@@ -582,16 +574,8 @@ void CDbIndexHelper::DisconnectTransactionInputs(CTransaction const & tx, int he
 
     size_t no = 0;
 
-    if(tx.IsZerocoinRemint()) {
-        for (std::vector<CTxIn>::const_iterator iter = tx.vin.begin(); iter != tx.vin.end(); ++iter) {
-            CTxIn const & input = *iter;
-            handleRemint(input, no, tx.GetHash(), height, txNumber, tx.vout[no].nValue, addressIndex, addressUnspentIndex, spentIndex);
-            ++no;
-        }
-    }
-
     no = 0;
-    if(!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint())
+    if(!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend())
         for (std::vector<CTxIn>::const_iterator iter = tx.vin.begin(); iter != tx.vin.end(); ++iter) {
             CTxIn const & input = *iter;
             handleInput(input, no++, tx.GetHash(), height, txNumber, view, addressIndex, addressUnspentIndex, spentIndex);

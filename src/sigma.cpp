@@ -142,11 +142,11 @@ bool CheckSigmaBlock(CValidationState &state, const CBlock& block) {
     for (const auto& tx : block.vtx) {
         // Check zerocoin to sigma remints against the same limit as sigma spends
 
-        auto txSpendsValue = tx.IsZerocoinRemint() ? CoinRemintToV3::GetAmount(tx) : GetSpendAmount(tx);
+        auto txSpendsValue = GetSpendAmount(tx);
         size_t txSpendsAmount = 0;
 
         for (const auto& in : tx.vin) {
-            if (in.IsSigmaSpend() || in.IsZerocoinRemint()) {
+            if (in.IsSigmaSpend()) {
                 txSpendsAmount++;
             }
         }

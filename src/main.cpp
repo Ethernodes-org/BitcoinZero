@@ -1097,7 +1097,7 @@ unsigned int GetP2SHSigOpCount(const CTransaction &tx, const CCoinsViewCache &in
 int64_t GetTransactionSigOpCost(const CTransaction &tx, const CCoinsViewCache &inputs, int flags) {
     int64_t nSigOps = GetLegacySigOpCount(tx) * WITNESS_SCALE_FACTOR;
 
-    if (tx.IsCoinBase() || tx.IsZerocoinSpend() || tx.IsSigmaSpend() || tx.IsZerocoinRemint())
+    if (tx.IsCoinBase() || tx.IsZerocoinSpend() || tx.IsSigmaSpend())
         return nSigOps;
 
     if (flags & SCRIPT_VERIFY_P2SH) {
@@ -1176,7 +1176,7 @@ bool CheckTransaction(
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
     } else {
 	    BOOST_FOREACH(const CTxIn &txin, tx.vin) {
-            if (txin.prevout.IsNull() && !(txin.scriptSig.IsZerocoinSpend() || txin.IsZerocoinRemint())) {
+            if (txin.prevout.IsNull() && !(txin.scriptSig.IsZerocoinSpend())) {
 			    return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
 		    }
 	    }
@@ -1337,19 +1337,6 @@ bool AcceptToMemoryPoolWorker(
                 zcSpendSerials.push_back(zcSpendSerial);
             }
         }
-        else if (tx.IsZerocoinRemint()) {
-            zcSpendSerial = sigma::CoinRemintToV3::GetSerialNumber(tx);
-
-            if (!zcSpendSerial)
-                return state.Invalid(false, REJECT_INVALID, "txn-invalid-zerocoin-spend");
-
-            if (!zcState->CanAddSpendToMempool(zcSpendSerial)) {
-                LogPrintf("AcceptToMemoryPool(): serial number %s has been used\n", zcSpendSerial.ToString());
-                return state.Invalid(false, REJECT_CONFLICT, "txn-mempool-conflict");
-            }
-
-            zcSpendSerials.push_back(zcSpendSerial);
-        }
         else if (tx.IsSigmaSpend()) {
 
             BOOST_FOREACH(const CTxIn &txin, tx.vin)
@@ -1416,7 +1403,7 @@ bool AcceptToMemoryPoolWorker(
                 return state.Invalid(false, REJECT_ALREADY_KNOWN, "txn-already-known");
             }
 
-            if (!tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint() && fCheckInputs) {
+            if (!tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && fCheckInputs) {
                 // do all inputs exist?
                 // Note that this does not check for the presence of actual outputs (see the next check for that),
                 // and only helps with filling in pfMissingInputs (to determine missing vs spent).
@@ -1459,7 +1446,7 @@ bool AcceptToMemoryPoolWorker(
             view.SetBackend(dummy);
         } // LOCK
 
-        if (!tx.IsZerocoinSpend() && !tx.IsZerocoinRemint() && fCheckInputs) {
+        if (!tx.IsZerocoinSpend() && fCheckInputs) {
 
             // Check for non-standard pay-to-script-hash in inputs
             if (!fTestNet && fRequireStandard && !AreInputsStandard(tx, view)) {
@@ -1807,7 +1794,7 @@ bool AcceptToMemoryPoolWorker(
         }
     }
 
-    if ((tx.IsZerocoinSpend() || tx.IsZerocoinRemint()) && markBitcoinZeroSpendTransactionSerial)
+    if ((tx.IsZerocoinSpend() || markBitcoinZeroSpendTransactionSerial)
         zcState->AddSpendToMempool(zcSpendSerials, hash);
     if (tx.IsSigmaSpend()){
         if(markBitcoinZeroSpendTransactionSerial)
@@ -2286,7 +2273,7 @@ void static InvalidBlockFound(CBlockIndex *pindex, const CValidationState &state
 
 void UpdateCoins(const CTransaction &tx, CCoinsViewCache &inputs, CTxUndo &txundo, int nHeight) {
     // mark inputs spent
-    if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) {
+    if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) {
         txundo.vprevout.reserve(tx.vin.size());
         BOOST_FOREACH(
         const CTxIn &txin, tx.vin) {
@@ -2381,7 +2368,7 @@ namespace Consensus {
 bool CheckInputs(const CTransaction &tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks,
                  unsigned int flags, bool cacheStore, PrecomputedTransactionData &txdata,
                  std::vector <CScriptCheck> *pvChecks) {
-    if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) {
+    if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) {
 
         if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs))) {
             LogPrintf("CheckTxInputs() failed!\n");
@@ -2638,7 +2625,7 @@ bool DisconnectBlock(const CBlock &block, CValidationState &state, const CBlockI
         }
 
         // restore inputs
-        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) { // not coinbases
+        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) { // not coinbases
             const CTxUndo &txundo = blockUndo.vtxundo[i - 1];
             if (txundo.vprevout.size() != tx.vin.size())
                 return error("DisconnectBlock(): transaction and undo data inconsistent");
@@ -2926,7 +2913,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
 
         nInputs += tx.vin.size();
 
-        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) {
+        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) {
             if (!view.HaveInputs(tx))
                 return state.DoS(100, error("ConnectBlock(): inputs missing/spent"),
                                  REJECT_INVALID, "bad-txns-inputs-missingorspent");
@@ -2956,7 +2943,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             }
         }
 
-        if (tx.IsZerocoinSpend() || tx.IsZerocoinMint() || tx.IsSigmaSpend() || tx.IsSigmaMint() || tx.IsZerocoinRemint()) {
+        if (tx.IsZerocoinSpend() || tx.IsZerocoinMint() || tx.IsSigmaSpend() || tx.IsSigmaMint()) {
             if( tx.IsSigmaSpend())
                 nFees += sigma::GetSigmaSpendInput(tx) - tx.GetValueOut();
 
@@ -2979,7 +2966,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                              REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
-        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend() && !tx.IsZerocoinRemint()) {
+        if (!tx.IsCoinBase() && !tx.IsZerocoinSpend() && !tx.IsSigmaSpend()) {
             nFees += view.GetValueIn(tx) - tx.GetValueOut();
 
             std::vector <CScriptCheck> vChecks;
@@ -3117,7 +3104,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
     sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
     BOOST_FOREACH(const CTransaction &tx, block.vtx) {
-        if (tx.IsZerocoinSpend() || tx.IsZerocoinRemint()) {
+        if (tx.IsZerocoinSpend()) {
             BOOST_FOREACH(
             const CTxIn &txin, tx.vin)
             {

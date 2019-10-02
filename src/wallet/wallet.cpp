@@ -1201,19 +1201,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const {
         if (db.HasCoinSpendSerialEntry(spend.getCoinSerialNumber())) {
             return ISMINE_SPENDABLE;
         }
-    } else if (txin.IsZerocoinRemint()) {
-        CWalletDB db(strWalletFile);
-
-        CDataStream serializedCoinRemint(
-            std::vector<char>(txin.scriptSig.begin() + 1, txin.scriptSig.end()),
-            SER_NETWORK, PROTOCOL_VERSION);
-
-        sigma::CoinRemintToV3 remint(serializedCoinRemint);
-        if (db.HasCoinSpendSerialEntry(remint.getSerialNumber())) {
-            return ISMINE_SPENDABLE;
-        }
-    }
-    else {
+    }else {
         map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end()) {
             const CWalletTx &prev = (*mi).second;
@@ -1248,8 +1236,6 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter &filter) const {
         if (db.HasCoinSpendSerialEntry(spend->getCoinSerialNumber())) {
             return spend->getIntDenomination();
         }
-    } else if (txin.IsZerocoinRemint()) {
-        return 0;
     } else {
         map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end()) {
@@ -1847,7 +1833,7 @@ bool CWalletTx::IsTrusted() const {
     // Trusted if all inputs are from us and are in the mempool:
     BOOST_FOREACH(const CTxIn &txin, vin)
     {
-        if (txin.IsZerocoinSpend() || txin.IsSigmaSpend() || txin.IsZerocoinRemint()) {
+        if (txin.IsZerocoinSpend() || txin.IsSigmaSpend()) {
             if (!(pwallet->IsMine(txin) & ISMINE_SPENDABLE)) {
                 return false;
             }
@@ -2671,10 +2657,10 @@ void CWallet::AvailableCoins(vector <COutput> &vCoins, bool fOnlyConfirmed, cons
                 bool found = false;
                 if(nCoinType == ALL_COINS){
                     // We are now taking ALL_COINS to mean everything sans mints
-                    found = !(pcoin->vout[i].scriptPubKey.IsZerocoinMint() || pcoin->vout[i].scriptPubKey.IsSigmaMint() || pcoin->vout[i].scriptPubKey.IsZerocoinRemint());
+                    found = !(pcoin->vout[i].scriptPubKey.IsZerocoinMint() || pcoin->vout[i].scriptPubKey.IsSigmaMint();
                 } else if(nCoinType == ONLY_MINTS){
                     // Do not consider anything other than mints
-                    found = (pcoin->vout[i].scriptPubKey.IsZerocoinMint() || pcoin->vout[i].scriptPubKey.IsSigmaMint() || pcoin->vout[i].scriptPubKey.IsZerocoinRemint());
+                    found = (pcoin->vout[i].scriptPubKey.IsZerocoinMint() || pcoin->vout[i].scriptPubKey.IsSigmaMint();
                 } else if (nCoinType == ONLY_DENOMINATED) {
                     found = IsDenominatedAmount(pcoin->vout[i].nValue);
                 } else if (nCoinType == ONLY_NOT1000IFMN) {

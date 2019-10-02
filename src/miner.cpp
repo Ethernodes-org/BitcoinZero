@@ -372,7 +372,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
             if (!chainparams.GetConsensus().IsRegtest() && (tx.IsZerocoinSpend() || tx.IsZerocoinMint()))
                 continue;
 
-            if (tx.IsSigmaSpend() || tx.IsZerocoinRemint()) {
+            if (tx.IsSigmaSpend()) {
                 // Sigma spend and zerocoin->sigma remint are subject to the same limits
                 CAmount spendAmount = tx.IsSigmaSpend() ? sigma::GetSpendAmount(tx) : sigma::CoinRemintToV3::GetAmount(tx);
 
@@ -899,7 +899,7 @@ void BlockAssembler::addPriorityTxs()
         //add BitcoinZero validation
         if (tx.IsCoinBase() || !CheckFinalTx(tx))
             continue;
-        if (tx.IsZerocoinSpend() || tx.IsSigmaSpend() || tx.IsZerocoinRemint()) {
+        if (tx.IsZerocoinSpend() || tx.IsSigmaSpend()) {
             //mempool.countZCSpend--;
             // Size limits
             unsigned int nTxSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
