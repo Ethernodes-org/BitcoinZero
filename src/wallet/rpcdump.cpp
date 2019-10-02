@@ -646,7 +646,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet dump created by version %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -673,7 +673,6 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
         std::string strTime = EncodeDumpTime(it->first);
         std::string strAddr = CBitcoinAddress(keyid).ToString();
         CKey key;
-        pwalletMain->mapKeyMetadata[keyid].ParseComponents();
         if (pwalletMain->GetKey(keyid, key)) {
             file << strprintf("%s %s ", CBitcoinSecret(key).ToString(), strTime);
             if (pwalletMain->mapAddressBook.count(keyid)) {
@@ -684,43 +683,12 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
                 file << "reserve=1";
             } else if (pwalletMain->mapKeyMetadata[keyid].hdKeypath == "m") {
                 file << "inactivehdmaster=1";
-            } else if (pwalletMain->mapKeyMetadata[keyid].nChange.first == 2) {
-                file << "sigma=1";
             } else {
                 file << "change=1";
             }
-            if(pwalletMain->mapKeyMetadata.find(keyid) != pwalletMain->mapKeyMetadata.end()){
-                if(pwalletMain->mapKeyMetadata[keyid].nVersion >= CKeyMetadata::VERSION_WITH_HDDATA){
-                    string hdKeypath = pwalletMain->mapKeyMetadata[keyid].hdKeypath;
-                    uint160 hdMasterKeyID = pwalletMain->mapKeyMetadata[keyid].hdMasterKeyID;
-                    if(hdKeypath != "")
-                        file << strprintf(" hdKeypath=%s", hdKeypath);
-                    if(!hdMasterKeyID.IsNull())
-                        file << strprintf(" hdMasterKeyID=%s", hdMasterKeyID.ToString());
-                }
-            }
-            file << strprintf(" # addr=%s\n", strAddr);
+            file << strprintf(" # addr=%s%s\n", strAddr, (pwalletMain->mapKeyMetadata[keyid].hdKeypath.size() > 0 ? " hdkeypath="+pwalletMain->mapKeyMetadata[keyid].hdKeypath : ""));
         }
     }
-
-    // Begin dump Sigma
-    list <CSigmaEntry> listPubcoin;
-    CWalletDB walletdb(pwalletMain->strWalletFile);
-    listPubcoin = zwalletMain->GetTracker().MintsAsZerocoinEntries(false, false);
-
-    BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin)
-    {
-        file << "sigma=1 ";
-        file << strprintf("%d ", SigmaItem.get_denomination_value()); // denomination
-        file << strprintf("%s ", SigmaItem.randomness.GetHex()); // randomness
-        file << strprintf("%s ", SigmaItem.serialNumber.GetHex()); // serialNumber
-        file << strprintf("%d ", SigmaItem.IsUsed); // IsUsed
-        file << strprintf("%d ", SigmaItem.nHeight); // nHeight
-        file << strprintf("%d ", SigmaItem.id); // id
-        file << strprintf("%s ", HexStr(SigmaItem.ecdsaSecretKey)); // ecdsaSecretKey
-        file << "#\n"; // --
-    }
-
     file << "\n";
     file << "# End of dump\n";
     file.close();
@@ -753,7 +721,7 @@ UniValue dumpsigma(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
     // produce output
-    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet sigma dump created by version: %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -809,7 +777,7 @@ UniValue dumpmasterkey(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
     // produce output
-    file << strprintf("# Wallet dump created by version: %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet masterkey dump created by version: %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
