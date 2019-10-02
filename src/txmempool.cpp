@@ -472,7 +472,7 @@ bool CTxMemPool::addUnchecked(const uint256 &hash, const CTxMemPoolEntry &entry,
 
 void CTxMemPool::removeUnchecked(txiter it) {
     const uint256 hash = it->GetTx().GetHash();
-    LogPrintf("removeUnchecked txHash=%s, IsZerocoinSpend()=%s\n", hash.ToString(), it->GetTx().IsZerocoinSpend() || it->GetTx().IsSigmaSpend();
+    LogPrintf("removeUnchecked txHash=%s, IsZerocoinSpend()=%s\n", hash.ToString(), it->GetTx().IsZerocoinSpend() || it->GetTx().IsSigmaSpend());
     if (!it->GetTx().IsZerocoinSpend() && !it->GetTx().IsSigmaSpend()) {
         BOOST_FOREACH(const CTxIn &txin, it->GetTx().vin)
             mapNextTx.erase(txin.prevout);
