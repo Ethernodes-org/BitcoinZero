@@ -3404,16 +3404,16 @@ UniValue resetmintzerocoin(const UniValue& params, bool fHelp) {
     CWalletDB walletdb(pwalletMain->strWalletFile);
     walletdb.ListPubCoin(listPubcoin);
 
-    BOOST_FOREACH(const CZerocoinEntry &zerocoinItem, listPubcoin){
-        if (zerocoinItem.randomness != 0 && zerocoinItem.serialNumber != 0) {
+    BOOST_FOREACH(const CZerocoinEntry &SigmaItem, listPubcoin){
+        if (SigmaItem.randomness != 0 && SigmaItem.serialNumber != 0) {
             CZerocoinEntry zerocoinTx;
             zerocoinTx.IsUsed = false;
-            zerocoinTx.denomination = zerocoinItem.denomination;
-            zerocoinTx.value = zerocoinItem.value;
-            zerocoinTx.serialNumber = zerocoinItem.serialNumber;
+            zerocoinTx.denomination = SigmaItem.denomination;
+            zerocoinTx.value = SigmaItem.value;
+            zerocoinTx.serialNumber = SigmaItem.serialNumber;
             zerocoinTx.nHeight = -1;
-            zerocoinTx.randomness = zerocoinItem.randomness;
-            zerocoinTx.ecdsaSecretKey = zerocoinItem.ecdsaSecretKey;
+            zerocoinTx.randomness = SigmaItem.randomness;
+            zerocoinTx.ecdsaSecretKey = SigmaItem.ecdsaSecretKey;
             walletdb.WriteZerocoinEntry(zerocoinTx);
         }
     }
@@ -3466,16 +3466,16 @@ UniValue listmintzerocoins(const UniValue& params, bool fHelp) {
     walletdb.ListPubCoin(listPubcoin);
     UniValue results(UniValue::VARR);
 
-    BOOST_FOREACH(const CZerocoinEntry &zerocoinItem, listPubcoin) {
-        if (fAllStatus || zerocoinItem.IsUsed || (zerocoinItem.randomness != 0 && zerocoinItem.serialNumber != 0)) {
+    BOOST_FOREACH(const CZerocoinEntry &SigmaItem, listPubcoin) {
+        if (fAllStatus || SigmaItem.IsUsed || (SigmaItem.randomness != 0 && SigmaItem.serialNumber != 0)) {
             UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("id", zerocoinItem.id));
-            entry.push_back(Pair("IsUsed", zerocoinItem.IsUsed));
-            entry.push_back(Pair("denomination", zerocoinItem.denomination));
-            entry.push_back(Pair("value", zerocoinItem.value.GetHex()));
-            entry.push_back(Pair("serialNumber", zerocoinItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", zerocoinItem.nHeight));
-            entry.push_back(Pair("randomness", zerocoinItem.randomness.GetHex()));
+            entry.push_back(Pair("id", SigmaItem.id));
+            entry.push_back(Pair("IsUsed", SigmaItem.IsUsed));
+            entry.push_back(Pair("denomination", SigmaItem.denomination));
+            entry.push_back(Pair("value", SigmaItem.value.GetHex()));
+            entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
+            entry.push_back(Pair("nHeight", SigmaItem.nHeight));
+            entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
             results.push_back(entry);
         }
     }
@@ -3508,16 +3508,16 @@ UniValue listsigmamints(const UniValue& params, bool fHelp) {
     listPubcoin = zwalletMain->GetTracker().MintsAsZerocoinEntries(false, false);
     UniValue results(UniValue::VARR);
 
-    BOOST_FOREACH(const CSigmaEntry &zerocoinItem, listPubcoin) {
-        if (fAllStatus || zerocoinItem.IsUsed || (zerocoinItem.randomness != uint64_t(0) && zerocoinItem.serialNumber != uint64_t(0))) {
+    BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin) {
+        if (fAllStatus || SigmaItem.IsUsed || (SigmaItem.randomness != uint64_t(0) && SigmaItem.serialNumber != uint64_t(0))) {
             UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("id", zerocoinItem.id));
-            entry.push_back(Pair("IsUsed", zerocoinItem.IsUsed));
-            entry.push_back(Pair("denomination", zerocoinItem.get_denomination_value()));
-            entry.push_back(Pair("value", zerocoinItem.value.GetHex()));
-            entry.push_back(Pair("serialNumber", zerocoinItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", zerocoinItem.nHeight));
-            entry.push_back(Pair("randomness", zerocoinItem.randomness.GetHex()));
+            entry.push_back(Pair("id", SigmaItem.id));
+            entry.push_back(Pair("IsUsed", SigmaItem.IsUsed));
+            entry.push_back(Pair("denomination", SigmaItem.get_denomination_value()));
+            entry.push_back(Pair("value", SigmaItem.value.GetHex()));
+            entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
+            entry.push_back(Pair("nHeight", SigmaItem.nHeight));
+            entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
             results.push_back(entry);
         }
     }
@@ -3546,16 +3546,16 @@ UniValue listpubcoins(const UniValue& params, bool fHelp) {
     UniValue results(UniValue::VARR);
     listPubcoin.sort(CompID);
 
-    BOOST_FOREACH(const CZerocoinEntry &zerocoinItem, listPubcoin) {
-        if (zerocoinItem.id > 0 && (denomination < 0 || zerocoinItem.denomination == denomination)) {
+    BOOST_FOREACH(const CZerocoinEntry &SigmaItem, listPubcoin) {
+        if (SigmaItem.id > 0 && (denomination < 0 || SigmaItem.denomination == denomination)) {
             UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("id", zerocoinItem.id));
-            entry.push_back(Pair("IsUsed", zerocoinItem.IsUsed));
-            entry.push_back(Pair("denomination", zerocoinItem.denomination));
-            entry.push_back(Pair("value", zerocoinItem.value.GetHex()));
-            entry.push_back(Pair("serialNumber", zerocoinItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", zerocoinItem.nHeight));
-            entry.push_back(Pair("randomness", zerocoinItem.randomness.GetHex()));
+            entry.push_back(Pair("id", SigmaItem.id));
+            entry.push_back(Pair("IsUsed", SigmaItem.IsUsed));
+            entry.push_back(Pair("denomination", SigmaItem.denomination));
+            entry.push_back(Pair("value", SigmaItem.value.GetHex()));
+            entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
+            entry.push_back(Pair("nHeight", SigmaItem.nHeight));
+            entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
             results.push_back(entry);
         }
     }
@@ -3596,20 +3596,20 @@ UniValue listsigmapubcoins(const UniValue& params, bool fHelp) {
     listPubcoin.sort(CompSigmaHeight);
 
     auto state = sigma::CSigmaState::GetState();
-    BOOST_FOREACH(const CSigmaEntry &sigmaItem, listPubcoin) {
-        sigma::PublicCoin coin(sigmaItem.value, sigmaItem.get_denomination());
+    BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin) {
+        sigma::PublicCoin coin(SigmaItem.value, SigmaItem.get_denomination());
         int height, id;
         std::tie(height, id) = state->GetMintedCoinHeightAndId(coin);
         if (id > 0 &&
-            (!filter_by_denom || sigmaItem.get_denomination() == denomination)) {
+            (!filter_by_denom || SigmaItem.get_denomination() == denomination)) {
             UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("id", id));
-            entry.push_back(Pair("IsUsed", sigmaItem.IsUsed));
-            entry.push_back(Pair("denomination", sigmaItem.get_string_denomination()));
-            entry.push_back(Pair("value", sigmaItem.value.GetHex()));
-            entry.push_back(Pair("serialNumber", sigmaItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", height));
-            entry.push_back(Pair("randomness", sigmaItem.randomness.GetHex()));
+            entry.push_back(Pair("id", SigmaItem.id));
+            entry.push_back(Pair("IsUsed", SigmaItem.IsUsed));
+            entry.push_back(Pair("denomination", SigmaItem.get_string_denomination()));
+            entry.push_back(Pair("value", SigmaItem.value.GetHex()));
+            entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
+            entry.push_back(Pair("nHeight", SigmaItem.height));
+            entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
             results.push_back(entry);
         }
     }
@@ -3637,20 +3637,20 @@ UniValue setmintzerocoinstatus(const UniValue& params, bool fHelp) {
 
     UniValue results(UniValue::VARR);
 
-    BOOST_FOREACH(const CZerocoinEntry &zerocoinItem, listPubcoin) {
-        if (zerocoinItem.serialNumber != 0) {
-            LogPrintf("zerocoinItem.serialNumber = %s\n", zerocoinItem.serialNumber.GetHex());
-            if (zerocoinItem.serialNumber == coinSerial) {
+    BOOST_FOREACH(const CZerocoinEntry &SigmaItem, listPubcoin) {
+        if (SigmaItem.serialNumber != 0) {
+            LogPrintf("SigmaItem.serialNumber = %s\n", SigmaItem.serialNumber.GetHex());
+            if (SigmaItem.serialNumber == coinSerial) {
                 LogPrintf("setmintzerocoinstatus Found!\n");
                 CZerocoinEntry zerocoinTx;
-                zerocoinTx.id = zerocoinItem.id;
+                zerocoinTx.id = SigmaItem.id;
                 zerocoinTx.IsUsed = fStatus;
-                zerocoinTx.denomination = zerocoinItem.denomination;
-                zerocoinTx.value = zerocoinItem.value;
-                zerocoinTx.serialNumber = zerocoinItem.serialNumber;
-                zerocoinTx.nHeight = zerocoinItem.nHeight;
-                zerocoinTx.randomness = zerocoinItem.randomness;
-                zerocoinTx.ecdsaSecretKey = zerocoinItem.ecdsaSecretKey;
+                zerocoinTx.denomination = SigmaItem.denomination;
+                zerocoinTx.value = SigmaItem.value;
+                zerocoinTx.serialNumber = SigmaItem.serialNumber;
+                zerocoinTx.nHeight = SigmaItem.nHeight;
+                zerocoinTx.randomness = SigmaItem.randomness;
+                zerocoinTx.ecdsaSecretKey = SigmaItem.ecdsaSecretKey;
                 const std::string& isUsedDenomStr = zerocoinTx.IsUsed
                         ? "Used (" + std::to_string(zerocoinTx.denomination) + " mint)"
                         : "New (" + std::to_string(zerocoinTx.denomination) + " mint)";
@@ -3707,8 +3707,8 @@ UniValue setsigmamintstatus(const UniValue& params, bool fHelp) {
     UniValue results(UniValue::VARR);
 
     BOOST_FOREACH(CMintMeta &mint, listMints) {
-        CSigmaEntry zerocoinItem;
-        if(!pwalletMain->GetMint(mint.hashSerial, zerocoinItem))
+        CSigmaEntry SigmaItem;
+        if(!pwalletMain->GetMint(mint.hashSerial, SigmaItem))
             continue;
 
         CHDMint dMint;
@@ -3716,20 +3716,20 @@ UniValue setsigmamintstatus(const UniValue& params, bool fHelp) {
             continue;
         }
 
-        if (zerocoinItem.serialNumber != uint64_t(0)) {
-            LogPrintf("zerocoinItem.serialNumber = %s\n", zerocoinItem.serialNumber.GetHex());
-            if (zerocoinItem.serialNumber == coinSerial) {
+        if (SigmaItem.serialNumber != uint64_t(0)) {
+            LogPrintf("SigmaItem.serialNumber = %s\n", SigmaItem.serialNumber.GetHex());
+            if (SigmaItem.serialNumber == coinSerial) {
                 LogPrintf("setmintzerocoinstatus Found!\n");
 
                 const std::string& isUsedDenomStr =
                     fStatus
-                    ? "Used (" + std::to_string((double)zerocoinItem.get_denomination_value() / COIN) + " mint)"
-                    : "New (" + std::to_string((double)zerocoinItem.get_denomination_value() / COIN) + " mint)";
-                pwalletMain->NotifyZerocoinChanged(pwalletMain, zerocoinItem.value.GetHex(), isUsedDenomStr, CT_UPDATED);
+                    ? "Used (" + std::to_string((double)SigmaItem.get_denomination_value() / COIN) + " mint)"
+                    : "New (" + std::to_string((double)SigmaItem.get_denomination_value() / COIN) + " mint)";
+                pwalletMain->NotifyZerocoinChanged(pwalletMain, SigmaItem.value.GetHex(), isUsedDenomStr, CT_UPDATED);
 
                 if(!mint.isDeterministic){
-                    zerocoinItem.IsUsed = fStatus;
-                    zwalletMain->GetTracker().Add(zerocoinItem, true);
+                    SigmaItem.IsUsed = fStatus;
+                    zwalletMain->GetTracker().Add(SigmaItem, true);
                 }else{
                     dMint.SetUsed(fStatus);
                     zwalletMain->GetTracker().Add(dMint, true);
@@ -3743,13 +3743,13 @@ UniValue setsigmamintstatus(const UniValue& params, bool fHelp) {
                 }
 
                 UniValue entry(UniValue::VOBJ);
-                entry.push_back(Pair("id", zerocoinItem.id));
+                entry.push_back(Pair("id", SigmaItem.id));
                 entry.push_back(Pair("IsUsed", fStatus));
-                entry.push_back(Pair("denomination", zerocoinItem.get_denomination_value()));
-                entry.push_back(Pair("value", zerocoinItem.value.GetHex()));
-                entry.push_back(Pair("serialNumber", zerocoinItem.serialNumber.GetHex()));
-                entry.push_back(Pair("nHeight", zerocoinItem.nHeight));
-                entry.push_back(Pair("randomness", zerocoinItem.randomness.GetHex()));
+                entry.push_back(Pair("denomination", SigmaItem.get_denomination_value()));
+                entry.push_back(Pair("value", SigmaItem.value.GetHex()));
+                entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
+                entry.push_back(Pair("nHeight", SigmaItem.nHeight));
+                entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
                 results.push_back(entry);
                 break;
             }

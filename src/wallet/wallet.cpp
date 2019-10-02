@@ -1055,12 +1055,12 @@ bool CWallet::AbandonTransaction(const uint256 &hashTx) {
             list <CZerocoinEntry> pubCoins;
             walletdb.ListPubCoin(pubCoins);
 
-            BOOST_FOREACH(const CZerocoinEntry &zerocoinItem, pubCoins) {
-                if (zerocoinItem.serialNumber == serial) {
-                    CZerocoinEntry modifiedItem = zerocoinItem;
+            BOOST_FOREACH(const CZerocoinEntry &SigmaItem, pubCoins) {
+                if (SigmaItem.serialNumber == serial) {
+                    CZerocoinEntry modifiedItem = SigmaItem;
                     modifiedItem.IsUsed = false;
-                    pwalletMain->NotifyZerocoinChanged(pwalletMain, zerocoinItem.value.GetHex(),
-                                                       std::string("New (") + std::to_string(zerocoinItem.denomination) + "mint)",
+                    pwalletMain->NotifyZerocoinChanged(pwalletMain, SigmaItem.value.GetHex(),
+                                                       std::string("New (") + std::to_string(SigmaItem.denomination) + "mint)",
                                                        CT_UPDATED);
                     walletdb.WriteZerocoinEntry(modifiedItem);
 

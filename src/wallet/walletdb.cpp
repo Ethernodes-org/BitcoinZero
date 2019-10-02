@@ -334,9 +334,9 @@ void CWalletDB::ListPubCoin(std::list <CZerocoinEntry> &listPubCoin) {
             break;
         CBigNum value;
         ssKey >> value;
-        CZerocoinEntry zerocoinItem;
-        ssValue >> zerocoinItem;
-        listPubCoin.push_back(zerocoinItem);
+        CZerocoinEntry SigmaItem;
+        ssValue >> SigmaItem;
+        listPubCoin.push_back(SigmaItem);
     }
     pcursor->close();
 }
@@ -367,9 +367,9 @@ void CWalletDB::ListSigmaPubCoin(std::list <CSigmaEntry> &listPubCoin) {
             break;
         GroupElement value;
         ssKey >> value;
-        CSigmaEntry zerocoinItem;
-        ssValue >> zerocoinItem;
-        listPubCoin.push_back(zerocoinItem);
+        CSigmaEntry SigmaItem;
+        ssValue >> SigmaItem;
+        listPubCoin.push_back(SigmaItem);
     }
     pcursor->close();
 }
