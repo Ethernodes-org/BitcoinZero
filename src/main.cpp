@@ -1794,13 +1794,13 @@ bool AcceptToMemoryPoolWorker(
         }
     }
 
-    if ((tx.IsZerocoinSpend()) && (markZcoinSpendTransactionSerial))
+    if ((tx.IsZerocoinSpend()) && (markBitcoinZeroSpendTransactionSerial))
     {
         zcState->AddSpendToMempool(zcSpendSerials, hash);
     }
     if (tx.IsSigmaSpend())
     {
-        if(markGravityCoinSpendTransactionSerial)
+        if(markBitcoinZeroSpendTransactionSerial)
             sigmaState->AddSpendToMempool(zcSpendSerialsV3, hash);
         LogPrintf("Updating mint tracker state from Mempool..");
 #ifdef ENABLE_WALLET
