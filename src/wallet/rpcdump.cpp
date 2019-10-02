@@ -468,13 +468,13 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         if(vstr[0] == "sigma=1"){
             CSigmaEntry SigmaEntry;
             //SigmaEntry.value.SetHex(vstr[1]);
-            SigmaEntry.set_denomination = stoi(vstr[2]);
-            SigmaEntry.randomness.SetHex(vstr[3]);
-            SigmaEntry.serialNumber.SetHex(vstr[4]);
-            SigmaEntry.IsUsed = stoi(vstr[5]);
-            SigmaEntry.nHeight = stoi(vstr[6]);
-            SigmaEntry.id = stoi(vstr[7]);
-            SigmaEntry.ecdsaSecretKey = ParseHex(vstr[8]);
+            //SigmaEntry.set_denomination = stoi(vstr[2]);
+            //SigmaEntry.randomness.SetHex(vstr[3]);
+            //SigmaEntry.serialNumber.SetHex(vstr[4]);
+            //SigmaEntry.IsUsed = stoi(vstr[5]);
+            //SigmaEntry.nHeight = stoi(vstr[6]);
+            //SigmaEntry.id = stoi(vstr[7]);
+            //SigmaEntry.ecdsaSecretKey = ParseHex(vstr[8]);
             walletdb.WriteZerocoinEntry(SigmaEntry);
         }
         else {
