@@ -4306,7 +4306,7 @@ int CWallet::GetNumberOfUnspentMintsForDenomination(int version, libzerocoin::Co
         *mintEntry = CZerocoinEntry();
 
     BOOST_FOREACH(const CZerocoinEntry &coin, mintedCoins) {
-        if (!coin.IsUsedForRemint && coin.denomination == d && coin.randomness != 0 && coin.serialNumber > 0) {
+        if (coin.denomination == d && coin.randomness != 0 && coin.serialNumber > 0) {
             // Ignore "used" state in the database, check if the coin serial is used
             if (zerocoinState->IsUsedCoinSerial(coin.serialNumber))
                 // Coin has already been spent
@@ -4490,8 +4490,7 @@ bool CWallet::CreateZerocoinToSigmaRemintModel(string &stringError, int version,
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
 
-    // Write mint entry as "used for remint"
-    mintEntry.IsUsed = mintEntry.IsUsedForRemint = true;
+    mintEntry.IsUsed = true;
     walletdb.WriteZerocoinEntry(mintEntry);
     NotifyZerocoinChanged(this,
         mintEntry.value.GetHex(),

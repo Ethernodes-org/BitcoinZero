@@ -474,10 +474,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
             zerocoinEntry.IsUsed = stoi(vstr[5]);
             zerocoinEntry.nHeight = stoi(vstr[6]);
             zerocoinEntry.id = stoi(vstr[7]);
-            if(vstr.size()>8){
-                zerocoinEntry.ecdsaSecretKey = ParseHex(vstr[8]);
-                zerocoinEntry.IsUsedForRemint = stoi(vstr[9]);
-            }
+            zerocoinEntry.ecdsaSecretKey = ParseHex(vstr[8]);
             walletdb.WriteZerocoinEntry(zerocoinEntry);
         }
         else {
@@ -760,9 +757,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
         file << strprintf("%d ", zerocoinEntry.IsUsed); // IsUsed
         file << strprintf("%d ", zerocoinEntry.nHeight); // nHeight
         file << strprintf("%d ", zerocoinEntry.id); // id
-        if(!zerocoinEntry.ecdsaSecretKey.empty()){
-            file << strprintf("%s ", HexStr(zerocoinEntry.ecdsaSecretKey)); // ecdsaSecretKey
-            file << strprintf("%d ", zerocoinEntry.IsUsedForRemint); // IsUsedForRemint
+        file << strprintf("%s ", HexStr(zerocoinEntry.ecdsaSecretKey)); // ecdsaSecretKey
         }
         file << "#\n"; // --
     }
