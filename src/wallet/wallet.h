@@ -1028,7 +1028,7 @@ public:
     //function for spending all old mints form v2 protocol
     bool SpendOldMints(string& stringError);
 
-    bool SetZerocoinBook(const CZerocoinEntry& zerocoinEntry);
+    bool SetZerocoinBook(const CZerocoinEntry& SigmaEntry);
 
     void CommitTransaction(CWalletTx& tx);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey);
