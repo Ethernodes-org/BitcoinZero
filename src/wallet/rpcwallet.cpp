@@ -3608,7 +3608,7 @@ UniValue listsigmapubcoins(const UniValue& params, bool fHelp) {
             entry.push_back(Pair("denomination", SigmaItem.get_string_denomination()));
             entry.push_back(Pair("value", SigmaItem.value.GetHex()));
             entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", SigmaItem.height));
+            entry.push_back(Pair("nHeight", SigmaItem.nHeight));
             entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
             results.push_back(entry);
         }
