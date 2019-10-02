@@ -4028,6 +4028,8 @@ UniValue removetxwallet(const UniValue& params, bool fHelp) {
 
 //extern UniValue dumpprivkey_gxx(const UniValue& params, bool fHelp); // in rpcdump.cpp
 //extern UniValue dumpwallet_gxx(const UniValue& params, bool fHelp);
+extern UniValue dumpprivkey(const UniValue& params, bool fHelp);
+extern UniValue dumpwallet(const UniValue& params, bool fHelp);
 extern UniValue dumpsigma(const UniValue& params, bool fHelp);
 extern UniValue dumpmasterkey(const UniValue& params, bool fHelp);
 extern UniValue importprivkey(const UniValue& params, bool fHelp);
