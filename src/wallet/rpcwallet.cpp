@@ -4026,11 +4026,13 @@ UniValue removetxwallet(const UniValue& params, bool fHelp) {
 
 
 
-extern UniValue dumpprivkey_bzx(const UniValue& params, bool fHelp); // in rpcdump.cpp
+//extern UniValue dumpprivkey_gxx(const UniValue& params, bool fHelp); // in rpcdump.cpp
+//extern UniValue dumpwallet_gxx(const UniValue& params, bool fHelp);
+extern UniValue dumpsigma(const UniValue& params, bool fHelp);
+extern UniValue dumpmasterkey(const UniValue& params, bool fHelp);
 extern UniValue importprivkey(const UniValue& params, bool fHelp);
 extern UniValue importaddress(const UniValue& params, bool fHelp);
 extern UniValue importpubkey(const UniValue& params, bool fHelp);
-extern UniValue dumpwallet_bzx(const UniValue& params, bool fHelp);
 extern UniValue importwallet(const UniValue& params, bool fHelp);
 extern UniValue importprunedfunds(const UniValue& params, bool fHelp);
 extern UniValue removeprunedfunds(const UniValue& params, bool fHelp);
