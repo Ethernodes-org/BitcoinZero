@@ -3976,9 +3976,6 @@ UniValue remintzerocointosigma(const UniValue &params, bool fHelp) {
     std::string stringError;
     CWalletTx wtx;
 
-    if (!pwalletMain->CreateZerocoinToSigmaRemintModel(stringError, ZEROCOIN_TX_VERSION_2, denomination, &wtx))
-        throw JSONRPCError(RPC_WALLET_ERROR, stringError);
-
     return wtx.GetHash().GetHex();
 }
 

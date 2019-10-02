@@ -30,8 +30,6 @@ class TransactionView;
 class TXHistoryDialog;
 class WalletModel;
 class AddressBookPage;
-class ZerocoinPage;
-class Zc2SigmaPage;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -92,11 +90,9 @@ private:
     TradeHistoryDialog *tradeHistoryTab;
     MetaDExDialog *metaDExTab;
     MetaDExCancelDialog *cancelTab;
-    ZerocoinPage *zerocoinPage;
     SigmaDialog *sigmaView;
     BlankSigmaDialog *blankSigmaView;
     QWidget *sigmaPage;
-    Zc2SigmaPage *zc2SigmaPage;
     TransactionView *coinTransactionList;
     TXHistoryDialog *exodusTransactionsView;
     QWidget *bitcoinzeroTransactionsView;
@@ -129,12 +125,8 @@ public Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-    /** Switch to zerocoin page */
-    void gotoZerocoinPage();
     /** Switch to sigma page */
     void gotoSigmaPage();
-    /** Switch to ZC to Sigma page */
-    void gotoZc2SigmaPage();
     /** Switch to utility page */
     void gotoToolboxPage();
 
