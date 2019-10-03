@@ -14,15 +14,6 @@
 // zerocoin parameters
 extern libzerocoin::Params *ZCParams, *ZCParamsV2;
 
-// Test for zerocoin transaction version 2
-inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, const Consensus::Params &params, int coinId) {
-	return ((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= params.nSpendV2ID_1))
-	    || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= params.nSpendV2ID_10))
-	    || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= params.nSpendV2ID_25))
-	    || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= params.nSpendV2ID_50))
-	    || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= params.nSpendV2ID_100));
-}
-
 // Zerocoin transaction info, added to the CBlock to ensure zerocoin mint/spend transactions got their info stored into
 // index
 class CZerocoinTxInfo {
@@ -49,22 +40,10 @@ CBigNum ParseZerocoinMintScript(const CScript& script);
 std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(const CTxIn& in);
 
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight);
-bool CheckZerocoinTransaction(const CTransaction &tx,
-	CValidationState &state,
-    const Consensus::Params &params,
-	uint256 hashTx,
-	bool isVerifyDB,
-	int nHeight,
-    bool isCheckWallet,
-    bool fZerocoinStateCheck,
-    CZerocoinTxInfo *zerocoinTxInfo);
 
 void DisconnectTipZC(CBlock &block, CBlockIndex *pindexDelete);
-bool ConnectBlockZC(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew, const CBlock *pblock, bool fJustCheck=false);
 
 int ZerocoinGetNHeight(const CBlockHeader &block);
-
-bool ZerocoinBuildStateFromIndex(CChain *chain, set<CBlockIndex *> &changes);
 
 CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx, const CTxIn &txin);
 
@@ -72,7 +51,6 @@ CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx, const CTxIn &txin);
  * State of minted/spent coins as extracted from the index
  */
 class CZerocoinState {
-friend bool ZerocoinBuildStateFromIndex(CChain *, set<CBlockIndex *> &);
 public:
     // First and last block where mint (and hence accumulator update) with given denomination and id was seen
     struct CoinGroupInfo {
@@ -114,8 +92,6 @@ public:
     // serials of spends currently in the mempool mapped to tx hashes
     unordered_map<CBigNum,uint256,CBigNumHash> mempoolCoinSerials;
 
-    // Add mint, automatically assigning id to it. Returns id and previous accumulator value (if any)
-    int AddMint(CBlockIndex *index, int denomination, const CBigNum &pubCoin, CBigNum &previousAccValue);
     // Add serial to the list of used ones
     void AddSpend(const CBigNum &serial);
 
@@ -132,29 +108,11 @@ public:
     // Query if there is a coin with given pubCoin value
     bool HasCoin(const CBigNum &pubCoin);
 
-    // Given denomination and id returns latest accumulator value and corresponding block hash
-    // Do not take into account coins with height more than maxHeight
-    // Returns number of coins satisfying conditions
-    int GetAccumulatorValueForSpend(CChain *chain, int maxHeight, int denomination, int id, CBigNum &accumulator, uint256 &blockHash, bool useModulusV2);
-
-    // Get witness
-    libzerocoin::AccumulatorWitness GetWitnessForSpend(CChain *chain, int maxHeight, int denomination, int id, const CBigNum &pubCoin, bool useModulusV2);
-
     // Return height of mint transaction and id of minted coin
     int GetMintedCoinHeightAndId(const CBigNum &pubCoin, int denomination, int &id);
 
-    // If needed calculate accumulators for alternative accumulator modulus
-    void CalculateAlternativeModulusAccumulatorValues(CChain *chain, int denomination, int id);
-
     // Reset to initial values
     void Reset();
-
-    // Test function
-    bool TestValidity(CChain *chain);
-
-    // Recalculate accumulators. Needed if upgrade from pre-modulusv2 version is detected
-    // Returns set of indices that changed
-    set<CBlockIndex *> RecalculateAccumulators(CChain *chain);
 
     // Check if there is a conflicting tx in the blockchain or mempool
     bool CanAddSpendToMempool(const CBigNum &coinSerial);

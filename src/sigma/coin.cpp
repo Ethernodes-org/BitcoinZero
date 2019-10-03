@@ -26,7 +26,7 @@ bool DenominationToInteger(CoinDenomination denom, int64_t& denom_out, CValidati
 
     switch (denom) {
         default:
-            return state.DoS(100, error("CheckZerocoinTransaction : invalid denomination value, unable to convert to integer"));
+            return state.DoS(100, error("CheckSigmaTransaction : invalid denomination value, unable to convert to integer"));
         case CoinDenomination::SIGMA_DENOM_X1:
             denom_out = 1 * COIN;
             break;
@@ -121,7 +121,7 @@ bool IntegerToDenomination(int64_t value, CoinDenomination& denom_out) {
 bool IntegerToDenomination(int64_t value, CoinDenomination& denom_out, CValidationState &state) {
     switch (value) {
         default:
-            return state.DoS(100, error("CheckZerocoinTransaction : invalid denomination value, unable to convert to enum"));
+            return state.DoS(100, error("CheckSigmaTransaction : invalid denomination value, unable to convert to enum"));
         case 1 * COIN:
             denom_out = CoinDenomination::SIGMA_DENOM_X1;
             break;

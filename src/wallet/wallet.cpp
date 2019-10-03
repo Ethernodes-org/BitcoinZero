@@ -4155,48 +4155,6 @@ bool CWallet::CheckDenomination(string denomAmount, int64_t& nAmount, libzerocoi
     return true;
 }
 
-bool CWallet::CheckHasV2Mint(libzerocoin::CoinDenomination denomination, bool forceUsed){
-    // Check if there is v2 mint, spend it first
-    bool result = false;
-    list <CZerocoinEntry> listOwnCoins;
-    CWalletDB(strWalletFile).ListPubCoin(listOwnCoins);
-    listOwnCoins.sort(CompHeight);
-    CZerocoinEntry coinToUse;
-    bool fModulusV2 = chainActive.Height() >= Params().GetConsensus().nModulusV2StartBlock;
-    CZerocoinState *zerocoinState = CZerocoinState::GetZerocoinState();
-
-    CBigNum accumulatorValue;
-    uint256 accumulatorBlockHash;      // to be used in zerocoin spend v2
-
-    int coinId = INT_MAX;
-    int coinHeight;
-    BOOST_FOREACH(const CZerocoinEntry &minIdPubcoin, listOwnCoins) {
-        if (minIdPubcoin.denomination == denomination
-            && ((minIdPubcoin.IsUsed == false && !forceUsed) || (minIdPubcoin.IsUsed == true && forceUsed))
-            && minIdPubcoin.randomness != 0
-            && minIdPubcoin.serialNumber != 0) {
-
-            int id;
-            coinHeight = zerocoinState->GetMintedCoinHeightAndId(minIdPubcoin.value, minIdPubcoin.denomination, id);
-            if (coinHeight > 0
-                && id < coinId
-                && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height()
-                && zerocoinState->GetAccumulatorValueForSpend(
-                    &chainActive,
-                    chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1),
-                    denomination,
-                    id,
-                    accumulatorValue,
-                    accumulatorBlockHash,
-                    fModulusV2) > 1
-                    ) {
-                result = true;
-            }
-        }
-    }
-    return result;
-}
-
 bool CWallet::CreateZerocoinSpendModel(
         string &stringError,
         string thirdPartyAddress,
@@ -4208,16 +4166,6 @@ bool CWallet::CreateZerocoinSpendModel(
 
     if (!fFileBacked)
         return false;
-
-    int64_t nAmount = 0;
-    libzerocoin::CoinDenomination denomination;
-    bool v2MintFound = false;
-    if (CheckDenomination(denomAmount, nAmount, denomination)) {
-        // If requested denomination can be a V2 denomination, check if there is any
-        // mint of given denomination. Mints which do not have
-        // 6 confirmations will NOT be considered.
-        v2MintFound = CheckHasV2Mint(denomination, forceUsed);
-    }
 
     // Wallet comments
     CWalletTx wtx;

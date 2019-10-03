@@ -2439,7 +2439,7 @@ bool CheckInputs(const CTransaction &tx, CValidationState &state, const CCoinsVi
                 return state.DoS(
                     100, false,
                     REJECT_MALFORMED,
-                    "CheckSpendBitcoinZeroTransaction: can't mix zerocoin spend input with regular ones");
+                    "CheckSigmaZeroTransaction: can't mix zerocoin spend input with regular ones");
             }
             CDataStream serializedCoinSpend((const char *)&*(txin.scriptSig.begin() + 1),
                                             (const char *)&*txin.scriptSig.end(),
@@ -3032,8 +3032,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     LogPrint("bench", "    - Verify %u txins: %.2fms (%.3fms/txin) [%.2fs]\n", nInputs - 1, 0.001 * (nTime4 - nTime2),
              nInputs <= 1 ? 0 : 0.001 * (nTime4 - nTime2) / (nInputs - 1), nTimeVerify * 0.000001);
 
-    if (!ConnectBlockZC(state, chainparams, pindex, &block, fJustCheck) ||
-        !sigma::ConnectBlockSigma(state, chainparams, pindex, &block, fJustCheck))
+    if (!sigma::ConnectBlockSigma(state, chainparams, pindex, &block, fJustCheck))
         return false;
 
     if (fJustCheck)
@@ -5112,9 +5111,8 @@ bool static LoadBlockIndexDB() {
 
     PruneBlockIndexCandidates();
 
-    // some blocks in index can change as a result of ZerocoinBuildStateFromIndex() call
+    // some blocks in index can change as a result of SigmaBuildStateFromIndex() call
     set<CBlockIndex *> changes;
-    ZerocoinBuildStateFromIndex(&chainActive, changes);
     sigma::BuildSigmaStateFromIndex(&chainActive);
     if (!changes.empty()) {
         setDirtyBlockIndex.insert(changes.begin(), changes.end());

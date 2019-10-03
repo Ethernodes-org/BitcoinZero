@@ -91,11 +91,6 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0");
 
         consensus.nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
-	    consensus.nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;
-	    consensus.nSpendV2ID_10 = ZC_V2_SWITCH_ID_10;
-	    consensus.nSpendV2ID_25 = ZC_V2_SWITCH_ID_25;
-	    consensus.nSpendV2ID_50 = ZC_V2_SWITCH_ID_50;
-	    consensus.nSpendV2ID_100 = ZC_V2_SWITCH_ID_100;
 	    consensus.nModulusV2StartBlock = ZC_MODULUS_V2_START_BLOCK;
         consensus.nModulusV1MempoolStopBlock = ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK;
 	    consensus.nModulusV1StopBlock = ZC_MODULUS_V1_STOP_BLOCK;
@@ -157,11 +152,6 @@ public:
         576.0 // * estimated number of transactions per day after checkpoint
         };
 
-        consensus.nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;
-        consensus.nSpendV2ID_10 = ZC_V2_SWITCH_ID_10;
-        consensus.nSpendV2ID_25 = ZC_V2_SWITCH_ID_25;
-        consensus.nSpendV2ID_50 = ZC_V2_SWITCH_ID_50;
-        consensus.nSpendV2ID_100 = ZC_V2_SWITCH_ID_100;
         consensus.nModulusV2StartBlock = ZC_MODULUS_V2_START_BLOCK;
         consensus.nModulusV1MempoolStopBlock = ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK;
         consensus.nModulusV1StopBlock = ZC_MODULUS_V1_STOP_BLOCK;

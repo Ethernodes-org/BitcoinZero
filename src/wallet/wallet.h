@@ -1026,8 +1026,6 @@ public:
 
     bool CheckDenomination(string denomAmount, int64_t& nAmount, libzerocoin::CoinDenomination& denomination);
 
-    bool CheckHasV2Mint(libzerocoin::CoinDenomination denomination, bool forceUsed);
-
     // functions to do reminting from zerocoin to sigma
     int GetNumberOfUnspentMintsForDenomination(int version, libzerocoin::CoinDenomination d, CZerocoinEntry *mintEntry = NULL);
 
