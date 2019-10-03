@@ -11,9 +11,6 @@
 #include <unordered_map>
 #include <functional>
 
-// zerocoin parameters
-extern libzerocoin::Params *ZCParams, *ZCParamsV2;
-
 // Zerocoin transaction info, added to the CBlock to ensure zerocoin mint/spend transactions got their info stored into
 // index
 class CZerocoinTxInfo {

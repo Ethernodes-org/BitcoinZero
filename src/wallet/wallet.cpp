@@ -3843,12 +3843,12 @@ bool CWallet::CreateSigmaMintModel(
         int64_t denominationValue;
         if (!DenominationToInteger(denomination, denominationValue)) {
             throw runtime_error(
-                "mintzerocoin <amount>(0.1, 0.5, 1, 10, 100) (\"bitcoinzeroaddress\")\n");
+                "MintSigma <amount>(1, 10, 50, 100, 500, 1000, 5000)  (\"bitcoinzeroaddress\")\n");
         }
 
         int64_t coinCount = denominationPair.second;
 
-        LogPrintf("rpcWallet.mintzerocoin() denomination = %s, nAmount = %s \n",
+        LogPrintf("rpcWallet.MintSigma() denomination = %s, nAmount = %s \n",
             denominationValue, coinCount);
 
         if(coinCount < 0) {
@@ -4013,60 +4013,6 @@ bool CWallet::CreateSigmaMintModel(string &stringError, const string& denomAmoun
         zwalletMain->SetCount(nCountNextUse);
         return false;
     }
-}
-
-int CWallet::GetNumberOfUnspentMintsForDenomination(int version, libzerocoin::CoinDenomination d, CZerocoinEntry *mintEntry /*=NULL*/) {
-    CZerocoinState *zerocoinState = CZerocoinState::GetZerocoinState();
-
-    // In case of corrupted database we need to rescan blockchain state to find the coins that were unspent
-
-    list<CZerocoinEntry> mintedCoins;
-    CWalletDB(strWalletFile).ListPubCoin(mintedCoins);
-
-    int result = 0;
-    if (mintEntry)
-        *mintEntry = CZerocoinEntry();
-
-    BOOST_FOREACH(const CZerocoinEntry &coin, mintedCoins) {
-        if (coin.denomination == d && coin.randomness != 0 && coin.serialNumber > 0) {
-            // Ignore "used" state in the database, check if the coin serial is used
-            if (zerocoinState->IsUsedCoinSerial(coin.serialNumber))
-                // Coin has already been spent
-                continue;
-
-            // Obtain coin version
-            int coinVersion = coin.IsCorrectV2Mint() ? ZEROCOIN_TX_VERSION_2 : ZEROCOIN_TX_VERSION_1;
-
-            if (coinVersion == version) {
-                // Find minted coin in the index
-                int mintId = -1, mintHeight = -1;
-
-                // group is the same in both v1 and v2 params
-                const libzerocoin::IntegerGroupParams &commGroup = ZCParamsV2->coinCommitmentGroup;
-                // calculate g^serial * h^randomness (mod modulus)
-                CBigNum coinPublicValue = commGroup.g.pow_mod(coin.serialNumber, commGroup.modulus).
-                                mul_mod(commGroup.h.pow_mod(coin.randomness, commGroup.modulus), commGroup.modulus);
-
-                if ((mintHeight = zerocoinState->GetMintedCoinHeightAndId(coinPublicValue, (int)d, mintId)) > 0) {
-                    if (mintEntry) {
-                        *mintEntry = coin;
-
-                        // we don't trust values in DB, we use values from blockchain
-                        mintEntry->nHeight = mintHeight;
-                        mintEntry->id = mintId;
-
-                        // no need to find anything else
-                        return 1;
-                    }
-                    else {
-                        result++;
-                    }
-                }
-            }
-        }
-    }
-
-    return result;
 }
 
 bool CWallet::CheckDenomination(string denomAmount, int64_t& nAmount, libzerocoin::CoinDenomination& denomination){
@@ -5201,81 +5147,6 @@ bool CWallet::CommitZerocoinSpendTransaction(CWalletTx &wtxNew, CReserveKey &res
     return true;
 }
 
-string CWallet::MintAndStoreZerocoin(vector<CRecipient> vecSend,
-                                     vector<libzerocoin::PrivateCoin> privCoins,
-                                     CWalletTx &wtxNew, bool fAskFee) {
-    CHECK_ZEROCOIN_STRING();
-
-    string strError;
-    if (IsLocked()) {
-        strError = _("Error: Wallet locked, unable to create transaction!");
-        LogPrintf("MintZerocoin() : %s", strError);
-        return strError;
-    }
-
-    int totalValue = 0;
-    BOOST_FOREACH(CRecipient recipient, vecSend){
-        // Check amount
-        if (recipient.nAmount <= 0)
-            return _("Invalid amount");
-
-        LogPrintf("MintZerocoin: value = %s\n", recipient.nAmount);
-        totalValue += recipient.nAmount;
-
-    }
-    if ((totalValue + payTxFee.GetFeePerK()) > GetBalance())
-        return _("Insufficient funds");
-
-    LogPrintf("payTxFee.GetFeePerK()=%s\n", payTxFee.GetFeePerK());
-    CReserveKey reservekey(this);
-    int64_t nFeeRequired = 0;
-
-    int nChangePosRet = -1;
-    bool isSigmaMint = false;
-    if (!CreateZerocoinMintTransaction(vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError, isSigmaMint)) {
-        LogPrintf("nFeeRequired=%s\n", nFeeRequired);
-        if (totalValue + nFeeRequired > GetBalance())
-            return strprintf(
-                    _("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"),
-                    FormatMoney(nFeeRequired).c_str());
-        return strError;
-    }
-
-    if (fAskFee && !uiInterface.ThreadSafeAskFee(nFeeRequired)){
-        LogPrintf("MintZerocoin: returning aborted..\n");
-        return "ABORTED";
-    }
-
-    CWalletDB walletdb(pwalletMain->strWalletFile);
-    libzerocoin::Params *zcParams = ZCParamsV2;
-
-    BOOST_FOREACH(libzerocoin::PrivateCoin privCoin, privCoins){
-        CZerocoinEntry zerocoinTx;
-        zerocoinTx.IsUsed = false;
-        zerocoinTx.denomination = privCoin.getPublicCoin().getDenomination();
-        zerocoinTx.value = privCoin.getPublicCoin().getValue();
-        libzerocoin::PublicCoin checkPubCoin(zcParams, zerocoinTx.value, privCoin.getPublicCoin().getDenomination());
-        if (!checkPubCoin.validate()) {
-            return "error: pubCoin not validated.";
-        }
-        zerocoinTx.randomness = privCoin.getRandomness();
-        zerocoinTx.serialNumber = privCoin.getSerialNumber();
-        const unsigned char *ecdsaSecretKey = privCoin.getEcdsaSeckey();
-        zerocoinTx.ecdsaSecretKey = std::vector<unsigned char>(ecdsaSecretKey, ecdsaSecretKey+32);
-        NotifyZerocoinChanged(this, zerocoinTx.value.GetHex(), "New (" + std::to_string(zerocoinTx.denomination) + " mint)", CT_NEW);
-        walletdb.WriteZerocoinEntry(zerocoinTx);
-    }
-
-    if (!CommitTransaction(wtxNew, reservekey)) {
-        return _(
-                "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
-    } else {
-        LogPrintf("CommitTransaction success!\n");
-    }
-
-    return "";
-}
-
 string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
                                        const vector<sigma::PrivateCoin>& privCoins,
                                        vector<CHDMint> vDMints,
@@ -5287,7 +5158,7 @@ string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
 
     if (IsLocked()) {
         strError = _("Error: Wallet locked, unable to create transaction!");
-        LogPrintf("MintZerocoin() : %s", strError);
+        LogPrintf("MintSigma() : %s", strError);
         return strError;
     }
 
@@ -5297,7 +5168,7 @@ string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
         if (recipient.nAmount <= 0)
             return _("Invalid amount");
 
-        LogPrintf("MintZerocoin: value = %s\n", recipient.nAmount);
+        LogPrintf("MintSigma: value = %s\n", recipient.nAmount);
         totalValue += recipient.nAmount;
 
     }
@@ -5322,7 +5193,7 @@ string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
     }
 
     if (fAskFee && !uiInterface.ThreadSafeAskFee(nFeeRequired)){
-        LogPrintf("MintZerocoin: returning aborted..\n");
+        LogPrintf("MintSigma: returning aborted..\n");
         return "ABORTED";
     }
 
@@ -5347,64 +5218,6 @@ string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
 
     // Update nCountNextUse in HDMint wallet database
     zwalletMain->UpdateCountDB();
-
-    return "";
-}
-
-/**
- * @brief CWallet::MintZerocoin
- * @param pubCoin
- * @param nValue
- * @param wtxNew
- * @param fAskFee
- * @return
- */
-string CWallet::MintZerocoin(CScript pubCoin, int64_t nValue, bool isSigmaMint, CWalletTx &wtxNew, bool fAskFee) {
-    if (!isSigmaMint) {
-        CHECK_ZEROCOIN_STRING();
-    }
-
-    LogPrintf("MintZerocoin: value = %s\n", nValue);
-    // Check amount
-    if (nValue <= 0)
-        return _("Invalid amount");
-    LogPrintf("CWallet.MintZerocoin() nValue = %s, payTxFee.GetFee(1000) = %s, GetBalance() = %s \n", nValue,
-              payTxFee.GetFee(1000), GetBalance());
-    if (nValue + payTxFee.GetFeePerK() > GetBalance())
-        return _("Insufficient funds");
-    LogPrintf("payTxFee.GetFeePerK()=%s\n", payTxFee.GetFeePerK());
-    CReserveKey reservekey(this);
-    int64_t nFeeRequired = 0;
-
-    if (IsLocked()) {
-        string strError = _("Error: Wallet locked, unable to create transaction!");
-        LogPrintf("MintZerocoin() : %s", strError);
-        return strError;
-    }
-
-    string strError;
-    if (!CreateZerocoinMintTransaction(pubCoin, nValue, wtxNew, reservekey, nFeeRequired, strError, isSigmaMint)) {
-        LogPrintf("nFeeRequired=%s\n", nFeeRequired);
-        if (nValue + nFeeRequired > GetBalance())
-            return strprintf(
-                    _("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"),
-                    FormatMoney(nFeeRequired).c_str());
-        return strError;
-    }
-
-    if (fAskFee && !uiInterface.ThreadSafeAskFee(nFeeRequired))
-        return "ABORTED";
-
-    if (!CommitTransaction(wtxNew, reservekey)) {
-        return _(
-                "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
-    } else {
-        LogPrintf("CommitTransaction success!\n");
-//        //TODO :
-//        // 1. In this case, we already have pubcoin that just committed to network.
-//        // 2. what we can do is <pubcoin><isOur><isUsed> storing in wallet
-//        // 3. We will store pubcoin, yes, no
-    }
 
     return "";
 }
