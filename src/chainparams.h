@@ -80,8 +80,7 @@ public:
     int PoolMaxTransactions() const { return nPoolMaxTransactions; }
     int FulfilledRequestExpireTime() const { return nFulfilledRequestExpireTime; }
     std::string SporkPubKey() const { return strSporkPubKey; }
-	
-	int nModulusV2StartBlock;
+
     int nModulusV1MempoolStopBlock;
 	int nModulusV1StopBlock;
 

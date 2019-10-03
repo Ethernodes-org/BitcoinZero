@@ -74,8 +74,6 @@ struct Params {
     int nBznodeMinimumConfirmations;
 
 	/** Zerocoin-related block numbers when features are changed */
-    int nCheckBugFixedAtBlock;
-	int nModulusV2StartBlock;
     int nModulusV1MempoolStopBlock;
 	int nModulusV1StopBlock;
 

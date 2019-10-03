@@ -95,8 +95,6 @@ public:
     // Add serial to the list of used ones
     void AddSpend(const CBigNum &serial);
 
-    // Add everything from the block to the state
-    void AddBlock(CBlockIndex *index, const Consensus::Params &params);
     // Disconnect block from the chain rolling back mints and spends
     void RemoveBlock(CBlockIndex *index);
 

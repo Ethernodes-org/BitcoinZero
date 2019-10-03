@@ -34,27 +34,6 @@ libzerocoin::Params *ZCParamsV2 = new libzerocoin::Params(bnTrustedModulusV2, bn
 
 static CZerocoinState zerocoinState;
 
-static bool CheckZerocoinSpendSerial(CValidationState &state, const Consensus::Params &params, CZerocoinTxInfo *zerocoinTxInfo, libzerocoin::CoinDenomination denomination, const CBigNum &serial, int nHeight, bool fConnectTip) {
-    if (nHeight > params.nCheckBugFixedAtBlock) {
-        // check for zerocoin transaction in this block as well
-        if (zerocoinTxInfo && !zerocoinTxInfo->fInfoIsComplete && zerocoinTxInfo->spentSerials.count(serial) > 0)
-            return state.DoS(0, error("CTransaction::CheckTransaction() : two or more spends with same serial in the same block"));
-
-        // check for used serials in zerocoinState
-        if (zerocoinState.IsUsedCoinSerial(serial)) {
-            // Proceed with checks ONLY if we're accepting tx into the memory pool or connecting block to the existing blockchain
-            if (nHeight == INT_MAX || fConnectTip) {
-                if (false)
-                    LogPrintf("ZCSpend: height=%d, denomination=%d, serial=%s\n", nHeight, (int)denomination, serial.ToString());
-                else
-                    return state.DoS(0, error("CTransaction::CheckTransaction() : The CoinSpend serial has been used"));
-            }
-        }
-    }
-
-    return true;
-}
-
 CBigNum ParseZerocoinMintScript(const CScript& script)
 {
     if (script.size() < 6) {
@@ -224,35 +203,6 @@ CZerocoinState::CZerocoinState() {
 
 void CZerocoinState::AddSpend(const CBigNum &serial) {
     usedCoinSerials.insert(serial);
-}
-
-void CZerocoinState::AddBlock(CBlockIndex *index, const Consensus::Params &params) {
-    BOOST_FOREACH(const PAIRTYPE(PAIRTYPE(int,int), PAIRTYPE(CBigNum,int)) &accUpdate, index->accumulatorChanges)
-    {
-        CoinGroupInfo   &coinGroup = coinGroups[accUpdate.first];
-
-        if (coinGroup.firstBlock == NULL)
-            coinGroup.firstBlock = index;
-        coinGroup.lastBlock = index;
-        coinGroup.nCoins += accUpdate.second.second;
-    }
-
-    BOOST_FOREACH(const PAIRTYPE(PAIRTYPE(int,int),vector<CBigNum>) &pubCoins, index->mintedPubCoins) {
-        latestCoinIds[pubCoins.first.first] = pubCoins.first.second;
-        BOOST_FOREACH(const CBigNum &coin, pubCoins.second) {
-            CMintedCoinInfo coinInfo;
-            coinInfo.denomination = pubCoins.first.first;
-            coinInfo.id = pubCoins.first.second;
-            coinInfo.nHeight = index->nHeight;
-            mintedPubCoins.insert(pair<CBigNum,CMintedCoinInfo>(coin, coinInfo));
-        }
-    }
-
-    if (index->nHeight > params.nCheckBugFixedAtBlock) {
-        BOOST_FOREACH(const CBigNum &serial, index->spentSerials) {
-            usedCoinSerials.insert(serial);
-        }
-    }
 }
 
 void CZerocoinState::RemoveBlock(CBlockIndex *index) {

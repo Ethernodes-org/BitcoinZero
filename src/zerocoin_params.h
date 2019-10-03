@@ -9,9 +9,6 @@
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
 static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 BZX mininput
 
-// There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK         1
-
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 200
 #define ZC_V2_SWITCH_ID_10 30
@@ -32,7 +29,6 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 BZX mininput
 // Block after which sigma mints are activated.
 #define ZC_SIGMA_STARTING_BLOCK         156111
 
-#define ZC_MODULUS_V2_START_BLOCK		1
 #define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        1
 #define ZC_MODULUS_V1_STOP_BLOCK		1
 #define ZC_MODULUS_V2_BASE_ID			1000

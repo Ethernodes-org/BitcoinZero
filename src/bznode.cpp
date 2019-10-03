@@ -500,12 +500,7 @@ bool CBznodeBroadcast::Create(CTxIn txin, CService service, CKey keyCollateralAd
         return false;
     }
 
-    int nHeight = chainActive.Height();
-    if (nHeight < ZC_MODULUS_V2_START_BLOCK) {
-        mnbRet = CBznodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyBznodeNew, MIN_PEER_PROTO_VERSION);
-    } else {
-        mnbRet = CBznodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyBznodeNew, PROTOCOL_VERSION);
-    }
+    mnbRet = CBznodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyBznodeNew, PROTOCOL_VERSION);
 
     if (!mnbRet.IsValidNetAddr()) {
         strErrorRet = strprintf("Invalid IP address, bznode=%s", txin.prevout.ToStringShort());

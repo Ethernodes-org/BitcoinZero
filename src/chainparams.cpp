@@ -90,8 +90,6 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0");
 
-        consensus.nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
-	    consensus.nModulusV2StartBlock = ZC_MODULUS_V2_START_BLOCK;
         consensus.nModulusV1MempoolStopBlock = ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK;
 	    consensus.nModulusV1StopBlock = ZC_MODULUS_V1_STOP_BLOCK;
         consensus.nDisableZerocoinStartBlock = 157000;
@@ -152,7 +150,6 @@ public:
         576.0 // * estimated number of transactions per day after checkpoint
         };
 
-        consensus.nModulusV2StartBlock = ZC_MODULUS_V2_START_BLOCK;
         consensus.nModulusV1MempoolStopBlock = ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK;
         consensus.nModulusV1StopBlock = ZC_MODULUS_V1_STOP_BLOCK;
 
