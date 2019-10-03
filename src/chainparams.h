@@ -81,9 +81,6 @@ public:
     int FulfilledRequestExpireTime() const { return nFulfilledRequestExpireTime; }
     std::string SporkPubKey() const { return strSporkPubKey; }
 
-    int nModulusV1MempoolStopBlock;
-	int nModulusV1StopBlock;
-
 protected:
     CChainParams() {}
 

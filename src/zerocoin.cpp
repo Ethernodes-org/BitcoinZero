@@ -23,53 +23,7 @@ using namespace std;
 int64_t nTransactionFee = 0;
 int64_t nMinimumInputValue = DUST_HARD_LIMIT;
 
-// btzc: add zerocoin init
-// zerocoin init
-static CBigNum bnTrustedModulus(ZEROCOIN_MODULUS), bnTrustedModulusV2(ZEROCOIN_MODULUS_V2);
-
-// Set up the Zerocoin Params object
-uint32_t securityLevel = 80;
-libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus, bnTrustedModulus);
-libzerocoin::Params *ZCParamsV2 = new libzerocoin::Params(bnTrustedModulusV2, bnTrustedModulus);
-
 static CZerocoinState zerocoinState;
-
-CBigNum ParseZerocoinMintScript(const CScript& script)
-{
-    if (script.size() < 6) {
-        throw std::invalid_argument("Script is not a valid Zerocoin mint");
-    }
-
-    return CBigNum(std::vector<unsigned char>(script.begin() + 6, script.end()));
-}
-
-std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(const CTxIn& in)
-{
-    // Check arguments.
-    uint32_t groupId = in.nSequence;
-
-    if (groupId < 1 || groupId >= INT_MAX) {
-        throw CBadSequence();
-    }
-
-    if (in.scriptSig.size() < 4) {
-        throw CBadTxIn();
-    }
-
-    // Determine if version 2 spend.
-    bool v2 = groupId >= ZC_MODULUS_V2_BASE_ID;
-
-    // Deserialize spend.
-    CDataStream serialized(
-        std::vector<unsigned char>(in.scriptSig.begin() + 4, in.scriptSig.end()),
-        SER_NETWORK,
-        PROTOCOL_VERSION
-    );
-
-    std::unique_ptr<libzerocoin::CoinSpend> spend(new libzerocoin::CoinSpend(v2 ? ZCParamsV2 : ZCParams, serialized));
-
-    return std::make_pair(std::move(spend), groupId);
-}
 
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight)
 
@@ -141,21 +95,6 @@ bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state
 
 void DisconnectTipZC(CBlock & /*block*/, CBlockIndex *pindexDelete) {
     zerocoinState.RemoveBlock(pindexDelete);
-}
-
-CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx, const CTxIn &txin) {
-    if (!txin.IsZerocoinSpend())
-        return CBigNum(0);
-    try {
-        CDataStream serializedCoinSpend((const char *)&*(txin.scriptSig.begin() + 4),
-                                    (const char *)&*txin.scriptSig.end(),
-                                    SER_NETWORK, PROTOCOL_VERSION);
-        libzerocoin::CoinSpend spend(txin.nSequence >= ZC_MODULUS_V2_BASE_ID ? ZCParamsV2 : ZCParams, serializedCoinSpend);
-        return spend.getCoinSerialNumber();
-    }
-    catch (const std::runtime_error &) {
-        return CBigNum(0);
-    }
 }
 
 int ZerocoinGetNHeight(const CBlockHeader &block) {

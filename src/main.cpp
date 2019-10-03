@@ -1323,20 +1323,7 @@ bool AcceptToMemoryPoolWorker(
     vector<Scalar> zcSpendSerialsV3;
     {
         LOCK(pool.cs); // protect pool.mapNextTx
-        if (tx.IsZerocoinSpend()) {
-            BOOST_FOREACH(const CTxIn &txin, tx.vin)
-            {
-                zcSpendSerial = ZerocoinGetSpendSerialNumber(tx, txin);
-                if (!zcSpendSerial)
-                    return state.Invalid(false, REJECT_INVALID, "txn-invalid-zerocoin-spend");
-                if (!zcState->CanAddSpendToMempool(zcSpendSerial)) {
-                    LogPrintf("AcceptToMemoryPool(): serial number %s has been used\n", zcSpendSerial.ToString());
-                    return state.Invalid(false, REJECT_CONFLICT, "txn-mempool-conflict");
-                }
-                zcSpendSerials.push_back(zcSpendSerial);
-            }
-        }
-        else if (tx.IsSigmaSpend()) {
+        if (tx.IsSigmaSpend()) {
 
             BOOST_FOREACH(const CTxIn &txin, tx.vin)
             {
@@ -3101,31 +3088,10 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         LogPrintf("mempool", "Erased %d orphan tx included or conflicted by block\n", nErased);
     }
 
-    // Erase conflicting zerocoin txs from the mempool
-    CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
+    // Erase conflicting sigma txs from the mempool
     sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
     BOOST_FOREACH(const CTransaction &tx, block.vtx) {
-        if (tx.IsZerocoinSpend()) {
-            BOOST_FOREACH(
-            const CTxIn &txin, tx.vin)
-            {
-                CBigNum zcSpendSerial = ZerocoinGetSpendSerialNumber(tx, txin);
-                uint256 thisTxHash = tx.GetHash();
-                uint256 conflictingTxHash = zcState->GetMempoolConflictingTxHash(zcSpendSerial);
-                if (!conflictingTxHash.IsNull() && conflictingTxHash != thisTxHash) {
-                    std::list<CTransaction> removed;
-                    auto pTx = mempool.get(conflictingTxHash);
-                    if (pTx)
-                        mempool.removeRecursive(*pTx, removed);
-                    LogPrintf("ConnectBlock: removed conflicting zerocoin spend tx %s from the mempool\n",
-                              conflictingTxHash.ToString());
-                }
-
-                // In any case we need to remove serial from mempool set
-                zcState->RemoveSpendFromMempool(zcSpendSerial);
-            }
-       }
-       else if (tx.IsSigmaSpend()) {
+        if (tx.IsSigmaSpend()) {
             BOOST_FOREACH(const CTxIn &txin, tx.vin)
             {
                 Scalar zcSpendSerial = sigma::GetSigmaSpendSerialNumber(tx, txin);

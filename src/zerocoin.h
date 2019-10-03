@@ -36,16 +36,11 @@ public:
     void Complete();
 };
 
-CBigNum ParseZerocoinMintScript(const CScript& script);
-std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(const CTxIn& in);
-
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, const Consensus::Params &params, int nHeight);
 
 void DisconnectTipZC(CBlock &block, CBlockIndex *pindexDelete);
 
 int ZerocoinGetNHeight(const CBlockHeader &block);
-
-CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx, const CTxIn &txin);
 
 /*
  * State of minted/spent coins as extracted from the index

@@ -73,10 +73,6 @@ struct Params {
     int nInstantSendKeepLock; // in blocks
     int nBznodeMinimumConfirmations;
 
-	/** Zerocoin-related block numbers when features are changed */
-    int nModulusV1MempoolStopBlock;
-	int nModulusV1StopBlock;
-
     // Values for dandelion.
 
     // The minimum amount of time a Dandelion transaction is embargoed (seconds).

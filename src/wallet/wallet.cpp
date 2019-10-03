@@ -563,16 +563,7 @@ bool CWallet::IsSpent(const uint256 &hash, unsigned int n) const {
         auto& script = tx->vout[n].scriptPubKey;
         CWalletDB db(strWalletFile);
 
-        if (script.IsZerocoinMint()) {
-            auto pub = ParseZerocoinMintScript(script);
-            CZerocoinEntry data;
-
-            if (!db.ReadZerocoinEntry(pub, data)) {
-                return false;
-            }
-
-            return data.IsUsed;
-        } else if (script.IsSigmaMint()) {
+        if (script.IsSigmaMint()) {
             auto pub = sigma::ParseSigmaMintScript(script);
             uint256 hashPubcoin = primitives::GetPubCoinValueHash(pub);
             CMintMeta meta;
@@ -1037,40 +1028,7 @@ bool CWallet::AbandonTransaction(const uint256 &hashTx) {
             }
         }
 
-        if (wtx.IsZerocoinSpend()) {
-            // find out coin serial number
-            assert(wtx.vin.size() == 1);
-
-            const CTxIn &txin = wtx.vin[0];
-            CDataStream serializedCoinSpend((const char *)&*(txin.scriptSig.begin() + 4),
-                                            (const char *)&*txin.scriptSig.end(),
-                                            SER_NETWORK, PROTOCOL_VERSION);
-            libzerocoin::CoinSpend spend(txin.nSequence >= ZC_MODULUS_V2_BASE_ID ? ZCParamsV2 : ZCParams,
-                                         serializedCoinSpend);
-
-            CBigNum serial = spend.getCoinSerialNumber();
-
-            // mark corresponding mint as unspent
-            list <CZerocoinEntry> pubCoins;
-            walletdb.ListPubCoin(pubCoins);
-
-            BOOST_FOREACH(const CZerocoinEntry &SigmaItem, pubCoins) {
-                if (SigmaItem.serialNumber == serial) {
-                    CZerocoinEntry modifiedItem = SigmaItem;
-                    modifiedItem.IsUsed = false;
-                    pwalletMain->NotifyZerocoinChanged(pwalletMain, SigmaItem.value.GetHex(),
-                                                       std::string("New (") + std::to_string(SigmaItem.denomination) + "mint)",
-                                                       CT_UPDATED);
-                    walletdb.WriteZerocoinEntry(modifiedItem);
-
-                    // erase zerocoin spend entry
-                    CZerocoinSpendEntry spendEntry;
-                    spendEntry.coinSerial = serial;
-                    walletdb.EraseCoinSpendSerialEntry(spendEntry);
-                }
-            }
-
-        } else if (wtx.IsSigmaSpend()) {
+        if (wtx.IsSigmaSpend()) {
             // find out coin serial number
             assert(wtx.vin.size() == 1);
 
@@ -2849,27 +2807,6 @@ void CWallet::ListAvailableCoinsMintCoins(vector <COutput> &vCoins, bool fOnlyCo
             }
             LogPrintf("pcoin->vout.size()=%s\n", pcoin->vout.size());
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
-                if (pcoin->vout[i].scriptPubKey.IsZerocoinMint()) {
-                    CTxOut txout = pcoin->vout[i];
-                    CBigNum pubCoin = ParseZerocoinMintScript(txout.scriptPubKey);
-                    LogPrintf("Pubcoin=%s\n", pubCoin.ToString());
-                    // CHECKING PROCESS
-                    BOOST_FOREACH(const CZerocoinEntry &ownCoinItem, listOwnCoins) {
-//                        LogPrintf("*******\n");
-//                        LogPrintf("ownCoinItem.value=%s,\n", ownCoinItem.value.ToString());
-//                        LogPrintf("ownCoinItem.IsUsed=%s\n, ", ownCoinItem.IsUsed);
-//                        LogPrintf("ownCoinItem.randomness=%s\n, ", ownCoinItem.randomness);
-//                        LogPrintf("ownCoinItem.serialNumber=%s\n, ", ownCoinItem.serialNumber);
-                        if (ownCoinItem.value == pubCoin && ownCoinItem.IsUsed == false &&
-                            ownCoinItem.randomness != 0 && ownCoinItem.serialNumber != 0) {
-                            vCoins.push_back(COutput(pcoin, i, nDepth, true, true));
-                            LogPrintf("-->OK\n");
-                        }
-                    }
-
-                }
-            }
         }
     }
 }

@@ -1087,95 +1087,6 @@ UniValue gettotalsupply(const UniValue& params, bool fHelp)
 }
 
 namespace {
-bool getZerocoinSupply(CAmount & amount) {
-    using idx_rec = std::pair<CAddressIndexKey, CAmount>;
-    std::vector<idx_rec> addressIndex;
-
-    if(!GetAddressIndex(uint160(), AddressType::zerocoinSpend, addressIndex))
-        return false;
-
-    auto predicate = [](idx_rec const & lhs, idx_rec const & rhs) {
-        if(lhs.first.blockHeight < rhs.first.blockHeight)
-            return true;
-        if(lhs.first.blockHeight > rhs.first.blockHeight)
-            return false;
-        return lhs.first.txindex < rhs.first.txindex;
-    };
-
-    if(!std::is_sorted(addressIndex.begin(), addressIndex.end(), predicate))
-        std::sort(addressIndex.begin(), addressIndex.end(), predicate);
-
-    using spend_value = std::pair<uint256, size_t>;
-    std::map<CBigNum, spend_value> originalSerials;
-    CAmount amt = 0;
-
-    for(idx_rec const & idr : addressIndex) {
-        CTransaction tx;
-        uint256 hash;
-
-        if(!GetTransaction(idr.first.txhash, tx, Params().GetConsensus(), hash, true))
-            return false;
-
-        size_t num = 0;
-        for(CTxIn const & in : tx.vin) {
-            ++num;
-            if(!in.IsZerocoinSpend())
-                continue;
-
-            CBigNum zspendSerial = CBigNum(0);
-            libzerocoin::CoinDenomination zspendAmount;
-
-            try {
-                CDataStream serializedCoinSpend((const char *)&*(in.scriptSig.begin() + 4),
-                                            (const char *)&*in.scriptSig.end(),
-                                            SER_NETWORK, PROTOCOL_VERSION);
-                libzerocoin::CoinSpend spend(in.nSequence >= ZC_MODULUS_V2_BASE_ID ? ZCParamsV2 : ZCParams, serializedCoinSpend);
-                zspendSerial = spend.getCoinSerialNumber();
-                zspendAmount = spend.getDenomination();
-            }
-            catch (const std::runtime_error &) {
-                continue;
-            }
-
-            auto const iter = originalSerials.find(zspendSerial);
-            if(iter == originalSerials.end())
-                originalSerials.insert({zspendSerial, spend_value(tx.GetHash(), num)});
-            else if(iter->second != spend_value(tx.GetHash(), num)){
-                amt += zspendAmount * COIN;
-            }
-        }
-    }
-    amount = amt;
-    return true;
-}
-}
-
-UniValue getzerocoinsupply(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() > 1)
-        throw runtime_error(
-                "getzerocoinsupply\n"
-                        "\nReturns zerocoin amount. This function is very slow by design.\n"
-                        "\nArguments: none\n"
-                        "\nResult:\n"
-                        "{\n"
-                        "  \"total\"  (string) The total supply in duffs\n"
-                        "}\n"
-                        "\nExamples:\n"
-                + HelpExampleCli("getzerocoinsupply", "")
-                + HelpExampleRpc("getzerocoinsupply", "")
-        );
-
-    CAmount total = 0;
-
-    if(!getZerocoinSupply(total))
-        throw JSONRPCError(RPC_DATABASE_ERROR, "Cannot read the zerocoin supply from the database. This functionality requires -addressindex to be enabled. Enabling -addressindex requires reindexing.");
-
-    UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("total", total));
-
-    return result;
-}
 
 UniValue getinfoex(const UniValue& params, bool fHelp)
 {
@@ -1216,9 +1127,6 @@ UniValue getinfoex(const UniValue& params, bool fHelp)
     if(!pblocktree->ReadTotalSupply(total))
         throw JSONRPCError(RPC_DATABASE_ERROR, "Cannot read the total supply from the database");
 
-    if(!getZerocoinSupply(zerocoin))
-        throw JSONRPCError(RPC_DATABASE_ERROR, "Cannot read the total supply from the database");
-
     info.push_back(Pair("moneysupply", total + zerocoin));
 
     return info;
@@ -1244,7 +1152,6 @@ static const CRPCCommand commands[] =
 
     /* Not shown in help */
     { "hidden",             "setmocktime",            &setmocktime,            true  },
-    { "hidden",             "getzerocoinsupply",      &getzerocoinsupply,      false },
     { "hidden",             "getinfoex",              &getinfoex,              false },
 
 };
