@@ -5222,6 +5222,56 @@ string CWallet::MintAndStoreSigma(const vector<CRecipient>& vecSend,
     return "";
 }
 
+string CWallet::MintZerocoin(CScript pubCoin, int64_t nValue, bool isSigmaMint, CWalletTx &wtxNew, bool fAskFee) {
+    if (!isSigmaMint) {
+        CHECK_ZEROCOIN_STRING();
+    }
+
+    LogPrintf("MintZerocoin: value = %s\n", nValue);
+    // Check amount
+    if (nValue <= 0)
+        return _("Invalid amount");
+    LogPrintf("CWallet.MintZerocoin() nValue = %s, payTxFee.GetFee(1000) = %s, GetBalance() = %s \n", nValue,
+              payTxFee.GetFee(1000), GetBalance());
+    if (nValue + payTxFee.GetFeePerK() > GetBalance())
+        return _("Insufficient funds");
+    LogPrintf("payTxFee.GetFeePerK()=%s\n", payTxFee.GetFeePerK());
+    CReserveKey reservekey(this);
+    int64_t nFeeRequired = 0;
+
+    if (IsLocked()) {
+        string strError = _("Error: Wallet locked, unable to create transaction!");
+        LogPrintf("MintZerocoin() : %s", strError);
+        return strError;
+    }
+
+    string strError;
+    if (!CreateZerocoinMintTransaction(pubCoin, nValue, wtxNew, reservekey, nFeeRequired, strError, isSigmaMint)) {
+        LogPrintf("nFeeRequired=%s\n", nFeeRequired);
+        if (nValue + nFeeRequired > GetBalance())
+            return strprintf(
+                    _("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"),
+                    FormatMoney(nFeeRequired).c_str());
+        return strError;
+    }
+
+    if (fAskFee && !uiInterface.ThreadSafeAskFee(nFeeRequired))
+        return "ABORTED";
+
+    if (!CommitTransaction(wtxNew, reservekey)) {
+        return _(
+                "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
+    } else {
+        LogPrintf("CommitTransaction success!\n");
+//        //TODO :
+//        // 1. In this case, we already have pubcoin that just committed to network.
+//        // 2. what we can do is <pubcoin><isOur><isUsed> storing in wallet
+//        // 3. We will store pubcoin, yes, no
+    }
+
+    return "";
+}
+
 string CWallet::SpendSigma(
         std::string &thirdPartyaddress,
         sigma::CoinDenomination denomination,
