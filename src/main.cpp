@@ -3099,7 +3099,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         {
             nErased += EraseOrphanTx(orphanHash);
         }
-        LogPrint("mempool", "Erased %d orphan tx included or conflicted by block\n", nErased);
+        LogPrintf("mempool", "Erased %d orphan tx included or conflicted by block\n", nErased);
     }
 
     // Erase conflicting zerocoin txs from the mempool
