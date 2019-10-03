@@ -1,4 +1,0 @@
-const char *sigmaRemintBlacklist[] = {
-	nullptr
-};
-

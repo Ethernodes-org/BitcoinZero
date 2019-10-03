@@ -1162,30 +1162,6 @@ bool CZerocoinState::CanAddSpendToMempool(const CBigNum &coinSerial) {
     return !IsUsedCoinSerial(coinSerial) && mempoolCoinSerials.count(coinSerial) == 0;
 }
 
-extern const char *sigmaRemintBlacklist[];
-std::unordered_set<CBigNum,CZerocoinState::CBigNumHash> CZerocoinState::sigmaRemintBlacklistSet;
-
-bool CZerocoinState::IsPublicCoinValueBlacklisted(const CBigNum &value) {
-    static bool blackListLoaded = false;
-
-    // Check against black list
-    if (!blackListLoaded) {
-        AssertLockHeld(cs_main);
-        // Initial build of the black list. Thread-safe as we are protected by cs_main
-        for (const char **blEntry = sigmaRemintBlacklist; *blEntry; blEntry++) {
-            CBigNum bn;
-            bn.SetHex(*blEntry);
-            sigmaRemintBlacklistSet.insert(bn);
-        }
-    }
-
-    return sigmaRemintBlacklistSet.count(value) > 0;
-}
-
-void CZerocoinState::BlacklistPublicCoinValue(const CBigNum &value) {
-    sigmaRemintBlacklistSet.insert(value);
-}
-
 void CZerocoinState::Reset() {
     coinGroups.clear();
     usedCoinSerials.clear();
