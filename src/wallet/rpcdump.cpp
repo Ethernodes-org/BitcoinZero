@@ -680,6 +680,7 @@ UniValue dumpsigma(const UniValue& params, bool fHelp)
 
     BOOST_FOREACH(const CSigmaEntry &SigmaItem, listPubcoin) {
         file << "sigma=1 ";
+        file << strprintf("%d ", SigmaItem.value.GetHex()); // value
         file << strprintf("%d ", SigmaItem.get_denomination_value()); // denomination
         file << strprintf("%s ", SigmaItem.randomness.GetHex()); // randomness
         file << strprintf("%s ", SigmaItem.serialNumber.GetHex()); // serialNumber
