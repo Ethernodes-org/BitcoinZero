@@ -1086,8 +1086,6 @@ UniValue gettotalsupply(const UniValue& params, bool fHelp)
     return result;
 }
 
-namespace {
-
 UniValue getinfoex(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
