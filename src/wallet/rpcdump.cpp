@@ -751,3 +751,9 @@ UniValue dumpmasterkey(const UniValue& params, bool fHelp)
     file.close();
     return NullUniValue;
 }
+
+UniValue importsigma(const UniValue& params, bool fHelp)
+{
+    return NullUniValue;
+}
+

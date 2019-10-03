@@ -3337,6 +3337,7 @@ UniValue removetxwallet(const UniValue& params, bool fHelp) {
 extern UniValue dumpprivkey(const UniValue& params, bool fHelp);
 extern UniValue dumpwallet(const UniValue& params, bool fHelp);
 extern UniValue dumpsigma(const UniValue& params, bool fHelp);
+extern UniValue importsigma(const UniValue& params, bool fHelp);
 extern UniValue dumpmasterkey(const UniValue& params, bool fHelp);
 extern UniValue importprivkey(const UniValue& params, bool fHelp);
 extern UniValue importaddress(const UniValue& params, bool fHelp);
@@ -3359,6 +3360,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true  },
     { "wallet",             "dumpsigma",                &dumpsigma,                true  },
+    { "wallet",             "importsigma",              &importsigma,              true  },
     { "wallet",             "dumpmasterkey",            &dumpmasterkey,            true  },
     { "wallet",             "encryptwallet",            &encryptwallet,            true  },
     { "wallet",             "getaccountaddress",        &getaccountaddress,        true  },
