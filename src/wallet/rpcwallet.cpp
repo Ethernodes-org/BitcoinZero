@@ -3007,44 +3007,6 @@ UniValue listsigmamints(const UniValue& params, bool fHelp) {
     return results;
 }
 
-
-UniValue listpubcoins(const UniValue& params, bool fHelp) {
-    if (fHelp || params.size() > 1)
-        throw runtime_error(
-                "listpubcoins <all>(1/10/25/50/100)\n"
-                        "\nArguments:\n"
-                        "1. <all> (int, optional) 1,10,100,250,500 (default) to return all pubcoin with denomination. empty to return all pubcoin.\n"
-                        "\nResults are an array of Objects, each of which has:\n"
-                        "{id, IsUsed, denomination, value, serialNumber, nHeight, randomness}");
-
-    int denomination = -1;
-    if (params.size() > 0) {
-        denomination = params[0].get_int();
-    }
-
-    list <CZerocoinEntry> listPubcoin;
-    CWalletDB walletdb(pwalletMain->strWalletFile);
-    walletdb.ListPubCoin(listPubcoin);
-    UniValue results(UniValue::VARR);
-    listPubcoin.sort(CompID);
-
-    BOOST_FOREACH(const CZerocoinEntry &SigmaItem, listPubcoin) {
-        if (SigmaItem.id > 0 && (denomination < 0 || SigmaItem.denomination == denomination)) {
-            UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("id", SigmaItem.id));
-            entry.push_back(Pair("IsUsed", SigmaItem.IsUsed));
-            entry.push_back(Pair("denomination", SigmaItem.denomination));
-            entry.push_back(Pair("value", SigmaItem.value.GetHex()));
-            entry.push_back(Pair("serialNumber", SigmaItem.serialNumber.GetHex()));
-            entry.push_back(Pair("nHeight", SigmaItem.nHeight));
-            entry.push_back(Pair("randomness", SigmaItem.randomness.GetHex()));
-            results.push_back(entry);
-        }
-    }
-
-    return results;
-}
-
 UniValue listsigmapubcoins(const UniValue& params, bool fHelp) {
 
     std::string help_message =
