@@ -755,6 +755,140 @@ UniValue dumpmasterkey(const UniValue& params, bool fHelp)
 
 UniValue importsigma(const UniValue& params, bool fHelp)
 {
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "importwallet \"filename\"\n"
+            "\nImports keys from a wallet dump file (see dumpwallet).\n"
+            "\nArguments:\n"
+            "1. \"filename\"    (string, required) The wallet file\n"
+            "\nExamples:\n"
+            "\nDump the wallet\n"
+            + HelpExampleCli("dumpwallet", "\"test\"") +
+            "\nImport the wallet\n"
+            + HelpExampleCli("importwallet", "\"test\"") +
+            "\nImport using the json rpc call\n"
+            + HelpExampleRpc("importwallet", "\"test\"")
+        );
+
+    if (fPruneMode)
+        throw JSONRPCError(RPC_WALLET_ERROR, "Importing wallets is disabled in pruned mode");
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    EnsureWalletIsUnlocked();
+
+    ifstream file;
+    file.open(params[0].get_str().c_str(), std::ios::in | std::ios::ate);
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
+
+    int64_t nTimeBegin = chainActive.Tip()->GetBlockTime();
+
+    bool fGood = true;
+
+    bool fMintUpdate = false;
+
+    int64_t nFilesize = std::max((int64_t)1, (int64_t)file.tellg());
+    file.seekg(0, file.beg);
+
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+
+    pwalletMain->ShowProgress(_("Importing..."), 0); // show progress dialog in GUI
+    while (file.good()) {
+        pwalletMain->ShowProgress("", std::max(1, std::min(99, (int)(((double)file.tellg() / (double)nFilesize) * 100))));
+        std::string line;
+        std::getline(file, line);
+        if (line.empty() || line[0] == '#')
+            continue;
+
+        std::vector<std::string> vstr;
+        boost::split(vstr, line, boost::is_any_of(" "));
+        if (vstr.size() < 2)
+            continue;
+        CBitcoinSecret vchSecret;
+        // begin sigma
+        if(vstr[0] == "sigma=1"){
+            CSigmaEntry zerocoinEntry;
+            //zerocoinEntry.value.SetHex(vstr[1]);
+            //zerocoinEntry.denomination = stoi(vstr[2]);
+            //zerocoinEntry.randomness.SetHex(vstr[3]);
+            //zerocoinEntry.serialNumber.SetHex(vstr[4]);
+            //zerocoinEntry.IsUsed = stoi(vstr[5]);
+            //zerocoinEntry.nHeight = stoi(vstr[6]);
+            //zerocoinEntry.id = stoi(vstr[7]);
+            //zerocoinEntry.ecdsaSecretKey = ParseHex(vstr[8]);
+            walletdb.WriteZerocoinEntry(zerocoinEntry);
+        }
+        else {
+            if (!vchSecret.SetString(vstr[0]))
+                continue;
+            CKey key = vchSecret.GetKey();
+            CPubKey pubkey = key.GetPubKey();
+            assert(key.VerifyPubKey(pubkey));
+            CKeyID keyid = pubkey.GetID();
+            if (pwalletMain->HaveKey(keyid)) {
+                LogPrintf("Skipping import of %s (key already present)\n", CBitcoinAddress(keyid).ToString());
+                continue;
+            }
+            int64_t nTime = DecodeDumpTime(vstr[1]);
+            std::string strLabel;
+            bool fLabel = true;
+            // CKeyMetadata
+            bool fHd = false;
+            std::string hdKeypath;
+            CKeyID hdMasterKeyID;
+
+            LogPrintf("Importing %s...\n", CBitcoinAddress(keyid).ToString());
+
+            // Add entry to mapKeyMetadata (Need to populate KeyMetadata before for it to be written to DB in the following call)
+            pwalletMain->mapKeyMetadata[keyid].nCreateTime = nTime;
+            if(fHd){
+                pwalletMain->mapKeyMetadata[keyid].hdKeypath = hdKeypath;
+                pwalletMain->mapKeyMetadata[keyid].hdMasterKeyID = hdMasterKeyID;
+                pwalletMain->mapKeyMetadata[keyid].ParseComponents();
+            }
+
+            if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
+                fGood = false;
+                continue;
+            }
+
+            if(fHd){
+                // If change component in HD path is 2, this is a mint seed key. Add to mintpool. (Have to call after key addition)
+                if(pwalletMain->mapKeyMetadata[keyid].nChange.first==2){
+                    zwalletMain->RegenerateMintPoolEntry(hdMasterKeyID, keyid, pwalletMain->mapKeyMetadata[keyid].nChild.first);
+                    fMintUpdate = true;
+                }
+            }
+            if (fLabel)
+                pwalletMain->SetAddressBook(keyid, strLabel, "receive");
+            nTimeBegin = std::min(nTimeBegin, nTime);
+        }
+    }
+    file.close();
+    pwalletMain->ShowProgress("", 100); // hide progress dialog in GUI
+
+    CBlockIndex *pindex = chainActive.Tip();
+    while (pindex && pindex->pprev && pindex->GetBlockTime() > nTimeBegin - 7200)
+        pindex = pindex->pprev;
+
+    if (!pwalletMain->nTimeFirstKey || nTimeBegin < pwalletMain->nTimeFirstKey)
+        pwalletMain->nTimeFirstKey = nTimeBegin;
+
+    LogPrintf("Rescanning last %i blocks\n", chainActive.Height() - pindex->nHeight + 1);
+    pwalletMain->ScanForWalletTransactions(pindex);
+    pwalletMain->MarkDirty();
+
+    if(fMintUpdate){
+        zwalletMain->SyncWithChain();
+        zwalletMain->GetTracker().ListMints(false, false);
+    }
+
+    if (!fGood)
+        throw JSONRPCError(RPC_WALLET_ERROR, "Error adding some keys to wallet");
+
     return NullUniValue;
 }
-
