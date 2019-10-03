@@ -3223,26 +3223,7 @@ UniValue listsigmaspends(const UniValue &params, bool fHelp) {
         }
 
         entry.push_back(Pair("spends", spends));
-
-        UniValue remints(UniValue::VARR);
-        BOOST_FOREACH(const CTxOut &txout, pwtx->vout) {
-            if (txout.scriptPubKey.empty() || !txout.scriptPubKey.IsSigmaMint()) {
-                continue;
-            }
-            sigma::CoinDenomination denomination;
-            IntegerToDenomination(txout.nValue, denomination);
-
-            UniValue remintEntry(UniValue::VOBJ);
-            remintEntry.push_back(Pair(
-                "denomination", sigma::DenominationToString(denomination)));
-            remintEntry.push_back(Pair(
-                "value", sigma::ParseSigmaMintScript(txout.scriptPubKey).tostring()));
-            remints.push_back(remintEntry);
-        }
-
-        entry.push_back(Pair("remints", remints));
         ret.push_back(entry);
-
         if (count > 0 && (int)ret.size() >= count)
             break;
     }
