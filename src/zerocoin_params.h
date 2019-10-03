@@ -9,10 +9,6 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 BZX mininput
 // Block after which sigma mints are activated.
 #define ZC_SIGMA_STARTING_BLOCK         156111
 
-// Number of coins per id in spend v1/v1.5
-#define ZC_SPEND_V1_COINSPERID			10
-// Number of coins per id in spend v2.0
-#define ZC_SPEND_V2_COINSPERID			10000
 // limit of coins number per id in spend v3.0
 #define ZC_SPEND_V3_COINSPERID_LIMIT    16000
 

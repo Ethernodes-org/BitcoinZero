@@ -3370,7 +3370,6 @@ static const CRPCCommand commands[] =
     { "wallet",             "resetsigmamint",           &resetsigmamint,           false },
     { "wallet",             "setsigmamintstatus",       &setsigmamintstatus,       false },
     { "wallet",             "listsigmamints",           &listsigmamints,           false },
-    { "wallet",             "listpubcoins",             &listpubcoins,             false },
     { "wallet",             "listsigmapubcoins",        &listsigmapubcoins,        false },
     { "wallet",             "removetxmempool",          &removetxmempool,          false },
     { "wallet",             "removetxwallet",           &removetxwallet,           false },
