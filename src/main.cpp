@@ -53,7 +53,6 @@
 #include "coins.h"
 
 #include "sigma/coinspend.h"
-#include "sigma/remint.h"
 
 #include <atomic>
 #include <sstream>
@@ -3111,7 +3110,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             BOOST_FOREACH(
             const CTxIn &txin, tx.vin)
             {
-                CBigNum zcSpendSerial = txin.IsZerocoinSpend() ? ZerocoinGetSpendSerialNumber(tx, txin) : sigma::CoinRemintToV3::GetSerialNumber(tx);
+                CBigNum zcSpendSerial = ZerocoinGetSpendSerialNumber(tx, txin);
                 uint256 thisTxHash = tx.GetHash();
                 uint256 conflictingTxHash = zcState->GetMempoolConflictingTxHash(zcSpendSerial);
                 if (!conflictingTxHash.IsNull() && conflictingTxHash != thisTxHash) {
@@ -3119,7 +3118,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                     auto pTx = mempool.get(conflictingTxHash);
                     if (pTx)
                         mempool.removeRecursive(*pTx, removed);
-                    LogPrintf("ConnectBlock: removed conflicting zerocoin spend/remint tx %s from the mempool\n",
+                    LogPrintf("ConnectBlock: removed conflicting zerocoin spend tx %s from the mempool\n",
                               conflictingTxHash.ToString());
                 }
 

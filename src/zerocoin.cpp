@@ -10,7 +10,6 @@
 #include "wallet/walletdb.h"
 #include "bznode-payments.h"
 #include "bznode-sync.h"
-#include "sigma/remint.h"
 
 #include <atomic>
 #include <sstream>
@@ -498,7 +497,7 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
 {
     if (tx.IsZerocoinSpend() || tx.IsZerocoinMint()) {
         if ((nHeight != INT_MAX && nHeight >= params.nDisableZerocoinStartBlock)    // transaction is a part of block: disable after specific block number
-                    || (nHeight == INT_MAX && !params.IsRegtest() && !isVerifyDB))  // transaction is accepted to the memory pool: always disable except if regtest chain (need remint tests)
+                    || (nHeight == INT_MAX && !params.IsRegtest() && !isVerifyDB))  // transaction is accepted to the memory pool: always disable except if regtest chain
             return state.DoS(1, error("Zerocoin is disabled at this point"));
     }
 

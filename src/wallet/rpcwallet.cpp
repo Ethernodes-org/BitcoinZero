@@ -3944,41 +3944,6 @@ UniValue listspendzerocoins(const UniValue &params, bool fHelp) {
     return ret;
 }
 
-UniValue remintzerocointosigma(const UniValue &params, bool fHelp) {
-
-    if (fHelp || params.size() != 1)
-        throw runtime_error(
-            "remintzerocointosigma <denomination>(1,10,100,250,500)\n"
-            +HelpRequiringPassphrase() +
-            "\nConvert zerocoin mint to sigma mint.\n"
-            "\nArguments:\n"
-            "1. \"denomination\"          (integer, required) existing zerocoin mint denomination\n"
-        );
-
-    EnsureSigmaWalletIsAvailable();
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-    libzerocoin::CoinDenomination denomination;
-    switch (params[0].get_int()) {
-        case 1:
-        case 10:
-        case 25:
-        case 50:
-        case 100:
-            denomination = (libzerocoin::CoinDenomination)params[0].get_int();
-            break;
-
-        default:
-            throw runtime_error("Incorrect denomination\n");
-    }
-
-    EnsureWalletIsUnlocked();
-    std::string stringError;
-    CWalletTx wtx;
-
-    return wtx.GetHash().GetHex();
-}
-
 UniValue removetxmempool(const UniValue &params, bool fHelp) {
     if (fHelp || params.size() != 1)
         throw runtime_error(
@@ -4113,8 +4078,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "removetxwallet",           &removetxwallet,           false },
     { "wallet",             "listspendzerocoins",       &listspendzerocoins,       false },
     { "wallet",             "listsigmaspends",          &listsigmaspends,          false },
-    { "wallet",             "spendallzerocoin",         &spendallzerocoin,         false },
-    { "wallet",             "remintzerocointosigma",    &remintzerocointosigma,    false }
+    { "wallet",             "spendallzerocoin",         &spendallzerocoin,         false }
 };
 
 void RegisterWalletRPCCommands(CRPCTable &tableRPC)

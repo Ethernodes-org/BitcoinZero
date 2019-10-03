@@ -32,7 +32,6 @@
 #include <boost/assign/list_of.hpp>
 #include <univalue.h>
 #include "sigma.h"
-#include "sigma/remint.h"
 
 using namespace std;
 

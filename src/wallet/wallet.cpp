@@ -21,7 +21,6 @@
 #include "../sigma/coinspend.h"
 #include "../sigma/spend_metadata.h"
 #include "../sigma/coin.h"
-#include "../sigma/remint.h"
 #include "../libzerocoin/SpendMetaData.h"
 #include "net.h"
 #include "policy/policy.h"
@@ -3988,19 +3987,10 @@ bool CWallet::CreateSigmaMintModel(
     return true;
 }
 
-/*
- * We disabled zerocoin for security reasons but in order for zerocoin to sigma remint tests
- * to pass we need it on regtest chain
- */
-
 static bool IsZerocoinEnabled(std::string &stringError) {
-    if (Params().GetConsensus().IsRegtest()) {
-        return true;
-    }
-    else {
+
         stringError = "Zerocoin functionality has been disabled";
         return false;
-    }
 }
 
 #define CHECK_ZEROCOIN_STRINGERROR(__s) { \

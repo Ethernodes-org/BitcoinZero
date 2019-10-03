@@ -475,22 +475,6 @@ void handleInput(CTxIn const & input, size_t inputNo, uint256 const & txHash, in
         spentIndex->push_back(make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue(txHash, inputNo, height, prevout.nValue, addrType.first, addrType.second)));
 }
 
-void handleRemint(CTxIn const & input, size_t inputNo, uint256 const & txHash, int height, int txNumber, CAmount nValue,
-        AddressIndexPtr & addressIndex, AddressUnspentIndexPtr & addressUnspentIndex, SpentIndexPtr & spentIndex)
-{
-    if(true)
-        return;
-
-    if (addressIndex) {
-        addressIndex->push_back(make_pair(CAddressIndexKey(AddressType::zerocoinRemint, uint160(), height, txNumber, txHash, inputNo, true), nValue * -1));
-        addressUnspentIndex->push_back(make_pair(CAddressUnspentKey(AddressType::zerocoinRemint, uint160(), input.prevout.hash, input.prevout.n), CAddressUnspentValue()));
-    }
-
-    if (spentIndex)
-        spentIndex->push_back(make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue(txHash, inputNo, height, nValue, AddressType::zerocoinRemint, uint160())));
-}
-
-
 template <class Iterator>
 void handleZerocoinSpend(Iterator const begin, Iterator const end, uint256 const & txHash, int height, int txNumber, CCoinsViewCache const & view,
         AddressIndexPtr & addressIndex, bool isV3)

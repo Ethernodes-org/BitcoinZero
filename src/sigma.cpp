@@ -12,7 +12,6 @@
 #include "crypto/sha256.h"
 #include "sigma/coinspend.h"
 #include "sigma/coin.h"
-#include "sigma/remint.h"
 #include "bznode-payments.h"
 #include "bznode-sync.h"
 #include "primitives/zerocoin.h"
@@ -62,11 +61,6 @@ bool IsSigmaAllowed()
 bool IsSigmaAllowed(int height)
 {
 	return height >= ::Params().GetConsensus().nSigmaStartBlock;
-}
-
-bool IsRemintWindow(int height) {
-    const Consensus::Params& params = ::Params().GetConsensus();
-    return IsSigmaAllowed(height) && height < params.nSigmaStartBlock + params.nZerocoinToSigmaRemintWindowSize;
 }
 
 secp_primitives::GroupElement ParseSigmaMintScript(const CScript& script)
@@ -140,7 +134,6 @@ bool CheckSigmaBlock(CValidationState &state, const CBlock& block) {
     CAmount blockSpendsValue(0);
 
     for (const auto& tx : block.vtx) {
-        // Check zerocoin to sigma remints against the same limit as sigma spends
 
         auto txSpendsValue = GetSpendAmount(tx);
         size_t txSpendsAmount = 0;

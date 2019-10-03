@@ -35,7 +35,6 @@
 #include "bznodeman.h"
 #include "zerocoin.h"
 #include "sigma.h"
-#include "sigma/remint.h"
 #include "spork.h"
 #include <algorithm>
 #include <boost/thread.hpp>
@@ -367,14 +366,8 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(
                     continue;
             }
 
-            // temporarily disable zerocoin. Re-enable after sigma release
-            // Make exception for regtest network (for remint tests)
-            if (!chainparams.GetConsensus().IsRegtest() && (tx.IsZerocoinSpend() || tx.IsZerocoinMint()))
-                continue;
-
             if (tx.IsSigmaSpend()) {
-                // Sigma spend and zerocoin->sigma remint are subject to the same limits
-                CAmount spendAmount = tx.IsSigmaSpend() ? sigma::GetSpendAmount(tx) : sigma::CoinRemintToV3::GetAmount(tx);
+                CAmount spendAmount = sigma::GetSpendAmount(tx);
 
                 if (tx.vin.size() > params.nMaxSigmaInputPerTransaction ||
                     spendAmount > params.nMaxValueSigmaSpendPerTransaction) {

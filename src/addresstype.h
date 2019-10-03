@@ -10,7 +10,6 @@ enum struct AddressType
     , zerocoinSpend = 4
     , sigmaMint = 5
     , sigmaSpend = 6
-    , zerocoinRemint = 7
 };
 
 namespace zerocoin { namespace utils {

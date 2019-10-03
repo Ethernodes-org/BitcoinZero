@@ -116,9 +116,6 @@ struct Params {
     // Value of maximum sigma spend per transaction.
     int64_t nMaxValueSigmaSpendPerTransaction;
 
-    // Number of blocks with allowed zerocoin to sigma remint transaction (after nSigmaStartBlock)
-    int nZerocoinToSigmaRemintWindowSize;
-
     /** block number to disable zerocoin on consensus level */
     int nDisableZerocoinStartBlock;
 	
