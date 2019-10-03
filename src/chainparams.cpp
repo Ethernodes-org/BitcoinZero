@@ -91,7 +91,6 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0");
 
         consensus.nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
-	    consensus.nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
 	    consensus.nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;
 	    consensus.nSpendV2ID_10 = ZC_V2_SWITCH_ID_10;
 	    consensus.nSpendV2ID_25 = ZC_V2_SWITCH_ID_25;
@@ -158,7 +157,6 @@ public:
         576.0 // * estimated number of transactions per day after checkpoint
         };
 
-        consensus.nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
         consensus.nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;
         consensus.nSpendV2ID_10 = ZC_V2_SWITCH_ID_10;
         consensus.nSpendV2ID_25 = ZC_V2_SWITCH_ID_25;
