@@ -32,9 +32,6 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 BZX mininput
 // Amount of sigma spends allowed per transaction
 #define ZC_SIGMA_INPUT_LIMIT_PER_TRANSACTION            50
 
-// Number of zerocoin mints allowed per transaction
-#define ZC_MINT_LIMIT         100
-
 /** Maximum number of outbound peers designated as Dandelion destinations */
 #define DANDELION_MAX_DESTINATIONS 2
 

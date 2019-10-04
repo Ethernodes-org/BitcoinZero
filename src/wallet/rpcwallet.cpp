@@ -81,24 +81,6 @@ void EnsureWalletIsUnlocked()
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 }
 
-bool ValidMultiMint(const UniValue& data){
-    vector<string> keys = data.getKeys();
-    CAmount totalValue = 0;
-    int totalInputs = 0;
-    int denomination;
-    int64_t amount;
-    BOOST_FOREACH(const string& denominationStr, keys){
-        denomination = stoi(denominationStr.c_str());
-        amount = data[denominationStr].get_int();
-        totalInputs += amount;
-        totalValue += denomination * amount * COIN;
-    }
-
-    return ((totalValue <= pwalletMain->GetBalance()) &&
-            (totalInputs <= ZC_MINT_LIMIT));
-
-}
-
 void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
 {
     int confirms = wtx.GetDepthInMainChain();
