@@ -416,7 +416,7 @@
          <item>
           <widget class="QLabel" name="Synch">
            <property name="text">
-            <string>Synch from scratch</string>
+            <string>Sync from scratch</string>
            </property>
           </widget>
          </item>
