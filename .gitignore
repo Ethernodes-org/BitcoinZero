@@ -87,7 +87,10 @@ GravityCoin-Qt.app
 qrc_*.cpp
 
 # Mac specific
-.DS_Store
+*.DS_Store
+*.DS_Store?
+.AppleDouble
+.LSOverride
 build
 
 #lcov
